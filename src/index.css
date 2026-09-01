@@ -1,0 +1,61 @@
+/* 모든 요소의 크기에 border와 padding 포함 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 기본 여백 제거 */
+* {
+  padding: 0;
+  margin: 0;
+}
+
+/* 기본 문서 설정 */
+html {
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 미디어 요소 */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 폼 요소의 폰트 상속 */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 링크 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 리스트 */
+ul,
+ol {
+  list-style: none;
+}
+
+/* 버튼 */
+button {
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
