@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "15-fall-in-daily-maple-fe",
   "private": true,
   "version": "0.0.0",
@@ -59,5 +60,9 @@
       "stylelint --fix",
       "prettier --write"
     ]
+=======
+  "dependencies": {
+    "axios": "^1.20.0"
+>>>>>>> 53ea5de (feat/260902 중간작업내용 업로드)
   }
 }
