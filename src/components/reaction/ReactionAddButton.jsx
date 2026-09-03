@@ -2,10 +2,12 @@
 
 import styles from "./ReactionAddButton.module.css";
 
-function ReactionAddButton() {
+function ReactionAddButton({ setIsOpen }) {
   return (
     <>
-      <button className={styles.addButton}>추가</button>
+      <button className={styles.addButton} onClick={() => setIsOpen(true)}>
+        추가
+      </button>
     </>
   );
 }

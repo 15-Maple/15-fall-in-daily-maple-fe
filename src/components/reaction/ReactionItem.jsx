@@ -5,7 +5,7 @@ function ReactionItem({ emoji, count }) {
   return (
     <div className={styles.reactionItem}>
       <span>{emoji}</span>
-      <sapn>{count}</sapn>
+      <span>{count}</span>
     </div>
   );
 }
