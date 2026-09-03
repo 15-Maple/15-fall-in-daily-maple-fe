@@ -110,3 +110,17 @@ npm run dev
 - `npm run dev` : 개발용 서버를 켭니다.
 - `npm run lint:fix` : 자바스크립트 문법 에러를 검사하고, 고칠 수 있는 건 자동으로 고칩니다.
 - `npm run format` : 프로젝트 전체 파일의 띄어쓰기/줄바꿈을 일괄 정렬합니다.
+
+## 🚀 새로운 페이지 추가하는 방법
+
+프로젝트에 새로운 화면을 추가할 때는 아래 3단계를 진행해 주세요.
+(참고: `src/pages/SamplePage.jsx` 파일을 복사해서 시작하시면 편리합니다!)
+
+1. **페이지 컴포넌트 생성**
+   - `src/pages` 폴더 내부에 새로운 페이지 파일을 생성합니다. (예: `MyPage.jsx`)
+2. **경로 상수 등록**
+   - `src/constants/routes.js` 파일에 URL 경로를 추가합니다.
+   - 예: `MY_PAGE: "/mypage"`
+3. **라우터에 연결**
+   - `src/App.jsx` 파일의 `children` 배열 안에 라우트 객체를 추가합니다.
+   - 예: `{ path: ROUTES.MY_PAGE, element: <MyPage /> }`
