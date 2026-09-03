@@ -1,0 +1,50 @@
+/* =========================================
+  1. 기본 스타일(모바일)
+========================================= */
+.wrapper {
+  padding: 16px;
+  background: var(--color-white);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 34px;
+}
+
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* =========================================
+  2. 태블릿 사이즈 (744px 이상)
+========================================= */
+@media (width >= 744px) {
+  .wrapper {
+    padding: 24px 20px;
+  }
+
+  .logoWrapper {
+    width: 266px;
+    height: 57px;
+  }
+}
+
+/* =========================================
+  3. PC 사이즈 (1024px 이상)
+========================================= */
+@media (width >= 1024px) {
+  .wrapper {
+    padding: 20px 220px;
+  }
+}
