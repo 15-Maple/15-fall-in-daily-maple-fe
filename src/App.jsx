@@ -1,5 +1,11 @@
+import ReactionTest from "./pages/ReactionTest";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <ReactionTest />
+    </>
+  );
 }
 
 export default App;
