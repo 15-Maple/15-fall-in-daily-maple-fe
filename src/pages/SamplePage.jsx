@@ -1,4 +1,5 @@
 import AcornSticker from "../components/common/AcornSticker";
+import TimerButton from "../components/ui/TimerButton";
 
 function SamplePage() {
   return (
@@ -19,6 +20,13 @@ function SamplePage() {
         {/* 도토리 추가 예시 */}
         <AcornSticker bgColor={"#d2e869"} />{" "}
         <AcornSticker bgColor={"var(--color-sticker-blue-100)"} />
+      </li>
+      <li>
+        {/* 타이머 버튼 */}
+        <TimerButton size="sm" type="stop" />
+        <TimerButton size="lg" type="stop" />
+        <TimerButton size="sm" type="start" />
+        <TimerButton size="lg" type="start" />
       </li>
     </ul>
   );
