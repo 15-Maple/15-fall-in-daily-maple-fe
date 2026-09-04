@@ -50,7 +50,7 @@
     width: 200px;
     height: 58px;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     border-radius: 16px;
   }
 }
