@@ -1,4 +1,3 @@
-// 이모지 기능 전체 담당 하위 컴포넌트 연결
 import { useState } from "react";
 
 import ReactionAddButton from "./ReactionAddButton";
@@ -8,17 +7,76 @@ import ReactionSelector from "./ReactionSelector";
 import styles from "./Reaction.module.css";
 
 function Reaction() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [reactions, setReactions] = useState([
+    {
+      emoji: "👩🏻‍💻",
+      count: 37,
+    },
+    {
+      emoji: "👍",
+      count: 11,
+    },
+    {
+      emoji: "🤩",
+      count: 9,
+    },
+    {
+      emoji: "🤩",
+      count: 9,
+    },
+    {
+      emoji: "🤩",
+      count: 9,
+    },
+  ]);
+
+  //같은 이모지면 +1
   const EmojiClick = (emoji) => {
-    console.log(emoji);
+    setReactions((prev) => {
+      const sameReaction = prev.find((item) => {
+        return item.emoji === emoji;
+      });
+
+      if (sameReaction) {
+        const newReactions = prev.map((item) => {
+          if (item.emoji === emoji) {
+            return {
+              ...item,
+              count: item.count + 1,
+            };
+          }
+
+          return item;
+        });
+
+        return newReactions;
+      }
+
+      //없으면 새 이모지 만들기
+      const newReaction = {
+        emoji: emoji,
+        count: 1,
+      };
+
+      return [...prev, newReaction];
+    });
   };
 
-  //이모지창 처음에 닫혀있음
-  const [isOpen, setIsOpen] = useState(false);
+  //리액션 배열 복사해서 큰순으로 정렬
+  const sortedReactions = [...reactions];
+  sortedReactions.sort((a, b) => {
+    return b.count - a.count;
+  });
+
+  //이모지 3개만 보여주기
+  const topReactions = sortedReactions.slice(0, 3);
 
   return (
     <section>
       <div className={styles.reactionContent}>
-        <ReactionList />
+        <ReactionList reactions={topReactions} />
         <ReactionAddButton setIsOpen={setIsOpen} />
       </div>
 

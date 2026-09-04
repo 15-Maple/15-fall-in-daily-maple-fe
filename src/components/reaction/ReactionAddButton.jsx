@@ -5,7 +5,10 @@ import styles from "./ReactionAddButton.module.css";
 function ReactionAddButton({ setIsOpen }) {
   return (
     <>
-      <button className={styles.addButton} onClick={() => setIsOpen(true)}>
+      <button
+        className={styles.addButton}
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
         추가
       </button>
     </>
