@@ -4,7 +4,7 @@ import logoImg from "../../assets/ic-logo.svg";
 
 import styles from "./Header.module.css";
 
-function Header({ showCreateButton = false }) {
+function Header() {
   return (
     <header className={styles.wrapper}>
       <div className={styles.content}>
@@ -15,11 +15,9 @@ function Header({ showCreateButton = false }) {
             className={styles.logoImage}
           />
         </div>
-        {showCreateButton && (
-          <div className={styles.buttonWrapper}>
-            <Button className={styles.headerBtn}>로그 만들기</Button>
-          </div>
-        )}
+        <div className={styles.buttonWrapper}>
+          <Button size="main">스터디 만들기</Button>
+        </div>
       </div>
     </header>
   );
