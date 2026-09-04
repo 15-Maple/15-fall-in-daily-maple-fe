@@ -80,6 +80,17 @@ button {
   border: 0;
 }
 
+/* 제목 태그 기본 스타일 리셋 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
 /* CSS 변수 설정 */
 :root {
   /* 컬러 파레트 */
