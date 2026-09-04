@@ -2,13 +2,16 @@ import { useState } from "react";
 
 import ReactionAddButton from "./ReactionAddButton";
 import ReactionList from "./ReactionList";
+import ReactionMore from "./ReactionMore";
 import ReactionSelector from "./ReactionSelector";
 
 import styles from "./Reaction.module.css";
 
 function Reaction() {
   const [isOpen, setIsOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
 
+  //임시 데이터
   const [reactions, setReactions] = useState([
     {
       emoji: "👩🏻‍💻",
@@ -23,12 +26,12 @@ function Reaction() {
       count: 9,
     },
     {
-      emoji: "🤩",
-      count: 9,
+      emoji: "🎶",
+      count: 5,
     },
     {
-      emoji: "🤩",
-      count: 9,
+      emoji: "🙈",
+      count: 4,
     },
   ]);
 
@@ -72,11 +75,18 @@ function Reaction() {
 
   //이모지 3개만 보여주기
   const topReactions = sortedReactions.slice(0, 3);
+  const hiddenReactions = sortedReactions.slice(3);
 
   return (
     <section>
       <div className={styles.reactionContent}>
         <ReactionList reactions={topReactions} />
+        <ReactionMore
+          moreOpen={moreOpen}
+          reactions={hiddenReactions}
+          setMoreOpen={setMoreOpen}
+        />
+
         <ReactionAddButton setIsOpen={setIsOpen} />
       </div>
 

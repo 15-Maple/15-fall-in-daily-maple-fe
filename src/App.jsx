@@ -1,9 +1,9 @@
-import ReactionTest from "./pages/ReactionTest";
+import StudyDetail from "./pages/StudyDetail";
 
 function App() {
   return (
     <>
-      <ReactionTest />
+      <StudyDetail />
     </>
   );
 }
