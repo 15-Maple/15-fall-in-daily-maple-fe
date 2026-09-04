@@ -1,6 +1,6 @@
 import { BACKGROUNDS } from "../../constants/backgrounds.js";
 
-import backgroundSelectorImg from "./creatLogImg/background_select_yellow.svg";
+import backgroundSelectorImg from "../../assets/background_select_yellow.svg";
 
 import styles from "./BackgroundSelector.module.css";
 

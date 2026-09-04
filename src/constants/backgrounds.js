@@ -1,11 +1,11 @@
-import bgBlue from "../assets/backgrounds/bg_blue.svg";
-import bgGreen from "../assets/backgrounds/bg_green.svg";
-import bgDesk from "../assets/backgrounds/bg_img_desk.svg";
-import bgPlant from "../assets/backgrounds/bg_img_plant.svg";
-import bgTile from "../assets/backgrounds/bg_img_tile.svg";
-import bgWindow from "../assets/backgrounds/bg_img_window.svg";
-import bgPink from "../assets/backgrounds/bg_pink.svg";
-import bgYellow from "../assets/backgrounds/bg_yellow.svg";
+import bgBlue from "../assets/bg_blue.svg";
+import bgGreen from "../assets/bg_green.svg";
+import bgDesk from "../assets/bg_img_desk.svg";
+import bgPlant from "../assets/bg_img_plant.svg";
+import bgTile from "../assets/bg_img_tile.svg";
+import bgWindow from "../assets/bg_img_window.svg";
+import bgPink from "../assets/bg_pink.svg";
+import bgYellow from "../assets/bg_yellow.svg";
 
 export const BACKGROUNDS = [
   { id: "bgGreen", name: "green", image: bgGreen },
