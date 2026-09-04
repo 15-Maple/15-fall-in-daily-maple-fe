@@ -1,6 +1,6 @@
-import { BACKGROUNDS } from "../../constants/backgrounds.js";
+import AcornSticker from "../../components/common/AcornSticker.jsx";
 
-import backgroundSelectorImg from "./creatLogImg/background_select_yellow.svg";
+import { BACKGROUNDS } from "../../constants/backgrounds.js";
 
 import styles from "./BackgroundSelector.module.css";
 
@@ -32,11 +32,13 @@ function BackgroundSelector({ value, onChange }) {
               src={background.image}
               className={styles.image}
             />
-            <img
-              alt="선택된 배경 표시"
-              src={backgroundSelectorImg}
-              className={`${styles.selector} ${isSelected ? styles.selectorOn : styles.selectorOff}`}
-            />
+            <div
+              className={`${styles.selector} ${
+                isSelected ? styles.selectorOn : styles.selectorOff
+              }`}
+            >
+              <AcornSticker />
+            </div>
           </label>
         );
       })}
