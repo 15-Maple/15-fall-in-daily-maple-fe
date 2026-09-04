@@ -1,0 +1,256 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4e4d6;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+}
+
+/* 헤더 */
+
+.header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100% - 48px, 980px);
+  min-height: 90px;
+  margin: 0 auto;
+}
+
+.logo-image {
+  display: block;
+  width: clamp(120px, 18vw, 180px);
+  height: auto;
+}
+
+.create-logs-button {
+  padding: 12px 28px;
+  font-size: clamp(12px, 1.5vw, 14px);
+  color: white;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: #8b654a;
+  border: none;
+  border-radius: 8px;
+}
+
+/* 페이지 전체 */
+
+.home-page {
+  width: min(100% - 48px, 980px);
+  padding-bottom: 80px;
+  margin: 0 auto;
+}
+
+/* 제목 */
+
+.section-title {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 700;
+}
+
+/* 최근 조회한 스터디 */
+.recent-logs {
+  padding: clamp(16px, 3vw, 24px);
+  margin-bottom: 24px;
+  background-color: white;
+  border-radius: 16px;
+}
+
+.recent-logs-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(140px, 25vw, 220px);
+  margin-top: 24px;
+}
+
+/* 스터디 둘러보기 */
+
+.logs-list {
+  padding: clamp(16px, 3vw, 24px);
+  background-color: white;
+  border-radius: 16px;
+}
+
+.logs-list-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* 검색 */
+
+.logs-search-input {
+  flex: 1 1 220px;
+  min-width: 0;
+  max-width: 280px;
+  padding: 10px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+}
+
+/* 정렬 */
+
+.logs-sort-box {
+  position: relative;
+  width: 120px;
+  height: 44px;
+}
+
+.logs-sort-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 44px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 16px;
+}
+
+.logs-sort-arrow {
+  position: absolute;
+  right: 16px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid #666;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+}
+
+.logs-sort-label {
+  position: absolute;
+  top: 40%;
+  left: 30%;
+  z-index: 2;
+  font-size: 14px;
+  color: #666;
+  pointer-events: none;
+  transform: translate(-30%, -30%);
+}
+
+.logs-sort-select {
+  width: 100%;
+  min-width: 120px;
+  height: 100%;
+  min-height: 44px;
+  color: transparent;
+  appearance: none;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 16px;
+}
+
+/* select-box */
+.logs-sort-box::after {
+  position: absolute;
+  top: 40%;
+  right: 41px;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  content: "";
+  border-top: 6px solid #666;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  transform: translateY(-30%);
+}
+
+/* 정렬 메뉴 */
+.logs-sort-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 10;
+  width: 160px;
+  overflow: hidden;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+}
+
+/* 스터디 리스트 */
+
+.logs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 24px;
+  align-items: start;
+  min-height: clamp(220px, 45vw, 380px);
+  margin-top: 24px;
+}
+
+/* 스터디 카드 */
+
+.logs-card {
+  width: 100%;
+  overflow: hidden;
+  background-color: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+}
+
+.logs-card-background {
+  height: 160px;
+}
+
+.logs-card-content {
+  padding: 20px;
+}
+
+.logs-card-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.logs-card-description {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+.logs-card-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.logs-card-date {
+  margin: 0;
+  font-size: 13px;
+  color: #888;
+}
+
+/* 빈창 */
+
+.empty-message {
+  margin: auto;
+  font-size: clamp(12px, 1.5vw, 14px);
+  color: #777;
+  text-align: center;
+}
+
+/* .logs-sort-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+} */
