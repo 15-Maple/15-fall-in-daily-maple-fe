@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
-import btnVisibilityOff from "./creatLogImg/btn_visibility_off_24px.svg";
-import btnVisibilityOn from "./creatLogImg/btn_visibility_on_24px.svg";
+import btnVisibilityOff from "../../assets/btn_visibility_off_24px.svg";
+import btnVisibilityOn from "../../assets/btn_visibility_on_24px.svg";
 
 import styles from "./createLog.module.css";
 
