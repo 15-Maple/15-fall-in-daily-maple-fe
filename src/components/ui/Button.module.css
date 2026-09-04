@@ -1,0 +1,39 @@
+/* 기본 버튼 베이스 */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  background: var(--color-brand-bg);
+}
+
+/* --- 텍스트 버튼 크기 (세로 58px 고정) --- */
+.xl {
+  width: 648px;
+  height: 58px;
+  border-radius: 16px;
+}
+
+.lg {
+  width: 600px;
+  height: 58px;
+  border-radius: 16px;
+}
+
+.md {
+  width: 312px;
+  height: 58px;
+  border-radius: 12px;
+}
+
+.sm {
+  width: 288px;
+  height: 58px;
+  border-radius: 16px;
+}
+
+.xs {
+  width: 140px;
+  height: 58px;
+  border-radius: 16px;
+}
