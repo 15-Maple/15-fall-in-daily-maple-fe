@@ -3,8 +3,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import CreateLog from "./pages/createLog/CreateLog";
 import LogDetail from "./pages/LogDetail";
-import SamplePage from "./pages/SamplePage.jsx";
-import TodayHabits from "./pages/todayHabits/TodayHabits.jsx";
+import SamplePage from "./pages/SamplePage";
+import TodayHabits from "./pages/todayHabits/TodayHabits";
 
 import { ROUTES } from "./constants/routes";
 
