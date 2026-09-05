@@ -1,4 +1,3 @@
-김경래
 # 🐿️ Fall in Daily (Front-End)
 
 > Fall in Daily : 도토리 모으는 일상 습관 <br> Maple 팀의 프론트엔드 레포지토리입니다.

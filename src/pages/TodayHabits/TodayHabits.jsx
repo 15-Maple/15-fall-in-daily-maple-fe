@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { fetchTodayHabits } from "../api/habit.js";
+import {
+  getTodayHabits,
+  createHabitCheck,
+  deleteHabitCheck,
+} from "../../api/habit/habit.js";
 
-import TodayHabitsModal from "../components/habitModal/TodayHabitsModal.jsx";
+import TodayHabitsModal from "../../components/habitModal/TodayHabitsModal.jsx";
 
 import styles from "./TodayHabits.module.css";
 
@@ -17,8 +21,22 @@ import styles from "./TodayHabits.module.css";
 //   {id: 7, isChecked: false, name: '물 2L 먹기'},
 // ];
 
+//현재 시간
+const nowTime = () => {
+  const now = new Date();
+
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const dd = String(now.getDate()).padStart(2, "0");
+  const time = now.toLocaleTimeString("ko-KR", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  return `${yyyy}-${mm}-${dd} ${time}`;
+};
+
 function TodayHabits() {
-  // 임시로 만든 모달창 열기
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   //habits=[], isLoading=true, error=null 상태일떄 그대로 한번만 실행
@@ -30,7 +48,7 @@ function TodayHabits() {
   const logId = 1; // 로그상세 받는 아이디값
 
   useEffect(() => {
-    fetchTodayHabits(logId)
+    getTodayHabits(logId)
       .then(setHabits)
       .catch(setError)
       .finally(() => setIsLoading(false));
@@ -38,6 +56,33 @@ function TodayHabits() {
 
   if (isLoading) return <p>불러오는 중...</p>;
   if (error) return <p>에러가 발생했습니다: {error.message}</p>;
+
+  const handleCheck = async (habitId, wasChecked) => {
+    //1. 화면
+    setHabits((prev) =>
+      prev.map((h) =>
+        h.id === habitId ? { ...h, isChecked: !h.isChecked } : h,
+      ),
+    );
+
+    try {
+      // 상태에 따라 생성/삭제 분기
+      if (wasChecked) {
+        await deleteHabitCheck(habitId);
+      } else {
+        await createHabitCheck(habitId);
+      }
+    } catch (err) {
+      console.error("습관 체크 저장 실패:", err);
+      //3. 실패하면 롤백 + 알림
+      setHabits((prev) =>
+        prev.map((h) =>
+          h.id === habitId ? { ...h, isChecked: !h.isChecked } : h,
+        ),
+      );
+      alert("저장에 실패했습니다. 다시 시도해주세요");
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -52,7 +97,7 @@ function TodayHabits() {
 
         <div className={styles.timeBox}>
           <div className={styles.timeLabel}>현재 시간</div>
-          <div className={styles.timeValue}>2024-01-24 오후 3:06</div>
+          <div className={styles.timeValue}>{nowTime()}</div>
         </div>
 
         <div className={styles.habitCard}>
@@ -71,6 +116,7 @@ function TodayHabits() {
               <button
                 key={habit.id}
                 className={`${styles.habitButton} ${habit.isChecked ? styles.habitButtonDone : styles.habitButtonTodo}`}
+                onClick={() => handleCheck(habit.id, habit.isChecked)}
               >
                 {habit.name}
               </button>
