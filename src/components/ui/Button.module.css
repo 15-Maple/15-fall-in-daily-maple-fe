@@ -37,3 +37,7 @@
   height: 58px;
   border-radius: 16px;
 }
+
+.cancel {
+  background: var(--color-gray-medium);
+}
