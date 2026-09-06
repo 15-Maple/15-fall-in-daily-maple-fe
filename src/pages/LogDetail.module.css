@@ -1,0 +1,45 @@
+.page {
+  background-color: #f1e3d8;
+}
+
+.content {
+  width: 1200px;
+  height: 890px;
+  padding: 40px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 20px;
+}
+
+.title {
+  margin-top: 20px;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.label {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #818181;
+}
+
+.desc {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.pontext {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #818181;
+}
+
+.box {
+  width: 1120px;
+  height: 511px;
+  margin-top: 30px;
+  border: 1px solid #000;
+  border-radius: 20px;
+}
