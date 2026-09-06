@@ -1,6 +1,6 @@
 import styles from "../../pages/Home.module.css";
 
-function RecentStudies() {
+function RecentLogs() {
   return (
     <section className={styles.recentLogs}>
       <h2 className={styles.sectionTitle}>최근 조회한 스터디</h2>
@@ -12,4 +12,4 @@ function RecentStudies() {
   );
 }
 
-export default RecentStudies;
+export default RecentLogs;
