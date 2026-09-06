@@ -15,8 +15,8 @@ const router = createBrowserRouter([
       { path: ROUTES.HOME, element: <>홈</> },
       { path: ROUTES.SAMPLE, element: <SamplePage /> },
       { path: ROUTES.CREATELOG, element: <CreateLog /> },
-      { path: ROUTES.LOGDETAIL, element: <LogDetail /> },
-      { path: ROUTES.TODAYHABITS, element: <TodayHabits /> },
+      { path: ROUTES.LOG_DETAIL, element: <LogDetail /> },
+      { path: ROUTES.TODAY_HABITS, element: <TodayHabits /> },
     ],
   },
 ]);

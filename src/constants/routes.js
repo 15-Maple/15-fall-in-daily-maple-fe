@@ -5,6 +5,6 @@ export const ROUTES = {
 
   SAMPLE: "/sample", // 새로운 페이지를 추가할 때 참고하는 샘플 경로입니다.
 
-  LOGDETAIL: "/logdetail",
-  TODAYHABITS: "/todayhabits",
+  LOG_DETAIL: "/logdetail",
+  TODAY_HABITS: "/todayhabits",
 };
