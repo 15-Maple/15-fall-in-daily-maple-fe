@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
 import CreateLog from "./pages/createLog/CreateLog";
+import HomePage from "./pages/HomePage";
 import SamplePage from "./pages/SamplePage";
 import TodayHabits from "./pages/TodayHabits";
 
@@ -11,7 +12,7 @@ const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { path: ROUTES.HOME, element: <>홈</> },
+      { path: ROUTES.HOME, element: <HomePage /> },
       { path: ROUTES.SAMPLE, element: <SamplePage /> },
       { path: ROUTES.CREATELOG, element: <CreateLog /> },
       { path: ROUTES.TODAYHABITS, element: <TodayHabits /> },
