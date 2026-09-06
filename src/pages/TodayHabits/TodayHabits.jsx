@@ -1,58 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import {
-  getTodayHabits,
-  createHabitCheck,
-  deleteHabitCheck,
-} from "../../api/habit/habit.js";
+import { createHabitCheck, deleteHabitCheck } from "../../api/habit/habit.js";
+import { useTodayHabits } from "../../hooks/useTodayHabits.js";
+import { nowTime } from "../../utils/formatDateTime.js";
 
 import TodayHabitsModal from "../../components/habitModal/TodayHabitsModal.jsx";
 
 import styles from "./TodayHabits.module.css";
 
-// mokdata habits
-// const habits = [
-//   {id: 1, isChecked: true, name: '미라클모닝 6시 기상'},
-//   {id: 2, isChecked: true, name: '아침 챙겨 먹기'},
-//   {id: 3, isChecked: false, name: 'React 스터디 책 1쳅터 읽기'},
-//   {id: 4, isChecked: false, name: '스트레칭'},
-//   {id: 5, isChecked: false, name: '영양제 챙겨먹기'},
-//   {id: 6, isChecked: false, name: '사이드 프로젝트'},
-//   {id: 7, isChecked: false, name: '물 2L 먹기'},
-// ];
-
-//현재 시간
-const nowTime = () => {
-  const now = new Date();
-
-  const yyyy = now.getFullYear();
-  const mm = String(now.getMonth() + 1).padStart(2, "0");
-  const dd = String(now.getDate()).padStart(2, "0");
-  const time = now.toLocaleTimeString("ko-KR", {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-
-  return `${yyyy}-${mm}-${dd} ${time}`;
-};
-
 function TodayHabits() {
   const [isEditOpen, setIsEditOpen] = useState(false);
-
-  //habits=[], isLoading=true, error=null 상태일떄 그대로 한번만 실행
-  const [habits, setHabits] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
 
   const logName = "Maple"; // 로그상세 받는 이름
   const logId = 1; // 로그상세 받는 아이디값
 
-  useEffect(() => {
-    getTodayHabits(logId)
-      .then(setHabits)
-      .catch(setError)
-      .finally(() => setIsLoading(false));
-  }, []);
+  const { habits, setHabits, isLoading, error } = useTodayHabits(logId);
 
   if (isLoading) return <p>불러오는 중...</p>;
   if (error) return <p>에러가 발생했습니다: {error.message}</p>;
@@ -64,7 +27,6 @@ function TodayHabits() {
         h.id === habitId ? { ...h, isChecked: !h.isChecked } : h,
       ),
     );
-
     try {
       // 상태에 따라 생성/삭제 분기
       if (wasChecked) {
@@ -105,7 +67,10 @@ function TodayHabits() {
             <span className={styles.habitCardTitle}>오늘의 습관</span>
             <button
               className={styles.editButton}
-              onClick={() => setIsEditOpen(true)}
+              onClick={() => {
+                setSelectedId(logId);
+                setIsEditOpen(true);
+              }}
             >
               목록 수정{" "}
             </button>
@@ -125,7 +90,12 @@ function TodayHabits() {
         </div>
       </div>
 
-      {isEditOpen && <TodayHabitsModal onClose={() => setIsEditOpen(false)} />}
+      {isEditOpen && (
+        <TodayHabitsModal
+          id={selectedId}
+          onClose={() => setIsEditOpen(false)}
+        />
+      )}
     </div>
   );
 }

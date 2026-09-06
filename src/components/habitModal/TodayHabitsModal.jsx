@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-
-import { getTodayHabits } from "../../api/habit/habit.js";
+import { useTodayHabits } from "../../hooks/useTodayHabits.js";
 
 import Button from "../ui/Button.jsx";
 
@@ -8,29 +6,8 @@ import trashcanIcon from "../../assets/ic-trashcan.svg";
 
 import styles from "./TodayHabitsModal.module.css";
 
-function HabitsModal({ onClose }) {
-  // const [habits, setHabits] = useState([
-  //   "미라클모닝 6시 기상",
-  //   "아침 챙겨 먹기",
-  //   "React 스터디 책 1챕터 읽기",
-  //   "스트레칭",
-  //   "영양제 챙겨 먹기",
-  //   "사이드 프로젝트",
-  //   "물 2L 먹기",
-  // ]);
-
-  const [habits, setHabits] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const logId = 1; // 로그상세 받는 아이디값
-
-  useEffect(() => {
-    getTodayHabits(logId)
-      .then(setHabits)
-      .catch(setError)
-      .finally(() => setIsLoading(false));
-  }, []);
+function HabitsModal({ id, onClose }) {
+  const { habits, setHabits, isLoading, error } = useTodayHabits(id);
 
   if (isLoading) return <p>불러오는 중...</p>;
   if (error) return <p>에러가 발생했습니다: {error.message}</p>;
