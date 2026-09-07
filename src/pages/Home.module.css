@@ -139,6 +139,7 @@
 /* 스터디 카드 */
 
 .logsCard {
+  position: relative;
   width: 100%;
   overflow: hidden;
   background-color: var(--color-white);
@@ -147,13 +148,19 @@
 }
 
 .logsCardBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
   width: 100%;
-  height: 160px;
+  height: 100%;
   object-fit: cover;
 }
 
 .logsCardContent {
-  padding: 20px;
+  position: relative;
+  z-index: 1;
+  padding: 24px;
 }
 
 .logsCardTitle {
@@ -247,8 +254,10 @@
   }
 
   .logsGrid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
   }
 
   .logsCardBackground {
