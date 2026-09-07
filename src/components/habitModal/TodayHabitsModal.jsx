@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-
-import { deactivateHabit, fetchTodayHabits } from "../../api/habit.js";
+import { deactivateHabit } from "../../api/habit/habit.js";
+import { useTodayHabits } from "../../hooks/useTodayHabits.js";
 
 import Button from "../ui/Button.jsx";
 
@@ -8,22 +7,8 @@ import trashcanIcon from "../../assets/ic-trashcan.svg";
 
 import styles from "./TodayHabitsModal.module.css";
 
-function HabitsModal({ onClose }) {
-  const [habits, setHabits] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const logId = 3; //테스트용
-
-  useEffect(() => {
-    fetchTodayHabits(logId)
-      .then((data) => {
-        console.log("습관 API 데이터:", data);
-        setHabits(data);
-      })
-      .catch(setError)
-      .finally(() => setIsLoading(false));
-  }, []);
+function HabitsModal({ id, onClose }) {
+  const { habits, setHabits, isLoading, error } = useTodayHabits(id);
 
   const handleDelete = async (habitId) => {
     try {
@@ -47,8 +32,8 @@ function HabitsModal({ onClose }) {
         <h1 className={styles.title}>습관 목록</h1>
 
         <div className={styles.habitList}>
-          {habits.map((habit) => (
-            <div key={habit.id} className={styles.habitItem}>
+          {habits.map((habit, index) => (
+            <div key={index} className={styles.habitItem}>
               <div className={styles.habitName}>{habit.name}</div>
 
               <button

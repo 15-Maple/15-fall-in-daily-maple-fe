@@ -1,0 +1,265 @@
+/* 페이지 전체 */
+
+.homePage {
+  width: 100%;
+  max-width: 980px;
+  padding-bottom: 80px;
+}
+
+/* 제목 */
+
+.sectionTitle {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 700;
+}
+
+/* 최근 조회한 스터디 */
+
+.recentLogs {
+  padding: clamp(16px, 3vw, 24px);
+  margin-bottom: 24px;
+  background-color: var(--color-white);
+  border-radius: 16px;
+}
+
+.recentLogsList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(140px, 25vw, 220px);
+  margin-top: 24px;
+}
+
+/* 스터디 둘러보기 */
+
+.logsList {
+  padding: clamp(16px, 3vw, 24px);
+  background-color: var(--color-white);
+  border-radius: 16px;
+}
+
+.logsListControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* 검색 */
+
+.logsSearchInput {
+  flex: 1 1 220px;
+  min-width: 0;
+  max-width: 280px;
+  padding: 10px 16px;
+  font-size: 14px;
+  outline: none;
+  background-color: var(--color-white);
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+}
+
+.logsSearchInput:focus {
+  border-color: var(--color-brand-main);
+}
+
+/* 정렬 */
+
+.logsSortBox {
+  position: relative;
+  width: 120px;
+  height: 44px;
+}
+
+.logsSortLabel {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  z-index: 2;
+  font-size: 14px;
+  color: #666;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.logsSortSelect {
+  width: 100%;
+  min-width: 120px;
+  height: 100%;
+  min-height: 44px;
+  padding: 0 40px 0 16px;
+  color: transparent;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+  background-color: var(--color-white);
+  border: 1px solid #d9d9d9;
+  border-radius: 16px;
+}
+
+.logsSortSelect:focus {
+  border-color: var(--color-brand-main);
+}
+
+.logsSortSelect:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* select 화살표 */
+
+.logsSortBox::after {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  content: "";
+  border-top: 6px solid #666;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  transform: translateY(-50%);
+}
+
+/* 스터디 리스트 */
+
+.logsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 24px;
+  align-items: start;
+  min-height: clamp(220px, 45vw, 380px);
+  margin-top: 24px;
+}
+
+/* 스터디 카드 */
+
+.logsCard {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-white);
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+}
+
+.logsCardBackground {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.logsCardContent {
+  padding: 20px;
+}
+
+.logsCardTitle {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.logsCardDescription {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+.logsCardInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.logsCardDate {
+  margin: 0;
+  font-size: 13px;
+  color: #888;
+}
+
+/* 데이터가 없을 때 */
+
+.emptyMessage {
+  margin: auto;
+  font-size: clamp(12px, 1.5vw, 14px);
+  color: #777;
+  text-align: center;
+}
+
+/* 태블릿 */
+
+@media (width <= 768px) {
+  .homePage {
+    padding-bottom: 60px;
+  }
+
+  .recentLogs,
+  .logsList {
+    padding: 20px;
+  }
+
+  .logsListControls {
+    align-items: stretch;
+  }
+
+  .logsSearchInput {
+    max-width: none;
+  }
+
+  .logsGrid {
+    gap: 16px;
+  }
+}
+
+/* 모바일 */
+
+@media (width <= 480px) {
+  .homePage {
+    padding-bottom: 40px;
+  }
+
+  .recentLogs,
+  .logsList {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .logsListControls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .logsSearchInput {
+    width: 100%;
+    max-width: none;
+  }
+
+  .logsSortBox {
+    width: 100%;
+  }
+
+  .logsSortSelect {
+    width: 100%;
+  }
+
+  .logsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .logsCardBackground {
+    height: 140px;
+  }
+
+  .logsCardContent {
+    padding: 16px;
+  }
+
+  .logsCardTitle {
+    font-size: 18px;
+  }
+}
