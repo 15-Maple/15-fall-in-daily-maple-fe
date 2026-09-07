@@ -29,7 +29,7 @@
   font-weight: 500;
 }
 
-.pontext {
+.pointText {
   margin-top: 20px;
   font-size: 18px;
   font-weight: 400;
@@ -39,7 +39,17 @@
 .box {
   width: 1120px;
   height: 511px;
+  padding: 20px;
   margin-top: 30px;
-  border: 1px solid #000;
+  border: 1px solid #ddd;
   border-radius: 20px;
+}
+
+.noHabitText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 430px;
+  text-align: center;
 }
