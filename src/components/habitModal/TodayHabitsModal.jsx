@@ -18,6 +18,9 @@ function HabitsModal({ id, onClose }) {
 
   const [placeholder, setPlaceholder] = useState("새로운 습관을 입력해주세요"); // 새로운 습관 input 안내 문구 저장
 
+  const [editingHabitId, setEditingHabitId] = useState(null); // 수정 중인 습관의 id
+  const [editingHabitName, setEditingHabitName] = useState(""); // (수정) input에 입력하고 있는 이름
+
   const handleDelete = async (habitId) => {
     try {
       await deactivateHabit(habitId);
@@ -38,6 +41,28 @@ function HabitsModal({ id, onClose }) {
     setIsAdding(false);
   };
 
+  const handleEditHabit = () => {
+    const habit = habits.find((habit) => habit.id === editingHabitId);
+
+    // 수정 중 이름이 전부 지워지면 원래 이름으로 되돌아가기
+    if (!editingHabitName.trim()) {
+      setEditingHabitName(habit.name);
+      setEditingHabitId(null);
+      return;
+    }
+    // 수정 중인 습관만 새 이름으로 변경
+    setHabits(
+      habits.map((habit) =>
+        habit.id === editingHabitId
+          ? { ...habit, name: editingHabitName }
+          : habit,
+      ),
+    );
+
+    setEditingHabitId(null);
+    setEditingHabitName("");
+  };
+
   if (isLoading) return <p>불러오는 중...</p>;
 
   if (error) {
@@ -51,7 +76,33 @@ function HabitsModal({ id, onClose }) {
         <div className={styles.habitList}>
           {habits.map((habit, index) => (
             <div key={index} className={styles.habitItem}>
-              <div className={styles.habitName}>{habit.name}</div>
+              {/* 현재 수정 중인 id === 습관 id  
+              input 보여주기
+
+              아니면 원래 습관박스 보여주기 */}
+              {editingHabitId === habit.id ? (
+                <input
+                  type="text"
+                  value={editingHabitName}
+                  className={styles.habitName}
+                  onChange={(e) => setEditingHabitName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleEditHabit();
+                    }
+                  }}
+                />
+              ) : (
+                <div
+                  className={styles.habitName}
+                  onClick={() => {
+                    setEditingHabitId(habit.id);
+                    setEditingHabitName(habit.name);
+                  }}
+                >
+                  {habit.name}
+                </div>
+              )}
 
               <button
                 aria-label={`${habit.name} 삭제`}
