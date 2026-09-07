@@ -1,0 +1,226 @@
+/* 어두운 배경 스타일 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999; /* 무조건 최상단에 오도록 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0 0 0 / 50%); /* 💡 어두운 반투명 배경 */
+}
+
+/* 모달 공통 스타일 */
+.modalWrapper {
+  background-color: var(--color-white);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+
+  /* 기본 애니메이션 (선택사항) */
+  animation: modal-fade-in 0.2s ease-out;
+}
+
+/* 4가지 종류별 모달 크기 (모바일 기준) */
+.alert {
+  width: 344px;
+  height: 223px;
+  padding: 68px 16px 24px;
+}
+
+.confirm {
+  width: 344px;
+  height: 223px;
+  padding: 68px 16px 24px;
+}
+
+.prompt {
+  width: 344px;
+  height: 341px;
+  padding: 24px 16px;
+}
+
+.form {
+  width: 344px;
+  height: 741px;
+  padding: 16px 16px 24px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.alert .modalContent,
+.confirm .modalContent {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prompt .modalContent {
+  gap: 20px;
+}
+
+/* 프롬프트 모달 타이틀 영역 */
+.titleWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.title {
+  padding-bottom: 4px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: var(--font-weight-extra-bold);
+  color: var(--color-black);
+}
+
+.modalText {
+  font-size: 18px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-black);
+  text-align: center;
+}
+
+.prompt .modalText {
+  color: var(--color-gray-dark);
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85px;
+}
+
+/* 버튼 그룹 스타일링 */
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm .buttonGroup {
+  gap: 16px;
+}
+
+.prompt .buttonGroup {
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 프롬프트 나가기 버튼 */
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px; /* 피그마상 148px지만 너무 넓어서 줄였어요 */
+  height: 29px;
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-pink);
+}
+
+.closeBtnDesktop {
+  display: none; /* 모바일에서는 데스크탑용 버튼 숨김 */
+}
+
+.closeBtnMobile {
+  display: flex; /* 모바일에서는 모바일용 버튼 보임 */
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+  2. 태블릿,PC 공통 (744px 이상)
+========================================= */
+@media (width >= 744px) {
+  .alert {
+    width: 648px;
+    height: 255px;
+    padding: 80px 24px 40px;
+  }
+
+  .confirm {
+    width: 648px;
+    height: 255px;
+    padding: 80px 24px 40px;
+  }
+
+  .prompt {
+    width: 648px;
+    height: 369px;
+    padding: 40px 24px;
+  }
+
+  .form {
+    width: 648px;
+    height: 861px;
+    padding: 40px 24px;
+  }
+
+  .title {
+    padding-bottom: 0;
+    font-size: 24px;
+  }
+
+  .prompt .modalContent {
+    gap: 28px;
+  }
+
+  .inputWrapper {
+    margin-bottom: 12px;
+  }
+
+  .confirm .buttonGroup {
+    gap: 24px;
+  }
+
+  /* 컨펌모달 버튼 스타일링 */
+  .cancelBtn,
+  .confirm .confirmBtn {
+    width: 288px;
+    height: 58px;
+    border-radius: 16px;
+  }
+
+  /* 알럿모달 버튼 스타일링 */
+  .alert .confirmBtn {
+    width: 600px;
+    height: 58px;
+    border-radius: 16px;
+  }
+
+  /* 프롬프트모달 버튼 스타일링 */
+  .prompt .confirmBtn {
+    width: 600px;
+    height: 58px;
+    border-radius: 16px;
+  }
+
+  .closeBtnDesktop {
+    position: absolute;
+    right: 0;
+    display: block; /* 744px 이상에서는 데스크탑용 버튼 보임 */
+  }
+
+  .closeBtnMobile {
+    display: none; /* 744px 이상에서는 모바일용 버튼 숨김 */
+  }
+}
