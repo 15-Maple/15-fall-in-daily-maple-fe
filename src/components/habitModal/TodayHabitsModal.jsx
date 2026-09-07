@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useTodayHabits } from "../../hooks/useTodayHabits.js";
 
 import Button from "../ui/Button.jsx";
 
@@ -6,16 +6,11 @@ import trashcanIcon from "../../assets/ic-trashcan.svg";
 
 import styles from "./TodayHabitsModal.module.css";
 
-function HabitsModal({ onClose }) {
-  const [habits, setHabits] = useState([
-    "미라클모닝 6시 기상",
-    "아침 챙겨 먹기",
-    "React 스터디 책 1챕터 읽기",
-    "스트레칭",
-    "영양제 챙겨 먹기",
-    "사이드 프로젝트",
-    "물 2L 먹기",
-  ]);
+function HabitsModal({ id, onClose }) {
+  const { habits, setHabits, isLoading, error } = useTodayHabits(id);
+
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (error) return <p>에러가 발생했습니다: {error.message}</p>;
 
   const handleDelete = (indexToDelete) => {
     setHabits(habits.filter((_, index) => index !== indexToDelete));
@@ -27,9 +22,9 @@ function HabitsModal({ onClose }) {
         <h1 className={styles.title}>습관 목록</h1>
 
         <div className={styles.habitList}>
-          {habits.map((habit, index) => (
+          {habits.map((habit, index = habit.id) => (
             <div key={index} className={styles.habitItem}>
-              <div className={styles.habitName}>{habit}</div>
+              <div className={styles.habitName}>{habit.name}</div>
 
               <button
                 aria-label={`${habit} 삭제`}
