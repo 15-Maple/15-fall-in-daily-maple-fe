@@ -21,6 +21,13 @@ function CreateLog() {
     passwordConfirm: "",
   });
 
+  // 유효성 검사를 위한 정규식
+  // const numExp = /[0-9]/;
+  // const engExp = /[a-z]/;
+  // const korExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+  // const regExp = /[~!@#$%";'^,&*()_+|</>=>`?:{[}]/;
+  // const [text, setText] = useState("");
+
   const [touched, setTouched] = useState({});
   const [formError, setFormError] = useState("");
 
@@ -55,10 +62,25 @@ function CreateLog() {
   // 입력 내용 변경시 작동
   const handleChange = (event) => {
     const { name, value } = event.target;
+    // const restrictedFields = ["nickname", "name"];
+
+    const sanitizeByfield = {
+      nickname: (value) => value.replace(/[^0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]/g, ""),
+
+      // 스터디 이름은 공백 허용
+      name: (value) => value.replace(/[^0-9a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣 ]/g, ""),
+
+      // 비밀번호는 한글 제외
+      password: (value) => value.replace(/[^0-9a-zA-Z]/g, ""),
+      passwordConfirm: (value) => value.replace(/[^0-9a-zA-Z]/g, ""),
+    };
+
+    const sanitizer = sanitizeByfield[name];
+    const sanitizedValue = sanitizer ? sanitizer(value) : value;
 
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: sanitizedValue,
     }));
 
     setFormError("");
@@ -131,6 +153,7 @@ function CreateLog() {
                 aria-required="true"
                 placeholder="닉네임을 입력해주세요"
                 type="text"
+                value={form.nickname}
                 className={errors.nickname ? styles.errorInput : ""}
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -147,6 +170,7 @@ function CreateLog() {
                 name="name"
                 placeholder="로그 이름을 입력해주세요"
                 type="text"
+                value={form.name}
                 className={errors.name ? styles.errorInput : ""}
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -161,6 +185,8 @@ function CreateLog() {
             <textarea
               name="description"
               placeholder="소개 멘트를 작성해주세요"
+              value={form.description}
+              onChange={handleChange}
             ></textarea>
           </label>
 
@@ -182,6 +208,7 @@ function CreateLog() {
                   name="password"
                   placeholder="비밀번호를 입력해 주세요"
                   type={isPasswordVisible ? "text" : "password"}
+                  value={form.password}
                   className={styles.inputPassword}
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -214,6 +241,7 @@ function CreateLog() {
                   name="passwordConfirm"
                   placeholder="비밀번호를 다시 한 번 입력해 주세요"
                   type={isPasswordConfirmVisible ? "text" : "password"}
+                  value={form.passwordConfirm}
                   className={styles.inputPassword}
                   onBlur={handleBlur}
                   onChange={handleChange}
