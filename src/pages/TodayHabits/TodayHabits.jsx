@@ -4,6 +4,7 @@ import { createHabitCheck, deleteHabitCheck } from "../../api/habit/habit.js";
 import { useTodayHabits } from "../../hooks/useTodayHabits.js";
 import { nowTime } from "../../utils/formatDateTime.js";
 
+import Modal from "../../components/common/Modal.jsx";
 import TodayHabitsModal from "../../components/habitModal/TodayHabitsModal.jsx";
 
 import styles from "./TodayHabits.module.css";
@@ -11,9 +12,10 @@ import styles from "./TodayHabits.module.css";
 function TodayHabits() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null); // null이면 모달 안 뜸
 
   const logName = "Maple"; // 로그상세 받는 이름
-  const logId = 1; // 로그상세 받는 아이디값
+  const logId = 10; // 로그상세 받는 아이디값
 
   const { habits, setHabits, isLoading, error } = useTodayHabits(logId);
 
@@ -42,7 +44,7 @@ function TodayHabits() {
           h.id === habitId ? { ...h, isChecked: !h.isChecked } : h,
         ),
       );
-      alert("저장에 실패했습니다. 다시 시도해주세요");
+      setAlertMessage("저장에 실패했습니다. 다시 시도해주세요");
     }
   };
 
@@ -96,6 +98,12 @@ function TodayHabits() {
           onClose={() => setIsEditOpen(false)}
         />
       )}
+      <Modal
+        content={alertMessage}
+        isOpen={!!alertMessage}
+        type="alert"
+        onClose={() => setAlertMessage(false)}
+      />
     </div>
   );
 }

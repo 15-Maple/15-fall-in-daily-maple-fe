@@ -8,10 +8,22 @@ export function useTodayHabits(logId) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getTodayHabits(logId)
-      .then(setHabits)
-      .catch(setError)
-      .finally(() => setIsLoading(false));
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const habits = await getTodayHabits(logId);
+        if (!cancelled) setHabits(habits);
+      } catch (error) {
+        if (!cancelled) setError(error);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [logId]);
 
   return { habits, setHabits, isLoading, error };
