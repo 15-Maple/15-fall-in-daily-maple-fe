@@ -45,8 +45,11 @@
   font-size: 16px;
   font-weight: 700;
   color: var(--color-gray-dark);
+  text-align: center; /* 새 습관 입력할 때도 텍스트 중앙 정렬 */
   text-decoration: underline;
+  outline: none; /* input 기본 디자인 삭제 */
   background-color: var(--color-gray-light);
+  border: none; /* input 기본 디자인 삭제 */
   border-radius: 20px;
 }
 
