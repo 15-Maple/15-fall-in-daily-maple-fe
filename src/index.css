@@ -140,6 +140,7 @@ h6 {
   -------------------------------------- */
   --color-overlay-black-50: rgb(0 0 0 / 50%);
   --color-overlay-black-40: rgb(0 0 0 / 40%);
+  --color-overlay-black-20: rgb(0 0 0 / 20%);
   --color-overlay-black-10: rgb(0 0 0 / 10%);
   --color-overlay-white-30: rgb(253 253 253 / 30%); /* fdfdfd 30% */
 

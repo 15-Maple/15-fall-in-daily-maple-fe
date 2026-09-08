@@ -1,0 +1,43 @@
+/* =========================================
+  1. 기본 스타일(모바일)
+========================================= */
+
+.navBtn {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  width: fit-content;
+  height: 40px;
+  padding: 8px 6px 8px 10px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-overlay-black-20);
+  border-radius: 15px;
+}
+
+.pageName {
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.icon {
+  width: 5px;
+  height: 11px;
+}
+
+/* =========================================
+  2. 태블릿 사이즈 이상(744px 이상)
+========================================= */
+@media (width >= 744px) {
+  .navBtn {
+    height: 48px;
+    padding: 12px 16px 12px 24px;
+  }
+}
