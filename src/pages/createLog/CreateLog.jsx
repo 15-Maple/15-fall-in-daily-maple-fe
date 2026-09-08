@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { createLog } from "../../api/logs.js";
+
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
 import btnVisibilityOff from "../../assets/btn_visibility_off_24px.svg";
@@ -13,18 +15,43 @@ function CreateLog() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
     useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
+  // 비밀번호 가시화/비가시화 버튼
   const handleBtnVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
-
   const handleBtnConfirmVisibility = () => {
     setIsPasswordConfirmVisible((prev) => !prev);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("폼이 제출되었습니다.");
+    setErrorMessage("");
+
+    // 폼 데이터 읽기
+    const form = event.target;
+    const formData = new FormData(form);
+
+    const logData = {
+      nickname: formData.get("nickname"),
+      name: formData.get("name"),
+      description: formData.get("description"),
+      background: selectedBackground,
+      password: formData.get("password"),
+      passwordConfirm: formData.get("passwordConfirm"),
+    };
+
+    try {
+      const createdLog = await createLog(logData);
+      console.log("로그가 생성되었습니다: ", createdLog);
+      // 생성된 로그 페이지로 이동하는 코드 필요
+    } catch (error) {
+      setErrorMessage(error.message);
+      console.log(errorMessage);
+    }
+
+    // 폼 데이터 전송하기
   };
 
   return (

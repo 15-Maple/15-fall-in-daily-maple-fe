@@ -1,4 +1,5 @@
-// Home 페이지 CSS Module import
+// src/components/logs/LogCard.jsx
+
 import styles from "../../pages/Home.module.css";
 
 import bgBlue from "../../assets/bg_blue.svg";
@@ -10,18 +11,20 @@ import bgWindow from "../../assets/bg_img_window.svg";
 import bgPink from "../../assets/bg_pink.svg";
 import bgYellow from "../../assets/bg_yellow.svg";
 
-// API 또는 목업데이터의 background 값과
-// 실제 SVG 이미지 파일을 연결하는 객체
+// 백엔드에서 오는 background 값과 실제 이미지 연결
 const BACKGROUND_MAP = {
-  blue: bgBlue,
-  green: bgGreen,
-  desk: bgDesk,
-  plant: bgPlant,
-  tile: bgTile,
-  window: bgWindow,
-  pink: bgPink,
-  yellow: bgYellow,
+  bgBlue,
+  bgGreen,
+  bgDesk,
+  bgPlant,
+  bgTile,
+  bgWindow,
+  bgPink,
+  bgYellow,
 };
+
+// 사진형 배경
+const IMAGE_BACKGROUNDS = ["bgPlant", "bgDesk", "bgTile", "bgWindow"];
 
 function LogCard({
   background,
@@ -31,12 +34,17 @@ function LogCard({
   point,
   reactions = [],
 }) {
-  // background 값에 해당하는 실제 SVG 이미지 가져오기
   const backgroundImage = BACKGROUND_MAP[background];
 
+  const isImageBackground = IMAGE_BACKGROUNDS.includes(background);
+
   return (
-    <article className={styles.logsCard}>
-      {/* 카드 배경 이미지 */}
+    <article
+      className={`${styles.logsCard} ${
+        isImageBackground ? styles.logsCardImageType : ""
+      }`}
+    >
+      {/* 배경 이미지 */}
       {backgroundImage && (
         <img
           alt=""
@@ -45,7 +53,10 @@ function LogCard({
         />
       )}
 
-      {/* 카드 안 실제 내용 */}
+      {/* 사진 배경일 때 어두운 오버레이 */}
+      {isImageBackground && <div className={styles.logsCardOverlay} />}
+
+      {/* 카드 실제 내용 */}
       <div className={styles.logsCardContent}>
         <div className={styles.logsCardHeader}>
           <div>
@@ -61,7 +72,7 @@ function LogCard({
 
         <div className={styles.logsCardReactions}>
           {reactions.map((reaction) => (
-            <span key={reaction.emoji}>
+            <span key={reaction.emoji} className={styles.logsCardReaction}>
               {reaction.emoji} {reaction.count}
             </span>
           ))}
