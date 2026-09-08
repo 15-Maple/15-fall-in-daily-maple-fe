@@ -11,6 +11,82 @@
   border-radius: 20px;
 }
 
+.topArea {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.leftArea {
+  display: flex;
+  flex-direction: column;
+}
+
+.rightArea {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.menu {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.menu button {
+  color: #7e5a44;
+}
+
+.menu .deleteBtn {
+  color: #818181;
+}
+
+.barOne {
+  color: #7e5a44;
+}
+
+.barTwo {
+  color: #818181;
+}
+
+.habitMenu {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.todayHabit {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #818181;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+}
+
+.todayFocus {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #818181;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+}
+
 .title {
   margin-top: 20px;
   font-size: 32px;
@@ -51,5 +127,6 @@
   align-items: center;
   justify-content: center;
   height: 430px;
+  color: #818181;
   text-align: center;
 }

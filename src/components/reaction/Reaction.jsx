@@ -75,15 +75,17 @@ function Reaction() {
   return (
     <section>
       <div className={styles.reactionContent}>
-        <ReactionList reactions={topReactions} />
+        {topReactions.length > 0 && <ReactionList reactions={topReactions} />}
 
         {/* 4번째 이후 리액션 더보기 */}
-        <ReactionMore
-          moreOpen={moreOpen}
-          reactions={hiddenReactions}
-          setIsOpen={setIsOpen}
-          setMoreOpen={setMoreOpen}
-        />
+        {hiddenReactions.length > 0 && (
+          <ReactionMore
+            moreOpen={moreOpen}
+            reactions={hiddenReactions}
+            setIsOpen={setIsOpen}
+            setMoreOpen={setMoreOpen}
+          />
+        )}
 
         <div className={styles.addPicker}>
           <ReactionAddButton setIsOpen={setIsOpen} />
