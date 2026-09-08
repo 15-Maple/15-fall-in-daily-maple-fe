@@ -5,10 +5,10 @@ import styles from "./ReactionMore.module.css";
 
 function ReactionMore({ moreOpen, setMoreOpen, reactions }) {
   //3개보다 많으면 더보기
-  const hiddenCount = reactions.length - 3;
+  const hiddenCount = reactions.length;
 
   return (
-    <div>
+    <div className={styles.moreArea}>
       {/* 히든카운트가 0보다크면 버튼표시 */}
       {hiddenCount > 0 && (
         <button
@@ -22,7 +22,7 @@ function ReactionMore({ moreOpen, setMoreOpen, reactions }) {
       {/* 더보기 true면 박스오픈 */}
       {moreOpen && (
         <div className={styles.moreBox}>
-          <ReactionList reactions={reactions} />
+          <ReactionList reactions={reactions} wrap={true} />
         </div>
       )}
     </div>

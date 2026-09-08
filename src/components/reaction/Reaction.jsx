@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { getReaction, postReaction } from "../../api/reaction";
 
 import ReactionAddButton from "./ReactionAddButton";
 import ReactionList from "./ReactionList";
@@ -8,35 +10,26 @@ import ReactionSelector from "./ReactionSelector";
 import styles from "./Reaction.module.css";
 
 function Reaction() {
+  //이모지 선택창 열기닫기
   const [isOpen, setIsOpen] = useState(false);
+  //이모지 더보기창 열기닫기
   const [moreOpen, setMoreOpen] = useState(false);
+  //백엔드에서 받아온데이터
+  const [reactions, setReactions] = useState([]);
 
-  //임시 데이터
-  const [reactions, setReactions] = useState([
-    {
-      emoji: "👩🏻‍💻",
-      count: 37,
-    },
-    {
-      emoji: "👍",
-      count: 11,
-    },
-    {
-      emoji: "🤩",
-      count: 9,
-    },
-    {
-      emoji: "🎶",
-      count: 5,
-    },
-    {
-      emoji: "🙈",
-      count: 4,
-    },
-  ]);
+  //리액션 조회
+  useEffect(() => {
+    const fetchReactions = async () => {
+      const responses = await getReaction(1);
+      setReactions(responses);
+    };
+    fetchReactions();
+  }, []);
 
-  //같은 이모지면 +1
-  const EmojiClick = (emoji) => {
+  //같은 이모지면 +1 없으면추가
+  const EmojiClick = async (emoji) => {
+    await postReaction(1, emoji);
+
     setReactions((prev) => {
       const sameReaction = prev.find((item) => {
         return item.emoji === emoji;
@@ -67,7 +60,7 @@ function Reaction() {
     });
   };
 
-  //리액션 배열 복사해서 큰순으로 정렬
+  //큰순으로 정렬
   const sortedReactions = [...reactions];
   sortedReactions.sort((a, b) => {
     return b.count - a.count;
@@ -75,22 +68,36 @@ function Reaction() {
 
   //이모지 3개만 보여주기
   const topReactions = sortedReactions.slice(0, 3);
+
+  //4번부터는 더보기
   const hiddenReactions = sortedReactions.slice(3);
 
   return (
     <section>
       <div className={styles.reactionContent}>
-        <ReactionList reactions={topReactions} />
-        <ReactionMore
-          moreOpen={moreOpen}
-          reactions={hiddenReactions}
-          setMoreOpen={setMoreOpen}
-        />
+        {topReactions.length > 0 && <ReactionList reactions={topReactions} />}
 
-        <ReactionAddButton setIsOpen={setIsOpen} />
+        {/* 4번째 이후 리액션 더보기 */}
+        {hiddenReactions.length > 0 && (
+          <ReactionMore
+            moreOpen={moreOpen}
+            reactions={hiddenReactions}
+            setIsOpen={setIsOpen}
+            setMoreOpen={setMoreOpen}
+          />
+        )}
+
+        <div className={styles.addPicker}>
+          <ReactionAddButton setIsOpen={setIsOpen} />
+
+          {/* 이모지선택창 표시 */}
+          {isOpen && (
+            <div className={styles.picker}>
+              <ReactionSelector onEmojiSelect={EmojiClick} />
+            </div>
+          )}
+        </div>
       </div>
-
-      {isOpen && <ReactionSelector onEmojiSelect={EmojiClick} />}
     </section>
   );
 }
