@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { getHomeLogs } from "../../api/home/logs";
 
 import styles from "../../pages/Home.module.css";
 
@@ -6,48 +8,47 @@ import LogCard from "./LogCard";
 
 function LogsList() {
   const [sort, setSort] = useState("recent");
+  const [logs, setLogs] = useState([]);
 
-  const logs = [
-    {
-      id: 1,
-      name: "이유디의 UX 스터디",
-      description: "Slow And Steady Wins The Race!!",
-      point: 310,
-      elapsedDays: 62,
-      background: "green",
-      reactions: [
-        { emoji: "🧑🏻‍💻", count: 37 },
-        { emoji: "🔥", count: 26 },
-        { emoji: "🤍", count: 14 },
-      ],
-    },
-    {
-      id: 2,
-      name: "K.K. 의 UX 스터디",
-      description: "나비보벳따우",
-      point: 310,
-      elapsedDays: 62,
-      background: "green",
-      reactions: [
-        { emoji: "🧑🏻‍💻", count: 37 },
-        { emoji: "🔥", count: 26 },
-        { emoji: "🤍", count: 14 },
-      ],
-    },
-    {
-      id: 3,
-      name: "연우 의 개발공장",
-      description: "오늘 하루도 화이팅 :)",
-      point: 50,
-      elapsedDays: 10,
-      background: "yellow",
-      reactions: [
-        { emoji: "👀", count: 12 },
-        { emoji: "👍🏻", count: 11 },
-        { emoji: "🤩", count: 9 },
-      ],
-    },
-  ];
+  // 최초 6개만 배치
+  const [visibleCount, setVisibleCount] = useState(6);
+
+  // 새로 열린 카드 위치를 배치
+  const loadMoreRef = useRef(null);
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const data = await getHomeLogs();
+
+        setLogs(data);
+      } catch (error) {
+        console.error("로그 목록 조회 실패:", error);
+      }
+    };
+
+    fetchLogs();
+  }, []);
+
+  const sortedLogs = [...logs].sort((a, b) => {
+    if (sort === "recent") {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+
+    if (sort === "oldest") {
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    }
+
+    if (sort === "pointDesc") {
+      return b.point - a.point;
+    }
+
+    if (sort === "pointAsc") {
+      return a.point - b.point;
+    }
+
+    return 0;
+  });
 
   const getSortLabel = () => {
     if (sort === "pointDesc" || sort === "pointAsc") {
@@ -63,6 +64,18 @@ function LogsList() {
     }
 
     return "최근순";
+  };
+
+  // 더보기
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 6);
+
+    setTimeout(() => {
+      loadMoreRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 0);
   };
 
   return (
@@ -94,22 +107,38 @@ function LogsList() {
       </div>
 
       <div className={styles.logsGrid}>
-        {logs.length === 0 ? (
+        {sortedLogs.length === 0 ? (
           <p className={styles.emptyMessage}>아직 둘러볼 로그가 없어요</p>
         ) : (
-          logs.map((log) => (
-            <LogCard
+          sortedLogs.slice(0, visibleCount).map((log, index) => (
+            <div
               key={log.id}
-              name={log.name}
-              background={log.background}
-              description={log.description}
-              elapsedDays={log.elapsedDays}
-              emojiCount={log.emojiCount}
-              point={log.point}
-            />
+              ref={index === visibleCount - 6 ? loadMoreRef : null}
+            >
+              <LogCard
+                name={log.name}
+                background={log.background}
+                description={log.description}
+                elapsedDays={log.elapsedDays}
+                point={log.point}
+                reactions={log.reactions}
+              />
+            </div>
           ))
         )}
       </div>
+
+      {visibleCount < sortedLogs.length && (
+        <div className={styles.loadMoreWrapper}>
+          <button
+            type="button"
+            className={styles.loadMoreButton}
+            onClick={handleLoadMore}
+          >
+            더보기
+          </button>
+        </div>
+      )}
     </section>
   );
 }
