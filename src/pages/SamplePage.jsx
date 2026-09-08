@@ -2,16 +2,20 @@ import { useState } from "react";
 
 import AcornSticker from "../components/common/AcornSticker";
 import Modal from "../components/common/Modal";
+import PasswordConfirmModal from "../components/common/PasswordConfirmModal";
 import HabitsModal from "../components/habitModal/TodayHabitsModal";
 import Button from "../components/ui/Button";
 import TimerButton from "../components/ui/TimerButton";
 
 function SamplePage() {
+  // 모달(alert, confirm)
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [isPromptOpen, setIsPromptOpen] = useState(false);
-  const [isModalFormOpen, setIsModalFormOpen] = useState(false);
 
+  // 비밀번호 확인 모달
+  const [isPasswordConfirmOpen, setIsPasswordConfirmOpen] = useState(false);
+
+  // 오늘의 습관 모달(전체 모달)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -84,40 +88,22 @@ function SamplePage() {
         </li>
         <li>
           {/* 프롬프트 */}
-          <Button size="xs" type="button" onClick={() => setIsPromptOpen(true)}>
-            프롬프트버튼
-          </Button>
-          <Modal
-            confirmText="수정하러 가기"
-            content="권한이 필요해요!"
-            isOpen={isPromptOpen}
-            title="삭제 확인"
-            type="prompt"
-            onClose={() => setIsPromptOpen(false)}
-            onConfirm={() => {
-              console.log("필요 로직 실행");
-              setIsPromptOpen(false);
-            }}
-          >
-            input 박스가 들어가는 곳
-          </Modal>
-        </li>
-        <li>
-          {/* 폼모달 */}
           <Button
             size="xs"
             type="button"
-            onClick={() => setIsModalFormOpen(true)}
+            onClick={() => setIsPasswordConfirmOpen(true)}
           >
-            폼모달
+            프롬프트버튼
           </Button>
-          <Modal
-            isOpen={isModalFormOpen}
-            type="form"
-            onClose={() => setIsModalFormOpen(false)}
-          >
-            전체 내용이 들어가는 곳
-          </Modal>
+          <PasswordConfirmModal
+            isOpen={isPasswordConfirmOpen}
+            title="maple 개발공장"
+            onClose={() => setIsPasswordConfirmOpen(false)}
+            onSuccess={() => {
+              console.log("성공");
+              setIsPasswordConfirmOpen(false);
+            }}
+          />
         </li>
       </ul>
     </div>
