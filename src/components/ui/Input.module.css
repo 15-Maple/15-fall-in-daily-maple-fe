@@ -1,4 +1,4 @@
-.inputBoxWrapper {
+.inputContainer {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -10,6 +10,13 @@
 .inputLabel {
   font-size: 18px;
   font-weight: var(--font-weight-semi-bold);
+}
+
+.inputBoxWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 
 .inputWrapper {
@@ -24,6 +31,10 @@
   background-color: var(--color-white);
   border: 1px solid var(--color-gray-medium);
   border-radius: 15px;
+}
+
+.input.error {
+  border: 1px solid var(--color-error-dark);
 }
 
 .input::placeholder {
@@ -50,4 +61,14 @@
 
 .eyeButton:hover .eyeButtonImg {
   opacity: 1;
+}
+
+.errorMessage {
+  font-size: 14px;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-error-dark);
+}
+
+.hidden {
+  visibility: hidden;
 }
