@@ -7,11 +7,12 @@ import Button from "../components/ui/Button";
 import TimerButton from "../components/ui/TimerButton";
 
 function SamplePage() {
+  // 모달(alert, confirm, prompt)
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isPromptOpen, setIsPromptOpen] = useState(false);
-  const [isModalFormOpen, setIsModalFormOpen] = useState(false);
 
+  // 오늘의 습관 모달(전체 모달)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -98,26 +99,7 @@ function SamplePage() {
               console.log("필요 로직 실행");
               setIsPromptOpen(false);
             }}
-          >
-            input 박스가 들어가는 곳
-          </Modal>
-        </li>
-        <li>
-          {/* 폼모달 */}
-          <Button
-            size="xs"
-            type="button"
-            onClick={() => setIsModalFormOpen(true)}
-          >
-            폼모달
-          </Button>
-          <Modal
-            isOpen={isModalFormOpen}
-            type="form"
-            onClose={() => setIsModalFormOpen(false)}
-          >
-            전체 내용이 들어가는 곳
-          </Modal>
+          ></Modal>
         </li>
       </ul>
     </div>
