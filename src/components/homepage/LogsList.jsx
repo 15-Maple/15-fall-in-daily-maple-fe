@@ -18,7 +18,7 @@ function LogsList() {
   // 검색어
   const [keyword, setKeyword] = useState("");
 
-  // 처음에는 6개만 표시
+  // 처음에는 6개까지만 표시
   const [visibleCount, setVisibleCount] = useState(6);
 
   // 더보기 위치로 스크롤하기 위한 ref
@@ -43,7 +43,7 @@ function LogsList() {
   const filteredLogs = logs.filter((log) => {
     const searchKeyword = keyword.trim().toLowerCase();
 
-    // 검색어가 없으면 모든 로그 표시
+    // 검색어가 없으면 모든 로그 반환
     if (!searchKeyword) {
       return true;
     }
@@ -82,7 +82,7 @@ function LogsList() {
   // 현재 화면에 보여줄 로그
   const visibleLogs = sortedLogs.slice(0, visibleCount);
 
-  // 정렬 선택창에 표시할 라벨
+  // 화면에 표시할 정렬 라벨
   const getSortLabel = () => {
     if (sort === "pointDesc" || sort === "pointAsc") {
       return "포인트순";
@@ -99,7 +99,7 @@ function LogsList() {
     return "최근순";
   };
 
-  // 더보기 클릭
+  // 더보기 버튼 클릭
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 6);
 
@@ -126,7 +126,7 @@ function LogsList() {
           onChange={(e) => {
             setKeyword(e.target.value);
 
-            // 검색어가 바뀌면 다시 처음 6개부터 표시
+            // 검색어가 바뀌면 다시 6개부터 표시
             setVisibleCount(6);
           }}
         />
@@ -141,7 +141,7 @@ function LogsList() {
             onChange={(e) => {
               setSort(e.target.value);
 
-              // 정렬 방식 변경 시 다시 처음 6개부터 표시
+              // 정렬 기준 변경 시 다시 6개부터 표시
               setVisibleCount(6);
             }}
           >
@@ -156,7 +156,7 @@ function LogsList() {
         </div>
       </div>
 
-      {/* 로그 카드 */}
+      {/* 로그 카드 목록 */}
       <div className={styles.logsGrid}>
         {visibleLogs.length === 0 ? (
           <p className={styles.emptyMessage}>
