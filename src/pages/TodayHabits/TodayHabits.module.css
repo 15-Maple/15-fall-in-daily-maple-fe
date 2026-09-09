@@ -109,10 +109,13 @@
   flex-direction: column;
   gap: 20px;
   width: 400px;
+  height: 424px;
+  overflow-y: auto;
 }
 
 .habitButton {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   height: 54px;
