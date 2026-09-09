@@ -5,6 +5,7 @@ import { nowTime } from "../../utils/formatDateTime.js";
 
 import Modal from "../../components/common/Modal.jsx";
 import TodayHabitsModal from "../../components/habitModal/TodayHabitsModal.jsx";
+import LogLayout from "../../components/layout/LogLayout.jsx";
 
 import styles from "./TodayHabits.module.css";
 
@@ -30,22 +31,16 @@ function TodayHabits() {
   if (isLoading) return <p>불러오는 중...</p>;
   if (error) return <p>에러가 발생했습니다: {error.message}</p>;
 
+  const info = (
+    <div className={styles.timeBox}>
+      <div className={styles.timeLabel}>현재 시간</div>
+      <div className={styles.timeValue}>{nowTime()}</div>
+    </div>
+  );
+
   return (
-    <div className={styles.page}>
-      <div className={styles.habitContent}>
-        <div className={styles.titleRow}>
-          <h1 className={styles.title}>{logName}</h1>
-          <div className={styles.nav}>
-            <button className={styles.navButton}>오늘의 집중 &gt;</button>
-            <button className={styles.navButton}>홈 &gt;</button>
-          </div>
-        </div>
-
-        <div className={styles.timeBox}>
-          <div className={styles.timeLabel}>현재 시간</div>
-          <div className={styles.timeValue}>{nowTime()}</div>
-        </div>
-
+    <>
+      <LogLayout info={info} title={`${logName}의 로그`}>
         <div className={styles.habitCard}>
           <div className={styles.habitCardHeader}>
             <span className={styles.habitCardTitle}>오늘의 습관</span>
@@ -90,7 +85,8 @@ function TodayHabits() {
             )}
           </div>
         </div>
-      </div>
+      </LogLayout>
+
       {/* 모달 창이 닫힐떄 재조회 -> 수정완료 성공시 바꿀예정 */}
       {isEditOpen && (
         <TodayHabitsModal
@@ -107,7 +103,7 @@ function TodayHabits() {
         type="alert"
         onClose={() => setAlertMessage(null)}
       />
-    </div>
+    </>
   );
 }
 
