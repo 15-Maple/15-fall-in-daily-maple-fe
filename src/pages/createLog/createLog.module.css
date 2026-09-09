@@ -44,6 +44,12 @@ form {
   color: #414141;
 }
 
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 label,
 fieldset {
   display: flex;
@@ -139,6 +145,32 @@ textarea {
   flex-shrink: 0;
   width: 1.5rem;
   height: 1.5rem;
+}
+
+.errorInput,
+.errorInputWrapper {
+  border-color: var(--red-error_C41013, #c41013);
+}
+
+.errorInputWrapper {
+  background: #fff;
+  border: 1px solid var(--red-error_C41013, #c41013);
+  border-radius: 0.9375rem;
+}
+
+.errorInputWrapper input {
+  border-color: transparent;
+}
+
+.inputError,
+.formError {
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--red-error_C41013, #c41013);
 }
 
 /* tablet */
