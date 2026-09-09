@@ -1,3 +1,5 @@
+import HabitTable from "../components/habit/habitTable";
+import Nohabit from "../components/habit/noHabit";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 
@@ -49,16 +51,8 @@ function LogDetail() {
             </div>
           </div>
         </div>
-
-        <div className={styles.box}>
-          <h2>습관기록표</h2>
-
-          <p className={styles.noHabitText}>
-            아직 습관이 없어요
-            <br />
-            오늘의 습관에서 습관을 생성해보세요
-          </p>
-        </div>
+        <HabitTable />
+        <Nohabit />
       </section>
     </main>
   );
