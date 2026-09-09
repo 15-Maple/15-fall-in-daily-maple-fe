@@ -1,0 +1,247 @@
+import clsx from "clsx";
+import { useEffect, useRef, useState } from "react";
+import { useTimer, useStopwatch } from "react-timer-hook";
+
+import Modal from "../common/Modal";
+import TimerButton from "../ui/TimerButton";
+
+import timerIcon from "../../assets/ic-timer.svg";
+
+import styles from "./Timer.module.css";
+
+function Timer() {
+  // 타이머
+  const [inputMinutes, setInputMinutes] = useState(25);
+  const [inputSeconds, setInputSeconds] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+  const [isTimerStarted, setIsTimerStarted] = useState(false);
+
+  // 모달
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+
+  // 스톱워치 설정(설정된 시간 종료 이후 처리)
+  const {
+    seconds: overSec,
+    minutes: overMin,
+    start: startOvertime,
+    reset: resetOvertime,
+  } = useStopwatch({ autoStart: false });
+
+  const overtimeTimeoutRef = useRef(null);
+
+  // 타이머 설정
+  const { seconds, minutes, hours, isRunning, restart, pause, resume } =
+    useTimer({
+      expiryTimestamp: new Date(),
+      autoStart: false,
+      onExpire: async () => {
+        setIsFinished(true);
+        startOvertime();
+
+        // 목표 시간 도달 시점에 포인트 지급
+        console.log("포인트 API 호출 (목표 시간 도달)");
+        await grantFocusPoint(); // 실제 API 호출
+
+        // 10분 후 타이머 초기화
+        overtimeTimeoutRef.current = setTimeout(
+          () => {
+            resetOvertime(null, false);
+            setIsFinished(false);
+            setIsTimerStarted(false);
+
+            setAlertMessage("집중이 자동 종료되었습니다.");
+            setIsAlertOpen(true);
+          },
+          10 * 60 * 1000,
+        );
+      },
+    });
+
+  const totalDisplayMinutes = hours * 60 + minutes;
+
+  const formatNumber = (num) => String(num).padStart(2, "0");
+
+  const handleStartTimer = () => {
+    if (inputMinutes > 99) {
+      setInputMinutes(99);
+      setAlertMessage("최대 99분까지만 설정할 수 있습니다.");
+      setIsAlertOpen(true);
+      return;
+    }
+    if (inputSeconds > 59) {
+      setInputSeconds(59);
+      setAlertMessage("초는 최대 59초까지만 설정할 수 있습니다.");
+      setIsAlertOpen(true);
+      return;
+    }
+    if (inputMinutes === 0 && inputSeconds === 0) {
+      setAlertMessage("1초 이상 시간을 설정해주세요.");
+      setIsAlertOpen(true);
+      return;
+    }
+
+    const newEndTime = new Date();
+    const totalSecondsToAdd = inputMinutes * 60 + inputSeconds;
+    newEndTime.setSeconds(newEndTime.getSeconds() + totalSecondsToAdd);
+
+    // 초기화
+    resetOvertime(null, false); // 스톱워치 끄기
+    setIsFinished(false); // 초과 시간 모드 끄기
+    setIsTimerStarted(true);
+
+    restart(newEndTime);
+  };
+
+  // 시간 멈춤
+  const handlePauseTimer = () => pause();
+
+  // 시간이 멈춘곳에서 다시 시작
+  const handleResumeTimer = () => resume();
+
+  // 재시작(restart 버튼)
+  const handleRestartTimer = () => handleStartTimer();
+
+  // 집중 완료(stop 버튼)
+  const handleStopOvertime = () => {
+    if (overtimeTimeoutRef.current) {
+      clearTimeout(overtimeTimeoutRef.current);
+      overtimeTimeoutRef.current = null;
+    }
+    resetOvertime(null, false);
+    setIsFinished(false);
+    setIsTimerStarted(false);
+  };
+
+  // api 통신(포인트)
+  const grantFocusPoint = async () => {
+    console.log("api 통신");
+  };
+
+  useEffect(() => {
+    return () => {
+      if (overtimeTimeoutRef.current) clearTimeout(overtimeTimeoutRef.current);
+    };
+  }, []);
+
+  // 화면 출력 시간(타이머, 스톱워치)
+  const currentMinutes = isFinished ? overMin : totalDisplayMinutes;
+  const currentSeconds = isFinished ? overSec : seconds;
+
+  return (
+    <div className={styles.timerContainer}>
+      {/* 목표시간 chip */}
+      <div className={styles.chipWrapper}>
+        <div
+          className={clsx(
+            styles.targetTimeChip,
+            !isTimerStarted ? styles.hidden : "",
+          )}
+        >
+          <div className={styles.timerIconWrapper}>
+            <img alt="시계모양 아이콘" src={timerIcon} />
+          </div>
+          <div className={styles.targetTime}>
+            {formatNumber(inputMinutes) + ":" + formatNumber(inputSeconds)}
+          </div>
+        </div>
+      </div>
+
+      {/* 타이머 영역 */}
+      <div
+        className={clsx(
+          styles.timeDisplayArea,
+          isTimerStarted ? styles.running : "",
+          isFinished ? styles.finished : "",
+        )}
+      >
+        {!isTimerStarted ? (
+          // 1. 타이머 정지(입력 모드)
+          <>
+            <div className={styles.numberWrapper}>
+              <input
+                max="99"
+                min="0"
+                type="number"
+                value={formatNumber(inputMinutes)}
+                className={styles.hiddenInput}
+                onChange={(e) => setInputMinutes(Number(e.target.value))}
+              />
+            </div>
+            <span className={styles.colon}>:</span>
+            <div className={styles.numberWrapper}>
+              <input
+                max="59"
+                min="0"
+                type="number"
+                value={formatNumber(inputSeconds)}
+                className={styles.hiddenInput}
+                onChange={(e) => setInputSeconds(Number(e.target.value))}
+              />
+            </div>
+          </>
+        ) : (
+          // 2. 타이머 실행 중 (타이머 모드)
+          <>
+            {/* 마이너스 시간: '-' 기호 추가 */}
+            {isFinished && <span className={styles.timeText}>-</span>}
+
+            <div className={styles.numberWrapper}>
+              <span className={styles.timeText}>
+                {formatNumber(currentMinutes)}
+              </span>
+            </div>
+            <span className={styles.colon}>:</span>
+            <div className={styles.numberWrapper}>
+              <span className={styles.timeText}>
+                {formatNumber(currentSeconds)}
+              </span>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* 버튼 영역 */}
+      <div className={styles.timerBtns}>
+        {!isTimerStarted ? (
+          // 시작 전: 시작 버튼
+          <TimerButton variant="start" onClick={handleStartTimer} />
+        ) : isFinished ? (
+          // 집중 종료: 마이너스 + 스톱워치 -> Stop 버튼
+          <TimerButton variant="stop" onClick={handleStopOvertime} />
+        ) : (
+          // 타이머 화면 (실행 중이거나 일시정지)
+          <>
+            <TimerButton
+              disabled={!isRunning} // 멈춰있으면 비활성화
+              variant="pause"
+              onClick={handlePauseTimer}
+            />
+            <TimerButton
+              disabled={isRunning} // 실행중 비활성화
+              variant="start"
+              onClick={handleResumeTimer}
+            />
+            <TimerButton
+              variant="restart"
+              onClick={handleRestartTimer} // 언제든 누를 수 있음
+            />
+          </>
+        )}
+      </div>
+
+      {isAlertOpen && (
+        <Modal
+          content={alertMessage}
+          isOpen={isAlertOpen}
+          onClose={() => {
+            setIsAlertOpen(false);
+            setAlertMessage("");
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+export default Timer;

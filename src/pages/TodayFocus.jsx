@@ -1,4 +1,6 @@
+import Timer from "../components/focus/Timer";
 import LogLayout from "../components/layout/LogLayout";
+import PointHistory from "../components/point/PointHistory";
 
 import styles from "./TodayFocus.module.css";
 
@@ -6,7 +8,7 @@ function TodayFocus() {
   const info = (
     <div className={styles.pointContainer}>
       <span>현재까지 획득한 포인트</span>
-      <span>포인트 칩</span>
+      <PointHistory />
     </div>
   );
   return (
@@ -14,9 +16,9 @@ function TodayFocus() {
       {/* 컨텐츠 영역을 LogLayout의 children prop으로 보냄 */}
       <div className={styles.contentWrapper}>
         <h2 className={styles.contentTitle}>오늘의 집중</h2>
-        <div>현재 설정한 시간</div>
-        <div>타이머</div>
-        <div>버튼영역</div>
+        <div className={styles.timerWrapper}>
+          <Timer />
+        </div>
       </div>
     </LogLayout>
   );
