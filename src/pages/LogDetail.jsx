@@ -49,7 +49,7 @@ function LogDetail() {
 
             <div className={styles.pointText}>현재까지 획득한 포인트</div>
 
-            <PointHistory />
+            <PointHistory logId={logId} />
           </div>
 
           <div className={styles.rightArea}>
