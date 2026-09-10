@@ -25,11 +25,10 @@ function Timer() {
   const [alertMessage, setAlertMessage] = useState("");
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
-  // TODO: lodId 받아와서 보내는 것으로 수정해야함
-  const logId = 61;
+  // context
+  const { logData, showToast } = useOutletContext();
 
-  // 토스트
-  const { showToast } = useOutletContext();
+  const logId = logData.id;
 
   // 스톱워치 설정(설정된 시간 종료 이후 처리)
   const {

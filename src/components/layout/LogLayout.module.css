@@ -33,6 +33,34 @@
   gap: 8px;
 }
 
+.timeBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.timeLabel {
+  font-size: 14px;
+  color: #818181;
+}
+
+.timeValue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 184px;
+  height: 48px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.pointContainer {
+  display: flex;
+  flex-direction: column;
+}
+
 .contentContainer {
   display: flex;
   flex-direction: column;
