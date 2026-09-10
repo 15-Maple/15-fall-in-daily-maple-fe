@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { createLog } from "../../api/logs.js";
+import { createLog, getLog } from "../../api/logs.js";
 
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
@@ -158,12 +158,22 @@ function CreateLog() {
 
     try {
       const createdLog = await createLog(logData);
+      const { logId } = createdLog;
+
+      if (!logId) {
+        throw new Error("생성된 로그 ID를 확인할 수 없습니다.");
+      }
+
       console.log("로그가 생성되었습니다: ", createdLog);
 
-      // 생성된 로그 페이지로 이동하는 코드 필요
       // 생성된 로그 id로 조회하기
+      const fetchedLog = await getLog(logId);
+
       // logDetail/id 페이지로 이동하기(임시: 기본 logDetail로 이동)
-      navigate("/logDetail", { replace: true });
+      navigate(`/logdetail/${logId}`, {
+        replace: true,
+        state: { log: fetchedLog },
+      });
     } catch (error) {
       const message = error.message || "로그 생성에 실패했습니다.";
       console.log(message);
@@ -171,12 +181,6 @@ function CreateLog() {
 
     // 폼 데이터 전송하기
   };
-
-  // const handleClick () => {
-  //   if (!isBtnActive){
-  //     return;
-  //   }
-  // }
 
   return (
     <div className={styles.contianer}>

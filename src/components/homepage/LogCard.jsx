@@ -33,6 +33,7 @@ function LogCard({
   name,
   point,
   reactions = [],
+  onClick,
 }) {
   const backgroundImage = BACKGROUND_MAP[background];
 
@@ -43,6 +44,7 @@ function LogCard({
       className={`${styles.logsCard} ${
         isImageBackground ? styles.logsCardImageType : ""
       }`}
+      onClick={onClick}
     >
       {/* 배경 이미지 */}
       {backgroundImage && (
