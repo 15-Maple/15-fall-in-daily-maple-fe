@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { getLog } from "../api/logs.js";
 
-import HabitTable from "../components/habit/habitTable";
-import Nohabit from "../components/habit/noHabit";
+import HabitTable from "../components/habit/habitTable.jsx";
+import Nohabit from "../components/habit/noHabit.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 
@@ -15,6 +16,7 @@ import styles from "./LogDetail.module.css";
 function LogDetail() {
   const { logId } = useParams();
   const [log, setLog] = useState(null);
+  console.log(log);
 
   useEffect(() => {
     const fetchLog = async () => {
@@ -60,14 +62,14 @@ function LogDetail() {
             </div>
 
             <div className={styles.habitMenu}>
-              <button className={styles.todayHabit}>
+              <Link to="/todayhabits" className={styles.todayHabit}>
                 오늘의 습관
                 <img src={arrow} />
-              </button>
-              <button className={styles.todayFocus}>
+              </Link>
+              <Link to="/today-focus" className={styles.todayFocus}>
                 오늘의 집중
                 <img src={arrow} />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
