@@ -1,4 +1,4 @@
-import styles from "./habit.module.css";
+import styles from "./Habit.module.css";
 
 function Nohabit() {
   return (

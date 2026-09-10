@@ -1,5 +1,6 @@
 //포인트 획득 내역 리스트를 표시
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { getPoint } from "../../api/point";
 
@@ -12,8 +13,8 @@ function PointHistory() {
 
   useEffect(() => {
     const fetchPoint = async () => {
-      //로그아이디로 수정예정
-      const responses = await getPoint(1);
+      const { logId } = useParams;
+      const responses = await getPoint(logId);
 
       setPoint(responses.points);
     };
