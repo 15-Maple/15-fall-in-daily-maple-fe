@@ -164,8 +164,6 @@ function UpdateLog() {
     setTouched({
       nickname: true,
       name: true,
-      password: true,
-      passwordConfirm: true,
     });
 
     // 비밀번호 입력 없으면 PATCH 요청에서 제외
