@@ -1,49 +1,44 @@
+/* =========================================
+  1. 기본 스타일(모바일)
+========================================= */
+
 /* 기본 버튼 베이스 */
 .timerBtn {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-right: 105px;
-  padding-left: 78px;
-  color: var(--color-white);
   background: var(--color-brand-bg);
+  transition: opacity 0.2s;
 }
 
-/* --- 아이콘 버튼 크기 --- */
-.lg {
-  width: 333px;
-  height: 60px;
-  padding-right: 105px;
-  padding-left: 78px;
-  font-size: 28px;
-  font-weight: var(--font-weight-extra-bold);
-  border-radius: 50px;
+.timerBtn:active {
+  opacity: 0.8; /* 눌렸을 때 살짝 투명해지는 효과 */
 }
 
-.sm {
+.pill {
   width: 140px;
   height: 45px;
   padding-right: 28px;
   padding-left: 20px;
   font-size: 18px;
   font-weight: var(--font-weight-semi-bold);
+  color: var(--color-white);
   border-radius: 50px;
 }
 
-.lg .imgWrapper {
-  display: flex;
-  align-items: center;
+.circle {
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
 }
 
-.lg > img {
-  width: 30.6px;
-  height: 33.8px;
+.timerBtn:disabled {
+  cursor: not-allowed;
+  background: var(--color-gray-dark);
 }
 
-.sm .imgWrapper {
+.imgWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,7 +46,47 @@
   height: 24px;
 }
 
-.sm > img {
+.pill .imgWrapper > img {
   width: 16.7px;
   height: 18.4px;
+}
+
+.circle .imgWrapper > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================================
+  2. 태블릿, PC (744px 이상)
+========================================= */
+@media (width >= 744px) {
+  .pill {
+    width: 333px;
+    height: 60px;
+    padding-right: 105px;
+    padding-left: 78px;
+    font-size: 28px;
+    font-weight: var(--font-weight-extra-bold);
+  }
+
+  .circle {
+    width: 64px;
+    height: 64px;
+  }
+
+  .pill .imgWrapper {
+    width: 44px;
+    height: 44px;
+  }
+
+  .circle .imgWrapper {
+    width: 32px;
+    height: 32px;
+  }
+
+  .pill .imgWrapper > img {
+    width: 30.6px;
+    height: 33.8px;
+  }
 }
