@@ -1,6 +1,9 @@
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { useTimer, useStopwatch } from "react-timer-hook";
+
+import { createFocusSession, finishFocus } from "../../api/focus";
 
 import Modal from "../common/Modal";
 import TimerButton from "../ui/TimerButton";
@@ -8,6 +11,8 @@ import TimerButton from "../ui/TimerButton";
 import timerIcon from "../../assets/ic-timer.svg";
 
 import styles from "./Timer.module.css";
+
+const formatNumber = (num) => String(num).padStart(2, "0");
 
 function Timer() {
   // 타이머
@@ -19,6 +24,12 @@ function Timer() {
   // 모달
   const [alertMessage, setAlertMessage] = useState("");
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+
+  // TODO: lodId 받아와서 보내는 것으로 수정해야함
+  const logId = 61;
+
+  // 토스트
+  const { showToast } = useOutletContext();
 
   // 스톱워치 설정(설정된 시간 종료 이후 처리)
   const {
@@ -36,12 +47,12 @@ function Timer() {
       expiryTimestamp: new Date(),
       autoStart: false,
       onExpire: async () => {
+        // 목표 시간 도달 시점에 포인트 지급
+        await handleFinishFocus();
+
+        // state 초기화
         setIsFinished(true);
         startOvertime();
-
-        // 목표 시간 도달 시점에 포인트 지급
-        console.log("포인트 API 호출 (목표 시간 도달)");
-        await grantFocusPoint(); // 실제 API 호출
 
         // 10분 후 타이머 초기화
         overtimeTimeoutRef.current = setTimeout(
@@ -60,8 +71,6 @@ function Timer() {
 
   const totalDisplayMinutes = hours * 60 + minutes;
 
-  const formatNumber = (num) => String(num).padStart(2, "0");
-
   const handleStartTimer = () => {
     if (inputMinutes > 99) {
       setInputMinutes(99);
@@ -75,26 +84,37 @@ function Timer() {
       setIsAlertOpen(true);
       return;
     }
-    if (inputMinutes === 0 && inputSeconds === 0) {
-      setAlertMessage("1초 이상 시간을 설정해주세요.");
+
+    const totalSecondsToAdd = inputMinutes * 60 + inputSeconds;
+
+    // 10분 이상 설정
+    if (totalSecondsToAdd < 600) {
+      setAlertMessage("시간을 10분 이상으로 설정해주세요.");
       setIsAlertOpen(true);
       return;
     }
 
     const newEndTime = new Date();
-    const totalSecondsToAdd = inputMinutes * 60 + inputSeconds;
     newEndTime.setSeconds(newEndTime.getSeconds() + totalSecondsToAdd);
+
+    // 시작 세션 생성
+    const targetSeconds = inputMinutes * 60 + inputSeconds;
+    handleStartFocus(targetSeconds);
 
     // 초기화
     resetOvertime(null, false); // 스톱워치 끄기
     setIsFinished(false); // 초과 시간 모드 끄기
     setIsTimerStarted(true);
 
+    // 타이머 시작
     restart(newEndTime);
   };
 
   // 시간 멈춤
-  const handlePauseTimer = () => pause();
+  const handlePauseTimer = () => {
+    pause();
+    showToast("warning");
+  };
 
   // 시간이 멈춘곳에서 다시 시작
   const handleResumeTimer = () => resume();
@@ -113,11 +133,31 @@ function Timer() {
     setIsTimerStarted(false);
   };
 
-  // api 통신(포인트)
-  const grantFocusPoint = async () => {
-    console.log("api 통신");
+  // api 통신: 집중 종료
+  const handleFinishFocus = async () => {
+    try {
+      const earnedPoints = await finishFocus({ logId });
+      showToast("success", earnedPoints);
+    } catch (error) {
+      console.error("집중 종료 에러:", error.message);
+      setAlertMessage(error.message);
+      setIsAlertOpen(true);
+    }
   };
 
+  // api 통신: 집중 시작 세션 등록
+  const handleStartFocus = async (targetSeconds) => {
+    try {
+      await createFocusSession({
+        logId,
+        targetSeconds,
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  // overtimeTimeoutRef 정리
   useEffect(() => {
     return () => {
       if (overtimeTimeoutRef.current) clearTimeout(overtimeTimeoutRef.current);
