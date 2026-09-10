@@ -1,8 +1,10 @@
 import { api } from "../axios.js";
 
-export async function getTodayHabits(logId) {
-  const data = await api.get(`/logs/${logId}/habits`);
-  return data.items; // [{id, name, isChecked}, ...]
+export async function getTodayHabits(logId, { page, limit }) {
+  const data = await api.get(`/logs/${logId}/habits`, {
+    params: { page, limit },
+  });
+  return { items: data.items, hasNextPage: data.pagination.hasNextPage }; //  [items : {id, name, isChecked}, ..., hasNextPage ]
 }
 
 export async function createHabitCheck(habitId) {
