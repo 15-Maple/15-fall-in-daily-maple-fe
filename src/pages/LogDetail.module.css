@@ -4,7 +4,7 @@
 
 .content {
   width: 1200px;
-  height: 890px;
+  height: auto;
   padding: 40px;
   margin: 0 auto;
   background-color: #fff;
@@ -110,23 +110,4 @@
   font-size: 18px;
   font-weight: 400;
   color: #818181;
-}
-
-.box {
-  width: 1120px;
-  height: 511px;
-  padding: 20px;
-  margin-top: 30px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-}
-
-.noHabitText {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 430px;
-  color: #818181;
-  text-align: center;
 }
