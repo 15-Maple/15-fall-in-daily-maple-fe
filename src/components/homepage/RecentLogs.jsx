@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { getRecentLogs } from "../../utils/recentLogs.js";
 
@@ -8,6 +9,7 @@ import LogCard from "./LogCard";
 
 function RecentLogs() {
   const [recentLogs] = useState(() => getRecentLogs());
+  const navigate = useNavigate();
 
   return (
     <section className={styles.recentLogs}>
@@ -26,6 +28,7 @@ function RecentLogs() {
               elapsedDays={log.elapsedDays}
               point={log.point}
               reactions={log.reactions}
+              onClick={() => navigate(`/logdetail/$log.id`)}
             />
           ))
         )}
