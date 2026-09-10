@@ -48,10 +48,10 @@ function SamplePage() {
         </li>
         <li>
           {/* 타이머 버튼 */}
-          <TimerButton size="sm" type="stop" />
-          <TimerButton size="lg" type="stop" />
-          <TimerButton size="sm" type="start" />
-          <TimerButton size="lg" type="start" />
+          <TimerButton variant="stop" />
+          <TimerButton variant="start" />
+          <TimerButton variant="pause" />
+          <TimerButton variant="restart" />
         </li>
         <li>
           {/* 알럿창 */}

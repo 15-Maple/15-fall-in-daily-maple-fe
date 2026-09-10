@@ -31,7 +31,7 @@ function HabitTable() {
   const days = ["월", "화", "수", "목", "금", "토", "일"];
 
   return (
-    <div div className={styles.box}>
+    <div className={styles.box}>
       <h2 className={styles.title}>습관 기록표</h2>
 
       <div>
