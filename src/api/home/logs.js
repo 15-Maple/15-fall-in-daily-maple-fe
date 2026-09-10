@@ -5,16 +5,26 @@ export const getHomeLogs = async () => {
 
   const logs = response.data.data.items;
 
-  return logs.map((log) => ({
-    ...log,
+  const logsWithReactions = await Promise.all(
+    logs.map(async (log) => {
+      const reactionResponse = await axios.get(
+        `http://localhost:5001/api/logs/${log.id}/reactions`,
+      );
 
-    point: log.points,
+      return {
+        ...log,
 
-    reactions: log.reactions ?? [],
+        point: log.points,
 
-    elapsedDays:
-      Math.floor(
-        (new Date() - new Date(log.createdAt)) / (1000 * 60 * 60 * 24),
-      ) + 1,
-  }));
+        reactions: reactionResponse.data.data ?? [],
+
+        elapsedDays:
+          Math.floor(
+            (new Date() - new Date(log.createdAt)) / (1000 * 60 * 60 * 24),
+          ) + 1,
+      };
+    }),
+  );
+
+  return logsWithReactions;
 };

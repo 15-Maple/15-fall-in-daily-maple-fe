@@ -34,7 +34,6 @@ function LogsList() {
     const fetchLogs = async () => {
       try {
         const data = await getHomeLogs();
-        console.log("홈 로그 데이터:", data);
         setLogs(data);
       } catch (error) {
         console.error("로그 목록 조회 실패:", error);
