@@ -1,8 +1,10 @@
 // src/components/homepage/LogsList.jsx
 
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { getHomeLogs } from "../../api/home/logs.js";
+import { saveRecentLog } from "../../utils/recentLogs.js";
 
 import styles from "../../pages/Home.module.css";
 
@@ -24,12 +26,14 @@ function LogsList() {
   // 더보기 위치로 스크롤하기 위한 ref
   const loadMoreRef = useRef(null);
 
+  // logCard 클릭시 상세페이지 이동
+  const navigate = useNavigate();
+
   // 로그 목록 API 호출
   useEffect(() => {
     const fetchLogs = async () => {
       try {
         const data = await getHomeLogs();
-
         setLogs(data);
       } catch (error) {
         console.error("로그 목록 조회 실패:", error);
@@ -172,6 +176,11 @@ function LogsList() {
               elapsedDays={log.elapsedDays}
               point={log.point}
               reactions={log.reactions}
+              onClick={() => {
+                saveRecentLog(log);
+
+                navigate(`/logdetail/${log.id}`);
+              }}
             />
           ))
         )}

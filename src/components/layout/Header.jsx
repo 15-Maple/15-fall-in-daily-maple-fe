@@ -17,7 +17,9 @@ function Header({ showCreateButton = false }) {
         </div>
         {showCreateButton && (
           <div className={styles.buttonWrapper}>
-            <Button className={styles.headerBtn}>로그 만들기</Button>
+            <Button to="/createlog" className={styles.headerBtn}>
+              로그 만들기
+            </Button>
           </div>
         )}
       </div>
