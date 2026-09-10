@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { getLog } from "../api/logs.js";
 
+import HabitTable from "../components/habit/habitTable.jsx";
+import Nohabit from "../components/habit/noHabit.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 
@@ -14,6 +17,7 @@ function LogDetail() {
   const { logId } = useParams();
   const navigate = useNavigate();
   const [log, setLog] = useState(null);
+  console.log(log);
 
   useEffect(() => {
     const fetchLog = async () => {
@@ -50,7 +54,7 @@ function LogDetail() {
 
             <div className={styles.pointText}>현재까지 획득한 포인트</div>
 
-            <PointHistory />
+            <PointHistory logId={logId} />
           </div>
 
           <div className={styles.rightArea}>
@@ -63,27 +67,19 @@ function LogDetail() {
             </div>
 
             <div className={styles.habitMenu}>
-              <button className={styles.todayHabit}>
+              <Link to="/todayhabits" className={styles.todayHabit}>
                 오늘의 습관
                 <img src={arrow} />
-              </button>
-              <button className={styles.todayFocus}>
+              </Link>
+              <Link to="/today-focus" className={styles.todayFocus}>
                 오늘의 집중
                 <img src={arrow} />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
-
-        <div className={styles.box}>
-          <h2>습관기록표</h2>
-
-          <p className={styles.noHabitText}>
-            아직 습관이 없어요
-            <br />
-            오늘의 습관에서 습관을 생성해보세요
-          </p>
-        </div>
+        <HabitTable />
+        <Nohabit />
       </section>
     </main>
   );

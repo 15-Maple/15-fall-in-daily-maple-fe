@@ -18,16 +18,16 @@
 
 .recentLogs {
   padding: clamp(16px, 3vw, 24px);
-  margin-bottom: 24px;
+  margin-bottom: 64px;
   background-color: var(--color-white);
   border-radius: 16px;
 }
 
 .recentLogsList {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: clamp(140px, 25vw, 220px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: stretch;
   margin-top: 24px;
 }
 
@@ -129,7 +129,7 @@
 
 .logsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   align-items: stretch;
   min-height: clamp(220px, 45vw, 380px);
@@ -230,11 +230,16 @@
 /* 로그 설명 */
 
 .logsCardDescription {
-  margin: 32px 0 16px;
+  display: -webkit-box;
+  margin: 20px 0 12px;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.6;
   color: #666;
+  -webkit-box-orient: vertical;
 }
 
 /* 기존 정보 영역이 필요하면 유지 */
@@ -250,6 +255,7 @@
 
 .logsCardReactions {
   display: flex;
+  flex-shrink: 0;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: auto;
