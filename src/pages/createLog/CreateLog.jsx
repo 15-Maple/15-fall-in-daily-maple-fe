@@ -170,7 +170,7 @@ function CreateLog() {
       const fetchedLog = await getLog(logId);
 
       // logDetail/id 페이지로 이동하기(임시: 기본 logDetail로 이동)
-      navigate(`/logDetail/${logId}`, {
+      navigate(`/logdetail/${logId}`, {
         replace: true,
         state: { log: fetchedLog },
       });

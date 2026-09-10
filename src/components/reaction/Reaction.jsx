@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import { getReaction, postReaction } from "../../api/reaction";
 
@@ -10,6 +11,8 @@ import ReactionSelector from "./ReactionSelector";
 import styles from "./Reaction.module.css";
 
 function Reaction() {
+  const { logId } = useParams();
+
   //이모지 선택창 열기닫기
   const [isOpen, setIsOpen] = useState(false);
   //이모지 더보기창 열기닫기
@@ -20,15 +23,15 @@ function Reaction() {
   //리액션 조회
   useEffect(() => {
     const fetchReactions = async () => {
-      const responses = await getReaction(1);
+      const responses = await getReaction(logId);
       setReactions(responses);
     };
     fetchReactions();
-  }, []);
+  }, [logId]);
 
   //같은 이모지면 +1 없으면추가
   const EmojiClick = async (emoji) => {
-    await postReaction(1, emoji);
+    await postReaction(logId, emoji);
 
     setReactions((prev) => {
       const sameReaction = prev.find((item) => {
