@@ -20,16 +20,16 @@ function HabitTable() {
       records: [true, true, true, true, true, true, false],
     },
     {
-      name: "React 스터디 책 1챕터 일기",
-      records: [true, true, true, true, true, true, false],
+      name: "React 스터디 책 1챕터 읽기",
+      records: [false, false, false, false, false, false, false],
     },
     {
       name: "오버워치 하기",
-      records: [true, true, true, true, true, true, false],
+      records: [false, false, false, false, false, false, false],
     },
     {
       name: "고양이 놀아주기",
-      records: [true, true, true, true, true, true, false],
+      records: [false, false, false, false, false, false, false],
     },
   ];
 
