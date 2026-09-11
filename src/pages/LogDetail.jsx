@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { getLog } from "../api/logs.js";
+import { getLogById, deleteLog as requestDeleteLog } from "../api/logs.js";
+import { removeRecentLog } from "../utils/recentLogs.js";
 
 import HabitTable from "../components/habit/habitTable.jsx";
 //import Nohabit from "../components/habit/noHabit.jsx";
@@ -9,7 +10,7 @@ import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 import NavButton from "../components/ui/NavButton.jsx";
 
-import { ROUTES } from "../constants/routes";
+import { ROUTES } from "../constants/routes.js";
 
 import styles from "./LogDetail.module.css";
 
@@ -20,8 +21,10 @@ function LogDetail() {
   console.log(log);
 
   useEffect(() => {
+    if (!logId) return;
+
     const fetchLog = async () => {
-      const data = await getLog(logId);
+      const data = await getLogById(logId);
       setLog(data);
     };
     fetchLog();
@@ -32,7 +35,7 @@ function LogDetail() {
     try {
       await navigator.clipboard.writeText(window.location.href);
 
-      alert("링크가 복사되었습니다람쥐 🐿️");
+      alert("링크가 복사되었습니 다람쥐 🐿️");
     } catch (error) {
       console.log("링크복사 실패", error);
     }
@@ -45,6 +48,18 @@ function LogDetail() {
 
   const todayHabitsPath = ROUTES.TODAY_HABITS.replace(":logId", logId);
   const todayFocusPath = ROUTES.TODAY_FOCUS.replace(":logId", logId);
+  // 로그 삭제하기
+  const handleDeleteLog = async () => {
+    try {
+      // 로그 삭제
+      await requestDeleteLog(logId);
+      // 로컬 스토리지에 저장되는 로그 삭제
+      removeRecentLog(logId);
+      navigate("/");
+    } catch (error) {
+      console.error("로그 삭제 실패:", error);
+    }
+  };
 
   return (
     <main className={styles.page}>
@@ -86,7 +101,9 @@ function LogDetail() {
               <span className={styles.barOne}>|</span>
               <button onClick={handleUpdateLog}>수정하기</button>
               <span className={styles.barTwo}>|</span>
-              <button className={styles.deleteBtn}>스터디 삭제하기</button>
+              <button className={styles.deleteBtn} onClick={handleDeleteLog}>
+                스터디 삭제하기
+              </button>
             </div>
 
             <div className={styles.habitMenu}>

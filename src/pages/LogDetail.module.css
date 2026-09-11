@@ -3,6 +3,7 @@
 }
 
 .content {
+  box-sizing: border-box;
   width: 100%;
   max-width: 1200px;
   height: auto;
@@ -129,11 +130,11 @@
   .rightArea {
     align-items: flex-end;
     width: 100%;
-    margin-top: 20px;
   }
 
   .menu {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
     order: 1;
     width: 100%;

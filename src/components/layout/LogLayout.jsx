@@ -6,7 +6,7 @@ import {
   useOutletContext,
 } from "react-router-dom";
 
-import { getLog } from "../../api/logs.js";
+import { getLogById } from "../../api/logs.js";
 import { nowTime } from "../../utils/formatDateTime.js";
 
 import { ROUTES } from "../../constants/routes";
@@ -35,7 +35,7 @@ function LogLayout() {
   useEffect(() => {
     const fetchLog = async () => {
       try {
-        const data = await getLog(logId);
+        const data = await getLogById(logId);
         setLogData(data);
       } catch (err) {
         console.error("로그 데이터 불러오기 실패:", err);
