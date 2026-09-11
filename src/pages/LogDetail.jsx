@@ -6,7 +6,7 @@ import { getLogById, deleteLog as requestDeleteLog } from "../api/logs.js";
 import { removeRecentLog } from "../utils/recentLogs.js";
 
 import HabitTable from "../components/habit/habitTable.jsx";
-import Nohabit from "../components/habit/noHabit.jsx";
+//import Nohabit from "../components/habit/noHabit.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 
@@ -104,8 +104,7 @@ function LogDetail() {
             </div>
           </div>
         </div>
-        <HabitTable />
-        <Nohabit />
+        <HabitTable logId={logId} />
       </section>
     </main>
   );

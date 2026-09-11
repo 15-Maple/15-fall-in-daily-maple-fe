@@ -7,6 +7,16 @@ export async function getTodayHabits(logId, { page, limit }) {
   return { items: data.items, hasNextPage: data.pagination.hasNextPage }; //  [items : {id, name, isChecked}, ..., hasNextPage ]
 }
 
+// 주간습관기록표 조회
+export async function getHabitsWeekly(logId) {
+  const data = await api.get(`/logs/${logId}/habits/weekly`);
+  return {
+    weekStart: data.weekStart,
+    weekEnd: data.weekEnd,
+    items: data.habits,
+  }; //  [weekStart, weekEnd, items : {habitId, name, isDeleted,records[] } ]
+}
+
 export async function createHabitCheck(habitId) {
   return api.post(`/habits/${habitId}/check`);
 }

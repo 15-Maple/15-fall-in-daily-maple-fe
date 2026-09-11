@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import {
+  Outlet,
+  useLocation,
+  useParams,
+  useOutletContext,
+} from "react-router-dom";
 
 import { getLogById } from "../../api/logs.js";
 import { nowTime } from "../../utils/formatDateTime.js";
@@ -23,6 +28,9 @@ function LogLayout() {
   const isHabits = currentPath.includes("habits");
   const isFocus = currentPath.includes("focus");
   const isDetail = !isHabits && !isFocus;
+
+  // 토스트 컨텍스트
+  const { showToast } = useOutletContext();
 
   useEffect(() => {
     const fetchLog = async () => {
@@ -83,7 +91,7 @@ function LogLayout() {
 
         {/* 5. 콘텐츠 영역 */}
         <div className={styles.contentContainer}>
-          <Outlet context={{ logData }} />
+          <Outlet context={{ logData, showToast }} />
         </div>
       </div>
     </div>
