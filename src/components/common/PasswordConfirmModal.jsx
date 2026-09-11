@@ -51,10 +51,9 @@ function PasswordConfirmModal({
       setPassword("");
       onSuccess();
     } catch (err) {
-      // API에서 401 에러(비밀번호 틀림)를 던진 경우
+      console.error("비밀번호 검증 API 에러:", err);
       setError({
-        message:
-          err.message || "비밀번호가 일치하지 않습니다. 다시 확인해 주세요.",
+        message: "비밀번호가 일치하지 않습니다. 다시 확인해 주세요.",
       });
     }
   };
@@ -100,7 +99,7 @@ function PasswordConfirmModal({
             <Button
               size="md"
               className={styles.confirmBtn}
-              onClick={handleConfirm || handleClose}
+              onClick={handleConfirm}
             >
               {confirmText}
             </Button>
