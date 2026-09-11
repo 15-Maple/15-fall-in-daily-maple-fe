@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getLogs } from "../../api/logs.js";
+import { getHomeLogs } from "../../api/logs.js";
 import { saveRecentLog } from "../../utils/recentLogs.js";
 
 import styles from "../../pages/Home.module.css";
@@ -36,8 +36,8 @@ function LogsList() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const data = await getLogs();
-        setLogs(data.items);
+        const data = await getHomeLogs();
+        setLogs(data);
       } catch (error) {
         console.error("로그 목록 조회 실패:", error);
       }
