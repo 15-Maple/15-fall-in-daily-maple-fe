@@ -70,59 +70,75 @@
 
 .logsSortBox {
   position: relative;
-  width: 120px;
-  height: 44px;
+  width: 160px;
 }
 
-.logsSortLabel {
-  position: absolute;
-  top: 50%;
-  left: 16px;
-  z-index: 2;
+.logsSortButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
   font-size: 14px;
   color: #666;
-  pointer-events: none;
-  transform: translateY(-50%);
-}
-
-.logsSortSelect {
-  width: 100%;
-  min-width: 120px;
-  height: 100%;
-  min-height: 44px;
-  padding: 0 40px 0 16px;
-  color: transparent;
-  appearance: none;
   cursor: pointer;
-  outline: none;
   background-color: var(--color-white);
   border: 1px solid #d9d9d9;
   border-radius: 16px;
 }
 
-.logsSortSelect:focus {
+.logsSortButton:focus {
   border-color: var(--color-brand-main);
 }
 
-.logsSortSelect:disabled {
+.logsSortButton:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-/* select 화살표 */
+.logsSortArrow {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
 
-.logsSortBox::after {
+.logsSortArrowOpen {
+  transform: rotate(180deg);
+}
+
+.logsSortDropdown {
   position: absolute;
-  top: 50%;
-  right: 16px;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  content: "";
-  border-top: 6px solid #666;
-  border-right: 5px solid transparent;
-  border-left: 5px solid transparent;
-  transform: translateY(-50%);
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  background-color: var(--color-white);
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
+}
+
+.logsSortDropdown button {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #555;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+}
+
+.logsSortDropdown button:hover {
+  background-color: #f5f5f5;
+}
+
+.logsSortOptionActive {
+  font-weight: 700;
+  background-color: #f5f5f5 !important;
 }
 
 /* 로그 리스트 */
@@ -143,6 +159,7 @@
   width: 100%;
   height: 230px;
   overflow: hidden;
+  cursor: pointer;
   background-color: var(--color-white);
   border: 1px solid #e5e5e5;
   border-radius: 24px;
@@ -178,7 +195,7 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: 24px 28px;
+  padding: 20px 24px;
 }
 
 /* 제목 + 포인트 상단 영역 */
@@ -278,16 +295,6 @@
 
 /* 사진 배경 카드 전용 */
 
-/*
-  bgPlant
-  bgDesk
-  bgTile
-  bgWindow
-
-  위 background 값일 때
-  LogCard.jsx에서 logsCardImageType 클래스가 추가됨
-*/
-
 .logsCardImageType .logsCardTitle {
   color: #fff;
 }
@@ -315,6 +322,29 @@
   text-align: center;
 }
 
+/* 더보기 */
+
+.loadMoreWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.loadMoreButton {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  background-color: var(--color-white);
+  border: 1px solid #d9d9d9;
+  border-radius: 999px;
+}
+
+.loadMoreButton:hover {
+  border-color: var(--color-brand-main);
+}
+
 /* 태블릿 */
 
 @media (width <= 768px) {
@@ -327,6 +357,12 @@
     padding: 20px;
   }
 
+  .recentLogsList,
+  .logsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
   .logsListControls {
     align-items: stretch;
   }
@@ -335,12 +371,8 @@
     max-width: none;
   }
 
-  .logsGrid {
-    gap: 16px;
-  }
-
   .logsCardContent {
-    padding: 24px;
+    padding: 20px;
   }
 }
 
@@ -371,12 +403,8 @@
     width: 100%;
   }
 
-  .logsSortSelect {
-    width: 100%;
-  }
-
+  .recentLogsList,
   .logsGrid {
-    display: grid;
     grid-template-columns: 1fr;
     gap: 16px;
     width: 100%;
@@ -396,7 +424,7 @@
   }
 
   .logsCardDescription {
-    margin-top: 32px;
+    margin-top: 24px;
     font-size: 13px;
   }
 
@@ -409,26 +437,4 @@
     padding: 5px 8px;
     font-size: 12px;
   }
-}
-
-/* 더보기 */
-.loadMoreWrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 24px;
-}
-
-.loadMoreButton {
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-  cursor: pointer;
-  background-color: var(--color-white);
-  border: 1px solid #d9d9d9;
-  border-radius: 999px;
-}
-
-.loadMoreButton:hover {
-  border-color: var(--color-brand-main);
 }
