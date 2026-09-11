@@ -33,11 +33,11 @@ export function deleteLog(logId) {
 // }
 
 export const getHomeLogs = async () => {
-  const { items: logs } = await api.get("/logs");
+  const { items: logs } = await api.get("/home/logs");
 
   return Promise.all(
     logs.map(async (log) => {
-      const reactions = await api.get(`logs/${log.id}/reactions`);
+      const reactions = await api.get(`/logs/${log.id}/reactions`);
       return {
         ...log,
 
