@@ -22,9 +22,6 @@ api.interceptors.response.use(
     if (err.response?.status === 401 && !isFocusFinishApi) {
       console.warn("인증이 만료되었습니다.");
 
-      // 모든 토큰 지움
-      sessionStorage.clear();
-
       // 커스텀 이벤트(토큰 만료)
       window.dispatchEvent(new CustomEvent("auth-expired"));
 

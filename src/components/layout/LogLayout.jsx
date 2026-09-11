@@ -9,6 +9,7 @@ import {
 import { getLogById } from "../../api/logs.js";
 import { nowTime } from "../../utils/formatDateTime.js";
 
+import { TOKEN_PREFIX } from "../../constants/auth";
 import { ROUTES } from "../../constants/routes";
 import PasswordConfirmModal from "../common/PasswordConfirmModal";
 import PointHistory from "../point/PointHistory";
@@ -58,6 +59,8 @@ function LogLayout() {
         "🚨 인증이 만료되었습니다. 다시 비밀번호를 입력해주세요.",
       );
 
+      sessionStorage.removeItem(`${TOKEN_PREFIX}${logId}`);
+
       setIsAuthModalOpen(true);
     };
 
@@ -66,7 +69,7 @@ function LogLayout() {
     return () => {
       window.removeEventListener("auth-expired", handleAuthExpired);
     };
-  }, [showToast]);
+  }, [showToast, logId]);
 
   // TODO: 에러, 로딩 처리 추가 필요
   if (error) return <div>{error}</div>;
