@@ -1,37 +1,30 @@
+import { useState, useEffect } from "react";
+
+import { getHabitsWeekly } from "../../api/habit/habit";
+
 import dotori_0 from "../../assets/dotori_0.svg";
 import dotori_1 from "../../assets/dotori_1.svg";
 
-import styles from "./Habit.module.css";
+import styles from "./habit.module.css";
 
-function HabitTable() {
+function HabitTable({ logId }) {
   const days = ["월", "화", "수", "목", "금", "토", "일"];
 
-  const habits = [
-    {
-      name: "도토리 100개 줍기",
-      records: [true, true, true, true, true, true, false],
-    },
-    {
-      name: "다람쥐 친구 구하기",
-      records: [true, true, true, true, true, true, false],
-    },
-    {
-      name: "스쿼시 하기",
-      records: [true, true, true, true, true, true, false],
-    },
-    {
-      name: "React 스터디 책 1챕터 읽기",
-      records: [false, false, false, false, false, false, false],
-    },
-    {
-      name: "오버워치 하기",
-      records: [false, false, false, false, false, false, false],
-    },
-    {
-      name: "고양이 놀아주기",
-      records: [false, false, false, false, false, false, false],
-    },
-  ];
+  const [habitWeekly, setHabitWeekly] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { weekStart, weekEnd, items } = await getHabitsWeekly(logId);
+        setHabitWeekly(items);
+        console.log(`주간기록표 ${weekStart} / ${weekEnd}`);
+      } catch (error) {
+        console.log(`주간기록표 에러 ${error}`);
+      } finally {
+        console.log("주간기록표 조회 완료");
+      }
+    })();
+  }, [logId]);
 
   return (
     <div className={styles.box}>
@@ -48,9 +41,9 @@ function HabitTable() {
           ))}
         </div>
 
-        {habits.map((habit, index) => (
+        {habitWeekly.map((habit) => (
           <div
-            key={index}
+            key={habit.habitId}
             className={`${styles.habit} ${habit.isDeleted ? styles.disabled : ""}`}
           >
             <span className={styles.habitTitle}>{habit.name}</span>

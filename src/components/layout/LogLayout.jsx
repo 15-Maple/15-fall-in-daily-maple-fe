@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import {
+  Outlet,
+  useLocation,
+  useParams,
+  useOutletContext,
+} from "react-router-dom";
 
-import { getLog } from "../../api/logs.js";
+import { getLogById } from "../../api/logs.js";
 import { nowTime } from "../../utils/formatDateTime.js";
 
 import { ROUTES } from "../../constants/routes";
@@ -24,10 +29,13 @@ function LogLayout() {
   const isFocus = currentPath.includes("focus");
   const isDetail = !isHabits && !isFocus;
 
+  // 토스트 컨텍스트
+  const { showToast } = useOutletContext();
+
   useEffect(() => {
     const fetchLog = async () => {
       try {
-        const data = await getLog(logId);
+        const data = await getLogById(logId);
         setLogData(data);
       } catch (err) {
         console.error("로그 데이터 불러오기 실패:", err);
@@ -83,7 +91,7 @@ function LogLayout() {
 
         {/* 5. 콘텐츠 영역 */}
         <div className={styles.contentContainer}>
-          <Outlet context={{ logData }} />
+          <Outlet context={{ logData, showToast }} />
         </div>
       </div>
     </div>

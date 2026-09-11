@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { ROUTES } from "../../constants/routes";
-import Toast from "../focus/Toast";
+import Toast from "../common/Toast";
 import Header from "./Header";
 import MainContent from "./MainContent";
 

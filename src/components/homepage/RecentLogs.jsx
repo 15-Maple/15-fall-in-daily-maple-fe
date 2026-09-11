@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRecentLogs } from "../../utils/recentLogs.js";
+import { getValidRecentLogs } from "../../utils/recentLogs.js";
 
 import styles from "../../pages/Home.module.css";
 
 import LogCard from "./LogCard";
 
 function RecentLogs() {
-  const [recentLogs] = useState(() => getRecentLogs());
+  const [recentLogs] = useState(() => getValidRecentLogs());
   const navigate = useNavigate();
 
   return (

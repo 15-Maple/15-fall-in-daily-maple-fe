@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { createLog, getLogById } from "../../api/logs.js";
+import { updateLog, getLogById } from "../../api/logs.js";
 
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
@@ -10,9 +11,9 @@ import btnVisibilityOn from "../../assets/btn_visibility_on_24px.svg";
 
 import styles from "./createLog.module.css";
 
-function CreateLog() {
+function UpdateLog() {
+  const { logId } = useParams();
   const navigate = useNavigate();
-  // isBtnActive가 true 일 때만 작동하도록 하기
 
   // 입력값 state
   const [selectedBackground, setSelectedBackground] = useState("bgGreen");
@@ -45,18 +46,52 @@ function CreateLog() {
   const errors = {
     nickname:
       touched.nickname && !form.nickname.trim() ? "*닉네임을 입력해주세요" : "",
+
     name: touched.name && !form.name.trim() ? "*로그 이름을 입력해주세요" : "",
+
+    // password랑 passwordConfirm은 둘 다 입력해야 함
     password:
-      touched.password && !form.password.trim()
+      touched.passwordConfirm && !form.password.trim() && !form.password.trim()
         ? "*비밀번호를 입력해주세요"
         : "",
     passwordConfirm:
-      touched.passwordConfirm && !form.passwordConfirm.trim()
+      touched.password && form.password.trim() && !form.passwordConfirm.trim()
         ? "*비밀번호 확인을 입력해주세요"
-        : touched.passwordConfirm && form.password !== form.passwordConfirm
+        : touched.passwordConfirm &&
+            form.password.trim() &&
+            form.passwordConfirm.trim() &&
+            form.password !== form.passwordConfirm
           ? "*비밀번호가 일치하지 않습니다."
           : "",
   };
+
+  // 현재 logid의 데이터 불러오기
+  useEffect(() => {
+    async function loadLog() {
+      // 로그 id 없으면 return
+      if (!logId) return;
+
+      try {
+        const log = await getLogById(logId);
+
+        setForm({
+          nickname: log.nickname,
+          name: log.name,
+          description: log.description ?? "",
+          password: "",
+          passwordConfirm: "",
+        });
+
+        setSelectedBackground(log.background);
+      } catch (error) {
+        const message =
+          error.response?.data?.message || "로그 정보를 불러오지 못했습니다.";
+        setFormError(message);
+      }
+    }
+
+    loadLog();
+  }, [logId]);
 
   // 한글 입력 조합 시작
   const handleCompositionStart = () => {
@@ -132,17 +167,21 @@ function CreateLog() {
     setTouched({
       nickname: true,
       name: true,
-      password: true,
-      passwordConfirm: true,
     });
 
-    // 오류 검사 - 필수 항목 누락 확인
+    // 비밀번호 입력 없으면 PATCH 요청에서 제외
+    const hasPasswordInput =
+      form.password.trim() || form.passwordConfirm.trim();
+
+    // 비밀번호, 비밀번호 확인 둘 중 하나라도 입력이 있는데 서로 일치하지 않은 경우 오류처리
+    const hasPasswordError =
+      hasPasswordInput &&
+      (!form.password.trim() ||
+        !form.passwordConfirm.trim() ||
+        form.password !== form.passwordConfirm);
+
     const hasError =
-      !form.nickname.trim() ||
-      !form.name.trim() ||
-      !form.password.trim() ||
-      !form.passwordConfirm.trim() ||
-      form.password !== form.passwordConfirm;
+      !form.nickname.trim() || !form.name.trim() || hasPasswordError;
 
     if (hasError) return;
 
@@ -152,25 +191,28 @@ function CreateLog() {
       name: form.name.trim(),
       description: form.description.trim() || null,
       background: selectedBackground,
-      password: form.password,
-      passwordConfirm: form.passwordConfirm,
     };
 
+    if (hasPasswordInput) {
+      logData.password = form.password;
+      logData.passwordConfirm = form.passwordConfirm;
+    }
+
     try {
-      const createdLog = await createLog(logData);
-      const { logId } = createdLog;
+      const updatedLog = await updateLog(logId, logData);
+      const { logId: updatedLogId } = updatedLog;
 
       if (!logId) {
-        throw new Error("생성된 로그 ID를 확인할 수 없습니다.");
+        throw new Error("수정된 로그 ID를 확인할 수 없습니다.");
       }
 
-      console.log("로그가 생성되었습니다: ", createdLog);
+      console.log("로그가 수정되었습니다: ", updatedLog);
 
       // 생성된 로그 id로 조회하기
-      const fetchedLog = await getLogById(logId);
+      const fetchedLog = await getLogById(updatedLogId);
 
-      // logDetail/id 페이지로 이동하기
-      navigate(`/logdetail/${logId}`, {
+      // logdetail/id 페이지로 이동하기
+      navigate(`/logdetail/${updatedLogId}`, {
         replace: true,
         state: { log: fetchedLog },
       });
@@ -186,7 +228,7 @@ function CreateLog() {
     <div className={styles.contianer}>
       <form noValidate onSubmit={handleSubmit}>
         <div className={styles.formContent}>
-          <span className={styles.title}>로그 만들기</span>
+          <span className={styles.title}>로그 수정하기</span>
           <label>
             닉네임
             <div className={styles.inputWrapper}>
@@ -249,7 +291,7 @@ function CreateLog() {
               >
                 <input
                   name="password"
-                  placeholder="비밀번호를 입력해 주세요"
+                  placeholder="새 비밀번호 (변경 시에만 입력)"
                   type={isPasswordVisible ? "text" : "password"}
                   value={form.password}
                   className={styles.inputPassword}
@@ -284,7 +326,7 @@ function CreateLog() {
               >
                 <input
                   name="passwordConfirm"
-                  placeholder="비밀번호를 다시 한 번 입력해 주세요"
+                  placeholder="새 비밀번호 확인"
                   type={isPasswordConfirmVisible ? "text" : "password"}
                   value={form.passwordConfirm}
                   className={styles.inputPassword}
@@ -321,10 +363,10 @@ function CreateLog() {
         </div>
 
         <button type="submit" className={styles.submitButton}>
-          만들기
+          수정 완료
         </button>
       </form>
     </div>
   );
 }
-export default CreateLog;
+export default UpdateLog;
