@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 
 import { verifyPasswordApi } from "../../api/auth";
 
+import { TOKEN_PREFIX } from "../../constants/auth";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 
@@ -44,7 +45,7 @@ function PasswordConfirmModal({
 
       // 발급받은 출입증(token)을 sessionStorage에 저장
       // 키 이름에 logId를 넣어서 로그별로 출입증을 따로 관리
-      sessionStorage.setItem(`log_token_${logId}`, token);
+      sessionStorage.setItem(`${TOKEN_PREFIX}${logId}`, token);
 
       // 성공 처리 (모달 닫기 & 다음 화면 이동)
       setError(null);

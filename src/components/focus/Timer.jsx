@@ -5,6 +5,7 @@ import { useTimer, useStopwatch } from "react-timer-hook";
 
 import { createFocusSession, finishFocus } from "../../api/focus";
 
+import { TOKEN_PREFIX } from "../../constants/auth";
 import Modal from "../common/Modal";
 import PasswordConfirmModal from "../common/PasswordConfirmModal";
 import TimerButton from "../ui/TimerButton";
@@ -147,7 +148,7 @@ function Timer() {
       // 에러 코드가 401(권한 없음/토큰 만료)일 경우
       if (error.response?.status === 401 || error.message.includes("401")) {
         // 만료된 토큰 지움
-        sessionStorage.removeItem(`log_token_${logId}`);
+        sessionStorage.removeItem(`${TOKEN_PREFIX}${logId}`);
         // 비밀번호 모달(다시 입력받고 이어서 처리)
         setIsPasswordModalOpen(true);
       } else {

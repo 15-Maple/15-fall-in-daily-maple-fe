@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 
+import { TOKEN_PREFIX } from "../../constants/auth";
 import PasswordConfirmModal from "../common/PasswordConfirmModal";
 
 import styles from "./RequireLogPassword.module.css";
@@ -14,7 +15,7 @@ function RequireLogPassword({ children }) {
 
   // 토큰이 있는지 없는지
   const [hasToken, setHasToken] = useState(
-    !!sessionStorage.getItem(`log_token_${logId}`),
+    !!sessionStorage.getItem(`${TOKEN_PREFIX}${logId}`),
   );
 
   // 토큰이 있으면 원래 가려던 페이지(children)
