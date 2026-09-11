@@ -28,7 +28,7 @@ function RecentLogs() {
               elapsedDays={log.elapsedDays}
               point={log.point}
               reactions={log.reactions}
-              onClick={() => navigate(`/logdetail/$log.id`)}
+              onClick={() => navigate(`/logdetail/${log.id}`)}
             />
           ))
         )}
