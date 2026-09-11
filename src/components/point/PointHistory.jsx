@@ -10,16 +10,15 @@ import styles from "./PointHistory.module.css";
 
 function PointHistory() {
   const [point, setPoint] = useState(0);
-
+  const { logId } = useParams();
   useEffect(() => {
     const fetchPoint = async () => {
-      const { logId } = useParams;
       const responses = await getPoint(logId);
 
       setPoint(responses.points);
     };
     fetchPoint();
-  }, []);
+  }, [logId]);
 
   return (
     <section className={styles.pointHistory}>

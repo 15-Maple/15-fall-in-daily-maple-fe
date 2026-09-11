@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import { getLog } from "../api/logs.js";
@@ -15,6 +15,7 @@ import styles from "./LogDetail.module.css";
 
 function LogDetail() {
   const { logId } = useParams();
+  const navigate = useNavigate();
   const [log, setLog] = useState(null);
   console.log(log);
 
@@ -25,6 +26,11 @@ function LogDetail() {
     };
     fetchLog();
   }, [logId]);
+
+  const handleUpdateLog = () => {
+    navigate(`/logdetail/${logId}/update`);
+  };
+
   return (
     <main className={styles.page}>
       <section className={styles.content}>
@@ -40,7 +46,6 @@ function LogDetail() {
               <p className={styles.label}>소개</p>
 
               <p className={styles.desc}>
-                {/* Slow And Steady Wins The Race! 다들 오늘 하루도 화이팅! :) */}
                 {log
                   ? log.description
                   : "Slow And Steady Wins The Race! 다들 오늘 하루도 화이팅!"}
@@ -56,7 +61,7 @@ function LogDetail() {
             <div className={styles.menu}>
               <button className={styles.share}>공유하기</button>
               <span className={styles.barOne}>|</span>
-              <button>수정하기</button>
+              <button onClick={handleUpdateLog}>수정하기</button>
               <span className={styles.barTwo}>|</span>
               <button className={styles.deleteBtn}>스터디 삭제하기</button>
             </div>
