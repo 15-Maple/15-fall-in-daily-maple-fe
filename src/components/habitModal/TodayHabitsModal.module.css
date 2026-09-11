@@ -8,7 +8,10 @@
 }
 
 .modalContainer {
+  display: flex;
+  flex-direction: column;
   width: 648px;
+  max-height: 80vh; /* 뷰포트 기준 최대 높이 제한 */
   padding: 40px 24px;
   background-color: var(--color-white);
   border-radius: 20px;
@@ -16,6 +19,7 @@
 
 .title {
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
   font-size: 24px;
   font-weight: 800;
@@ -24,13 +28,18 @@
 
 .habitList {
   display: flex;
+  flex: 1; /* 남는 공간을 차지 */
   flex-direction: column;
   gap: 20px;
-  margin-top: 24px;
+  width: 300px;
+  min-height: 0; /* flex 자식이 부모보다 커지는 걸 방지 (스크롤 되게) */
+  margin: 24px auto 0;
+  overflow-y: auto;
 }
 
 .habitItem {
   display: flex;
+  flex-shrink: 0;
   gap: 8px;
   align-items: center;
   justify-content: center;
@@ -70,6 +79,7 @@
 
 .habitAddLayout {
   display: flex;
+  flex-shrink: 0;
   gap: 8px;
   align-items: center;
   justify-content: center;
@@ -95,6 +105,7 @@
 
 .btnLayout {
   display: flex;
+  flex-shrink: 0;
   gap: 24px;
   font-size: 18px;
   font-weight: 600;

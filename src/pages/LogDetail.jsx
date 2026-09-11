@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 import { getLog } from "../api/logs.js";
 
 import HabitTable from "../components/habit/habitTable.jsx";
-import Nohabit from "../components/habit/noHabit.jsx";
+//import Nohabit from "../components/habit/noHabit.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
+
+import { ROUTES } from "../constants/routes";
 
 import arrow from "../assets/ic-arrow-right.svg";
 
@@ -67,19 +69,24 @@ function LogDetail() {
             </div>
 
             <div className={styles.habitMenu}>
-              <Link to="/todayhabits" className={styles.todayHabit}>
+              <Link
+                to={ROUTES.TODAY_HABITS.replace(":logId", logId)}
+                className={styles.todayHabit}
+              >
                 오늘의 습관
                 <img src={arrow} />
               </Link>
-              <Link to="/today-focus" className={styles.todayFocus}>
+              <Link
+                to={ROUTES.TODAY_FOCUS.replace(":logId", logId)}
+                className={styles.todayFocus}
+              >
                 오늘의 집중
                 <img src={arrow} />
               </Link>
             </div>
           </div>
         </div>
-        <HabitTable />
-        <Nohabit />
+        <HabitTable logId={logId} />
       </section>
     </main>
   );
