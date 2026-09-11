@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 import { getLog } from "../api/logs.js";
 
@@ -8,10 +7,9 @@ import HabitTable from "../components/habit/habitTable.jsx";
 //import Nohabit from "../components/habit/noHabit.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
+import NavButton from "../components/ui/NavButton.jsx";
 
 import { ROUTES } from "../constants/routes";
-
-import arrow from "../assets/ic-arrow-right.svg";
 
 import styles from "./LogDetail.module.css";
 
@@ -45,6 +43,9 @@ function LogDetail() {
     navigate(`/logdetail/${logId}/update`);
   };
 
+  const todayHabitsPath = ROUTES.TODAY_HABITS.replace(":logId", logId);
+  const todayFocusPath = ROUTES.TODAY_FOCUS.replace(":logId", logId);
+
   return (
     <main className={styles.page}>
       <section className={styles.content}>
@@ -55,6 +56,12 @@ function LogDetail() {
             <h1 className={styles.title}>
               {log ? log.name : "연우의 개발공장"}
             </h1>
+
+            <div className={styles.mobileHabitMenu}>
+              <NavButton pageName="오늘의 습관" to={todayHabitsPath} />
+
+              <NavButton pageName="오늘의 집중" to={todayFocusPath} />
+            </div>
 
             <div className={styles.sub}>
               <p className={styles.label}>소개</p>
@@ -83,20 +90,9 @@ function LogDetail() {
             </div>
 
             <div className={styles.habitMenu}>
-              <Link
-                to={ROUTES.TODAY_HABITS.replace(":logId", logId)}
-                className={styles.todayHabit}
-              >
-                오늘의 습관
-                <img src={arrow} />
-              </Link>
-              <Link
-                to={ROUTES.TODAY_FOCUS.replace(":logId", logId)}
-                className={styles.todayFocus}
-              >
-                오늘의 집중
-                <img src={arrow} />
-              </Link>
+              <NavButton pageName="오늘의 습관" to={todayHabitsPath} />
+
+              <NavButton pageName="오늘의 집중" to={todayFocusPath} />
             </div>
           </div>
         </div>

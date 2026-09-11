@@ -3,7 +3,8 @@
 }
 
 .content {
-  width: 1200px;
+  width: 100%;
+  max-width: 1200px;
   height: auto;
   padding: 40px;
   margin: 0 auto;
@@ -59,6 +60,10 @@
   margin-top: 20px;
 }
 
+.mobileHabitMenu {
+  display: none;
+}
+
 .todayHabit {
   display: flex;
   gap: 10px;
@@ -110,4 +115,42 @@
   font-size: 18px;
   font-weight: 400;
   color: #818181;
+}
+
+/* ======================================
+모바일 (744px)
+========================================= */
+
+@media (width <= 744px) {
+  .topArea {
+    flex-direction: column;
+  }
+
+  .rightArea {
+    align-items: flex-end;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .menu {
+    display: flex;
+    justify-content: flex-end;
+    order: 1;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .leftArea {
+    order: 2;
+  }
+
+  .mobileHabitMenu {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .habitMenu {
+    display: none;
+  }
 }
