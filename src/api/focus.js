@@ -1,11 +1,23 @@
 import { api } from "./axios.js";
 
 // 집중 세션 생성
-export function createFocusSession(data) {
-  return api.post("/focus", data);
+export function createFocusSession({ logId, targetSeconds }) {
+  const token = sessionStorage.getItem(`log_token_${logId}`);
+
+  return api.post(
+    "/focus",
+    { targetSeconds },
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
 }
 
 // 집중 종료
-export function finishFocus(data) {
-  return api.post("/focus/finish", data);
+export function finishFocus({ logId }) {
+  const token = sessionStorage.getItem(`log_token_${logId}`);
+
+  return api.post(
+    "/focus/finish",
+    {},
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
 }

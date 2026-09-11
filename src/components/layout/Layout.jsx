@@ -14,8 +14,8 @@ function Layout() {
 
   const [toast, setToast] = useState(null);
 
-  const showToast = (variant, points) => {
-    setToast({ variant, points, key: Date.now() });
+  const showToast = (variant, message) => {
+    setToast({ variant, message, key: Date.now() });
   };
 
   return (

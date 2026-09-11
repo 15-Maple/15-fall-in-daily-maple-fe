@@ -2,6 +2,8 @@ import clsx from "clsx";
 import { useState } from "react";
 import ReactDOM from "react-dom";
 
+import { verifyPasswordApi } from "../../api/auth";
+
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 
@@ -27,6 +29,7 @@ function PasswordConfirmModal({
   onSuccess,
   confirmText = "확인",
   closeText = "나가기",
+  logId,
 }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -35,17 +38,23 @@ function PasswordConfirmModal({
   if (!isOpen) return null;
 
   const handleConfirm = async () => {
-    // API 통신 등 비밀번호 검증 로직
-    const isCorrect = password === "1234"; // 임시 테스트용 조건
+    try {
+      // 백엔드로 비밀번호 검증 요청
+      const { token } = await verifyPasswordApi(logId, password);
 
-    if (isCorrect) {
+      // 발급받은 출입증(token)을 sessionStorage에 저장
+      // 키 이름에 logId를 넣어서 로그별로 출입증을 따로 관리
+      sessionStorage.setItem(`log_token_${logId}`, token);
+
+      // 성공 처리 (모달 닫기 & 다음 화면 이동)
       setError(null);
-      setPassword(""); // 다음 번 열릴 때를 대비해 초기화
+      setPassword("");
       onSuccess();
-    } else {
-      // 모달을 닫지 않고 에러 상태만 업데이트
+    } catch (err) {
+      // API에서 401 에러(비밀번호 틀림)를 던진 경우
       setError({
-        message: "비밀번호가 일치하지 않습니다. 다시 확인해 주세요.",
+        message:
+          err.message || "비밀번호가 일치하지 않습니다. 다시 확인해 주세요.",
       });
     }
   };

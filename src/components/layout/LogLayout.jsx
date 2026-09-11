@@ -10,6 +10,7 @@ import { getLog } from "../../api/logs.js";
 import { nowTime } from "../../utils/formatDateTime.js";
 
 import { ROUTES } from "../../constants/routes";
+import PasswordConfirmModal from "../common/PasswordConfirmModal";
 import PointHistory from "../point/PointHistory";
 import NavButton from "../ui/NavButton";
 
@@ -19,6 +20,9 @@ function LogLayout() {
   const { logId } = useParams();
   const [logData, setLogData] = useState(null);
   const [error, setError] = useState(null);
+
+  // 비밀번호 모달
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // 현재 위치 정보
   const location = useLocation();
@@ -32,6 +36,7 @@ function LogLayout() {
   // 토스트 컨텍스트
   const { showToast } = useOutletContext();
 
+  // 로그 데이터
   useEffect(() => {
     const fetchLog = async () => {
       try {
@@ -44,6 +49,24 @@ function LogLayout() {
     };
     fetchLog();
   }, [logId]);
+
+  // 비밀번호 검증
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      showToast(
+        "warning",
+        "🚨 인증이 만료되었습니다. 다시 비밀번호를 입력해주세요.",
+      );
+
+      setIsAuthModalOpen(true);
+    };
+
+    window.addEventListener("auth-expired", handleAuthExpired);
+
+    return () => {
+      window.removeEventListener("auth-expired", handleAuthExpired);
+    };
+  }, [showToast]);
 
   // TODO: 에러, 로딩 처리 추가 필요
   if (error) return <div>{error}</div>;
@@ -94,6 +117,18 @@ function LogLayout() {
           <Outlet context={{ logData, showToast }} />
         </div>
       </div>
+
+      {/* 비밀번호 모달 */}
+      <PasswordConfirmModal
+        isOpen={isAuthModalOpen}
+        logId={logId}
+        title={logData.name}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={() => {
+          setIsAuthModalOpen(false);
+          showToast("success", "🎉 인증되었습니다!");
+        }}
+      />
     </div>
   );
 }
