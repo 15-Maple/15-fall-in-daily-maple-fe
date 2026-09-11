@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
+import LogLayout from "./components/layout/LogLayout";
 import CreateLog from "./pages/createLog/CreateLog";
 import UpdateLog from "./pages/createLog/UpdateLog";
 import HomePage from "./pages/HomePage";
@@ -19,9 +20,17 @@ const router = createBrowserRouter([
       { path: ROUTES.SAMPLE, element: <SamplePage /> },
       { path: ROUTES.CREATE_LOG, element: <CreateLog /> },
       { path: ROUTES.LOG_DETAIL, element: <LogDetail /> },
+
       { path: ROUTES.UPDATE_LOG, element: <UpdateLog /> },
-      { path: ROUTES.TODAY_HABITS, element: <TodayHabits /> },
-      { path: ROUTES.TODAY_FOCUS, element: <TodayFocus /> },
+      {
+        path: ROUTES.LOG,
+        element: <LogLayout />,
+        children: [
+          { index: true, element: <></> },
+          { path: "habits", element: <TodayHabits /> },
+          { path: "focus", element: <TodayFocus /> },
+        ],
+      },
     ],
   },
 ]);
