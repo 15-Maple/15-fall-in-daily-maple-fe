@@ -29,6 +29,18 @@ function LogDetail() {
     fetchLog();
   }, [logId]);
 
+  //공유하기 버튼
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+
+      alert("링크가 복사되었습니다람쥐 🐿️");
+    } catch (error) {
+      console.log("링크복사 실패", error);
+    }
+  };
+
+  //수정하기 버튼
   const handleUpdateLog = () => {
     navigate(`/logdetail/${logId}/update`);
   };
@@ -61,7 +73,9 @@ function LogDetail() {
 
           <div className={styles.rightArea}>
             <div className={styles.menu}>
-              <button className={styles.share}>공유하기</button>
+              <button className={styles.share} onClick={handleShare}>
+                공유하기
+              </button>
               <span className={styles.barOne}>|</span>
               <button onClick={handleUpdateLog}>수정하기</button>
               <span className={styles.barTwo}>|</span>
