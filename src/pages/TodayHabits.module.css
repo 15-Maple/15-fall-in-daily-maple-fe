@@ -70,3 +70,25 @@
   color: #818181;
   background-color: #eee;
 }
+
+.emptyHabitBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  height: 230px; /* .habitList와 동일한 기본 높이 */
+}
+
+@media (width >= 744px) {
+  .emptyHabitBox {
+    height: 500px;
+  }
+}
+
+.emptyHabitText {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #818181;
+  text-align: center;
+}
