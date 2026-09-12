@@ -8,7 +8,7 @@ import HomePage from "./pages/HomePage";
 import LogDetail from "./pages/LogDetail";
 import SamplePage from "./pages/SamplePage";
 import TodayFocus from "./pages/TodayFocus";
-import TodayHabits from "./pages/todayHabits/TodayHabits";
+import TodayHabits from "./pages/TodayHabits";
 
 import { ROUTES } from "./constants/routes";
 
