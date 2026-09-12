@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { ROUTES } from "../../constants/routes";
@@ -13,10 +13,9 @@ function Layout() {
   const isHome = location.pathname === ROUTES.HOME;
 
   const [toast, setToast] = useState(null);
-
-  const showToast = (variant, points) => {
-    setToast({ variant, points, key: Date.now() });
-  };
+  const showToast = useCallback((variant, message) => {
+    setToast({ variant, message, key: Date.now() });
+  }, []);
 
   return (
     <div className={styles.layoutWrapper}>
@@ -28,7 +27,7 @@ function Layout() {
       {toast && (
         <Toast
           key={toast.key}
-          points={toast.points}
+          message={toast.message}
           variant={toast.variant}
           onClose={() => setToast(null)}
         />

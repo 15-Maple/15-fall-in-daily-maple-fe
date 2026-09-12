@@ -4,13 +4,8 @@ import ReactDOM from "react-dom";
 
 import styles from "./Toast.module.css";
 
-function Toast({ variant, points, onClose }) {
+function Toast({ variant = "success", message, onClose }) {
   const [isClosing, setIsClosing] = useState(false);
-
-  const message =
-    variant === "warning"
-      ? "🚨 집중이 중단되었습니다."
-      : `🎉 ${points}포인트를 획득했습니다!`;
 
   useEffect(() => {
     // 2.7초 뒤에 사라지는 애니메이션 시작
@@ -34,7 +29,7 @@ function Toast({ variant, points, onClose }) {
       role="alert"
       className={clsx(
         styles.toastWrapper,
-        styles[variant],
+        styles[variant], // success, warning, error 등
         isClosing ? styles.fadeOut : styles.fadeIn,
       )}
     >
