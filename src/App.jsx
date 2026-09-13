@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import RequireLogPassword from "./components/auth/RequireLogPassword";
 import Layout from "./components/layout/Layout";
 import LogLayout from "./components/layout/LogLayout";
 import CreateLog from "./pages/createLog/CreateLog";
@@ -28,7 +29,14 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <></> },
           { path: "habits", element: <TodayHabits /> },
-          { path: "focus", element: <TodayFocus /> },
+          {
+            path: "focus",
+            element: (
+              <RequireLogPassword>
+                <TodayFocus />
+              </RequireLogPassword>
+            ),
+          },
         ],
       },
     ],
