@@ -74,6 +74,14 @@ legend {
   margin-bottom: 1.5rem;
 }
 
+.nameWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  place-content: center space-between;
+  width: 100%;
+}
+
 .submitButton {
   display: flex;
   gap: 0.625rem;
@@ -171,6 +179,26 @@ textarea {
   font-weight: 400;
   line-height: normal;
   color: var(--red-error_C41013, #c41013);
+}
+
+.inputCorrect {
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: #418099;
+}
+
+.nameCheckBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10rem;
+  color: var(--color-white);
+  background: var(--color-brand-bg);
+  border-radius: 16px;
 }
 
 /* tablet */
