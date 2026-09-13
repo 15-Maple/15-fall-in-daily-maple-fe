@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { getHabitsWeekly } from "../../api/habit/habit";
+import { getHabitsWeekly } from "../../api/habit.js";
 
 import dotori_0 from "../../assets/dotori_0.svg";
 import dotori_1 from "../../assets/dotori_1.svg";

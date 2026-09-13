@@ -4,7 +4,7 @@ import {
   createHabitCheck,
   deleteHabitCheck,
   getTodayHabits,
-} from "../api/habit/habit.js";
+} from "../api/habit.js";
 
 export function useTodayHabitList(logId) {
   const [habits, setHabits] = useState([]);
@@ -47,9 +47,9 @@ export function useTodayHabitList(logId) {
     try {
       // 상태에 따라 생성/삭제 분기
       if (wasChecked) {
-        await deleteHabitCheck(habitId);
+        await deleteHabitCheck(habitId, logId);
       } else {
-        await createHabitCheck(habitId);
+        await createHabitCheck(habitId, logId);
       }
     } catch (err) {
       console.error("습관 체크 저장 실패:", err);

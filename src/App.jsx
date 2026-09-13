@@ -28,7 +28,14 @@ const router = createBrowserRouter([
         element: <LogLayout />,
         children: [
           { index: true, element: <></> },
-          { path: "habits", element: <TodayHabits /> },
+          {
+            path: "habits",
+            element: (
+              <RequireLogPassword>
+                <TodayHabits />
+              </RequireLogPassword>
+            ),
+          },
           {
             path: "focus",
             element: (

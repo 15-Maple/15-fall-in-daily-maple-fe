@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getTodayHabits } from "../api/habit/habit.js";
+import { getTodayHabits } from "../api/habit.js";
 
 export function useTodayHabits(logId) {
   const [habits, setHabits] = useState([]);
