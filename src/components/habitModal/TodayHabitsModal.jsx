@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 import { syncTodayHabits } from "../../api/habit.js";
 import { useTodayHabits } from "../../hooks/useTodayHabits.js";
 
+import { TOKEN_PREFIX } from "../../constants/auth.js";
+import PasswordConfirmModal from "../common/PasswordConfirmModal.jsx";
 import Button from "../ui/Button.jsx";
 
 import trashcanIcon from "../../assets/ic-trashcan.svg";
@@ -13,7 +16,7 @@ const MAX_HABIT_COUNT = 30;
 
 function HabitsModal({ id, onClose, onSaved }) {
   const { habits, setHabits, isLoading, error } = useTodayHabits(id);
-
+  const { logData } = useOutletContext();
   const [isAdding, setIsAdding] = useState(false); // 새 습관 입력창 표시 여부
   const [newHabitName, setNewHabitName] = useState(""); // 새 습관 이름 저장
   const [placeholder, setPlaceholder] = useState("새로운 습관을 입력해주세요");
@@ -24,12 +27,14 @@ function HabitsModal({ id, onClose, onSaved }) {
   const [deletedIds, setDeletedIds] = useState([]); // 삭제한 "기존" 습관 id 모아두기 (저장할 때 한 번에 보냄)
   const [errorMessage, setErrorMessage] = useState(""); // 화면에 보여줄 에러 문구
   const [isSubmitting, setIsSubmitting] = useState(false); // 저장 중 중복 클릭 방지
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   // 삭제 버튼: 바로 API 호출하지 않고 화면에서만 지우고, 기존 습관이면 삭제 목록에 담아둠
   const handleDelete = (habitId) => {
     const target = habits.find((habit) => habit.id === habitId);
-    if (!target) return;
-
+    if (!target) {
+      return;
+    }
     if (!target.isNew) {
       setDeletedIds([...deletedIds, habitId]);
     }
@@ -45,7 +50,9 @@ function HabitsModal({ id, onClose, onSaved }) {
   // Enter를 누르면 새 습관을 기존 습관 목록에 그대로 추가 (같은 배열, isNew로만 구분)
   const handleAddHabit = () => {
     const trimmedName = newHabitName.trim();
-    if (!trimmedName) return;
+    if (!trimmedName) {
+      return;
+    }
 
     if (habits.length >= MAX_HABIT_COUNT) {
       setErrorMessage(`습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`);
@@ -68,7 +75,9 @@ function HabitsModal({ id, onClose, onSaved }) {
 
   const handleEditHabit = () => {
     const habit = habits.find((habit) => habit.id === editingHabitId);
-    if (!habit) return;
+    if (!habit) {
+      return;
+    }
 
     const trimmedName = editingHabitName.trim();
 
@@ -101,7 +110,9 @@ function HabitsModal({ id, onClose, onSaved }) {
 
   // 수정 완료: 화면에 있는 상태를 create / update / delete로 나눠서 한 번에 전송
   const handleSubmit = async () => {
-    if (isSubmitting) return;
+    if (isSubmitting) {
+      return;
+    }
 
     const createList = [];
     const updateList = [];
@@ -126,7 +137,14 @@ function HabitsModal({ id, onClose, onSaved }) {
       onSaved(); // 저장 성공했을 때만 → 재조회 + 닫기
     } catch (err) {
       console.error("습관 목록 저장 실패:", err);
-      setErrorMessage(err.message || "저장에 실패했습니다. 다시 시도해주세요.");
+      if (err.cause?.response?.status === 401) {
+        sessionStorage.removeItem(`${TOKEN_PREFIX}${id}`);
+        setIsPasswordModalOpen(true);
+      } else {
+        setErrorMessage(
+          err.message || "저장에 실패했습니다. 다시 시도해주세요.",
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -262,6 +280,16 @@ function HabitsModal({ id, onClose, onSaved }) {
           </Button>
         </div>
       </div>
+      <PasswordConfirmModal
+        isOpen={isPasswordModalOpen}
+        logId={id}
+        title={logData.name}
+        onClose={() => setIsPasswordModalOpen(false)}
+        onSuccess={() => {
+          setIsPasswordModalOpen(false);
+          handleSubmit();
+        }}
+      />
     </div>
   );
 }

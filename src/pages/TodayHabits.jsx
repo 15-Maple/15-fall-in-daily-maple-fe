@@ -29,8 +29,21 @@ function TodayHabits() {
     refresh,
   } = useTodayHabitList(logId);
 
-  if (isLoading) return <p>불러오는 중...</p>;
-  if (error) return <p>에러가 발생했습니다: {error.message}</p>;
+  if (isLoading) {
+    return (
+      <div className={styles.habitCard}>
+        <p>불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.habitCard}>
+        <p>에러가 발생했습니다: {error.message}</p>
+      </div>
+    );
+  }
 
   return (
     <>
