@@ -1,3 +1,4 @@
+import { TOKEN_PREFIX } from "../constants/auth";
 import { api } from "./axios.js";
 
 // 로그 생성하기
@@ -20,12 +21,16 @@ export function getLogById(logId) {
 
 // 로그 수정하기
 export function updateLog(logId, logData) {
-  return api.patch(`/logs/${logId}`, logData);
+  const token = sessionStorage.getItem(`${TOKEN_PREFIX}${logId}`);
+  return api.patch(`/logs`, logData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 // 로그 삭제하기
 export function deleteLog(logId) {
-  return api.delete(`/logs/${logId}`);
+  const token = sessionStorage.getItem(`${TOKEN_PREFIX}${logId}`);
+  return api.delete(`/logs`, { headers: { Authorization: `Bearer ${token}` } });
 }
 
 // export function verifyLogPassword(logId, password) {

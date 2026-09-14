@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "http://localhost:5001/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api",
 });
 
 // 기존 만들어두셨던 interceptor와 합쳤습니다.(비밀번호 처리 추가)
