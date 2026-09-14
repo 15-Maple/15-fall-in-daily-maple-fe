@@ -3,6 +3,8 @@
   background-color: #f1e3d8;
 }
 
+/* 컨텐츠영역 흰색배경 */
+
 .content {
   box-sizing: border-box;
   width: 100%;
@@ -32,6 +34,8 @@
   align-items: flex-end;
 }
 
+/* 공유 수정 삭제 버튼 */
+
 .menu {
   display: flex;
   gap: 16px;
@@ -56,43 +60,21 @@
   color: #818181;
 }
 
+/* 오늘의 습관/집중 버튼(pc) */
+
 .habitMenu {
   display: flex;
   gap: 16px;
   margin-top: 20px;
 }
 
+/* 오늘의 습관/집중 버튼(mo) */
+
 .mobileHabitMenu {
   display: none;
 }
 
-.todayHabit {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  padding: 0 20px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #818181;
-  border: 1px solid #ddd;
-  border-radius: 15px;
-}
-
-.todayFocus {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  padding: 0 20px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #818181;
-  border: 1px solid #ddd;
-  border-radius: 15px;
-}
+/* 제목 */
 
 .title {
   margin-top: 20px;
@@ -100,12 +82,16 @@
   font-weight: 800;
 }
 
+/* 소개 */
+
 .label {
   margin-top: 20px;
   font-size: 18px;
   font-weight: 400;
   color: #818181;
 }
+
+/* 내용 */
 
 .desc {
   font-size: 18px;
@@ -133,6 +119,22 @@
     width: 100%;
   }
 
+  .title {
+    font-size: 24px;
+  }
+
+  .label {
+    font-size: 16px;
+  }
+
+  .desc {
+    font-size: 14px;
+  }
+
+  .pointText {
+    font-size: 16px;
+  }
+
   .menu {
     display: flex;
     flex-wrap: wrap;
@@ -140,6 +142,7 @@
     order: 1;
     width: 100%;
     margin-bottom: 20px;
+    font-size: 12px;
   }
 
   .leftArea {
@@ -167,17 +170,8 @@
     min-width: 0;
   }
 
-  /* .topArea {
-    width: 100%;
-    min-width: 0;
-  } */
-
   .leftArea,
   .rightArea {
     min-width: 0;
   }
-
-  /* .menu {
-    min-width: 0;
-  } */
 }
