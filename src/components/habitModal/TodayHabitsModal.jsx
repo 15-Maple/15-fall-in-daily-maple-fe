@@ -15,6 +15,7 @@ import styles from "./TodayHabitsModal.module.css";
 const MAX_HABIT_COUNT = 30;
 
 function HabitsModal({ id, onClose, onSaved }) {
+  const { showToast } = useOutletContext();
   const { habits, setHabits, isLoading, error } = useTodayHabits(id);
   const { logData } = useOutletContext();
   const [isAdding, setIsAdding] = useState(false); // 새 습관 입력창 표시 여부
@@ -25,7 +26,6 @@ function HabitsModal({ id, onClose, onSaved }) {
   const [editingHabitName, setEditingHabitName] = useState(""); // (수정) input에 입력하고 있는 이름
 
   const [deletedIds, setDeletedIds] = useState([]); // 삭제한 "기존" 습관 id 모아두기 (저장할 때 한 번에 보냄)
-  const [errorMessage, setErrorMessage] = useState(""); // 화면에 보여줄 에러 문구
   const [isSubmitting, setIsSubmitting] = useState(false); // 저장 중 중복 클릭 방지
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
@@ -55,13 +55,17 @@ function HabitsModal({ id, onClose, onSaved }) {
     }
 
     if (habits.length >= MAX_HABIT_COUNT) {
-      setErrorMessage(`습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`);
+      showToast(
+        "warning",
+        `습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`,
+      );
       return;
     }
 
     const isDuplicate = habits.some((habit) => habit.name === trimmedName);
+
     if (isDuplicate) {
-      setErrorMessage("이미 같은 이름의 습관이 있어요.");
+      showToast("warning", "이미 같은 이름의 습관이 있어요.");
       return;
     }
 
@@ -70,7 +74,6 @@ function HabitsModal({ id, onClose, onSaved }) {
 
     setNewHabitName("");
     setIsAdding(false);
-    setErrorMessage("");
   };
 
   const handleEditHabit = () => {
@@ -92,7 +95,7 @@ function HabitsModal({ id, onClose, onSaved }) {
       (h) => h.id !== editingHabitId && h.name === trimmedName,
     );
     if (isDuplicate) {
-      setErrorMessage("이미 같은 이름의 습관이 있어요.");
+      showToast("warning", "이미 같은 이름의 습관이 있어요.");
       return;
     }
 
@@ -105,7 +108,6 @@ function HabitsModal({ id, onClose, onSaved }) {
 
     setEditingHabitId(null);
     setEditingHabitName("");
-    setErrorMessage("");
   };
 
   // 수정 완료: 화면에 있는 상태를 create / update / delete로 나눠서 한 번에 전송
@@ -125,8 +127,30 @@ function HabitsModal({ id, onClose, onSaved }) {
       }
     });
 
+    // Enter를 누르지 않은 새 습관도 저장 대상에 포함
+    const trimmedNewHabitName = newHabitName.trim();
+
+    if (trimmedNewHabitName) {
+      const isDuplicate = habits.some(
+        (habit) => habit.name === trimmedNewHabitName,
+      );
+
+      if (isDuplicate) {
+        showToast("warning", "이미 같은 이름의 습관이 있어요.");
+        return;
+      }
+      if (habits.length >= MAX_HABIT_COUNT) {
+        showToast(
+          "warning",
+          `습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`,
+        );
+        return;
+      }
+
+      createList.push({ name: trimmedNewHabitName });
+    }
+
     setIsSubmitting(true);
-    setErrorMessage("");
 
     try {
       await syncTodayHabits(id, {
@@ -134,6 +158,9 @@ function HabitsModal({ id, onClose, onSaved }) {
         update: updateList,
         delete: deletedIds,
       });
+
+      showToast("success", "습관 목록이 수정되었습니다.");
+
       onSaved(); // 저장 성공했을 때만 → 재조회 + 닫기
     } catch (err) {
       console.error("습관 목록 저장 실패:", err);
@@ -141,7 +168,8 @@ function HabitsModal({ id, onClose, onSaved }) {
         sessionStorage.removeItem(`${TOKEN_PREFIX}${id}`);
         setIsPasswordModalOpen(true);
       } else {
-        setErrorMessage(
+        showToast(
+          "warning",
           err.message || "저장에 실패했습니다. 다시 시도해주세요.",
         );
       }
@@ -249,21 +277,43 @@ function HabitsModal({ id, onClose, onSaved }) {
                 }
               }}
             />
-            <div className={styles.habitAddSpacer} />
+            <button
+              aria-label="새 습관 입력 취소"
+              type="button"
+              className={styles.habitDelete}
+              onClick={() => {
+                setNewHabitName("");
+                setIsAdding(false);
+              }}
+            >
+              <img
+                alt=""
+                src={trashcanIcon}
+                className={styles.habitDeleteIcon}
+              />
+            </button>
           </div>
         )}
         <div className={styles.habitAddLayout}>
           <button
-            disabled={habits.length >= MAX_HABIT_COUNT}
+            aria-disabled={habits.length >= MAX_HABIT_COUNT}
             className={styles.habitAdd}
-            onClick={() => setIsAdding(true)}
+            onClick={() => {
+              if (habits.length >= MAX_HABIT_COUNT) {
+                showToast(
+                  "warning",
+                  `습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`,
+                );
+                return;
+              }
+
+              setIsAdding(true);
+            }}
           >
             +
           </button>
           <div className={styles.habitAddSpacer} />
         </div>
-
-        {errorMessage && <p className={styles.formError}>{errorMessage}</p>}
 
         <div className={styles.btnLayout}>
           <Button
