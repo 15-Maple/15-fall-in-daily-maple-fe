@@ -1,4 +1,4 @@
-import styles from "./Habit.module.css";
+import styles from "./habit.module.css"; // 대문자 문제
 
 function Nohabit() {
   return (
