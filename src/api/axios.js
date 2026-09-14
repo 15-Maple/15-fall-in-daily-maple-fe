@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const VITE_API_BASE_URL =
+  "https://one5-fall-in-daily-maple-be.onrender.com/api";
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api",
+  baseURL: VITE_API_BASE_URL || "http://localhost:5001/api",
 });
 
 // 기존 만들어두셨던 interceptor와 합쳤습니다.(비밀번호 처리 추가)
