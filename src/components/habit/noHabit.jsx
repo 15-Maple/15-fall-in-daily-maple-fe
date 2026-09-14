@@ -2,7 +2,7 @@ import styles from "./Habit.module.css";
 
 function Nohabit() {
   return (
-    <div className={styles.box}>
+    <div className={styles.noHabitBox}>
       <h2 className={styles.title}>습관기록표</h2>
 
       <p className={styles.noHabitText}>

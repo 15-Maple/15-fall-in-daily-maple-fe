@@ -3,7 +3,7 @@ import ReactionItem from "./ReactionItem";
 
 import styles from "./ReactionList.module.css";
 
-function ReactionList({ reactions, wrap }) {
+function ReactionList({ reactions, wrap, onEmojiClick }) {
   let listClass = styles.reactionList;
 
   if (wrap) {
@@ -14,7 +14,12 @@ function ReactionList({ reactions, wrap }) {
     <div className={listClass}>
       {/* 리액션에 있는 개수만큼 아이템 만들기 */}
       {reactions.map((item) => (
-        <ReactionItem key={item.emoji} count={item.count} emoji={item.emoji} />
+        <ReactionItem
+          key={item.emoji}
+          count={item.count}
+          emoji={item.emoji}
+          onEmojiClick={onEmojiClick}
+        />
       ))}
     </div>
   );
