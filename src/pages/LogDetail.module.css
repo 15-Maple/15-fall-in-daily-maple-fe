@@ -1,4 +1,5 @@
 .page {
+  width: 100%;
   background-color: #f1e3d8;
 }
 
@@ -154,4 +155,29 @@
   .habitMenu {
     display: none;
   }
+
+  .page {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .content {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* .topArea {
+    width: 100%;
+    min-width: 0;
+  } */
+
+  .leftArea,
+  .rightArea {
+    min-width: 0;
+  }
+
+  /* .menu {
+    min-width: 0;
+  } */
 }

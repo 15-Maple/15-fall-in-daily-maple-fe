@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import { getHabitsWeekly } from "../../api/habit.js";
 
+import Nohabit from "./noHabit";
+
 import dotori_0 from "../../assets/dotori_0.svg";
 import dotori_1 from "../../assets/dotori_1.svg";
 
@@ -25,6 +27,11 @@ function HabitTable({ logId }) {
       }
     })();
   }, [logId]);
+
+  //습관이 없으면 nohabit
+  if (habitWeekly.length === 0) {
+    return <Nohabit />;
+  }
 
   return (
     <div className={styles.box}>

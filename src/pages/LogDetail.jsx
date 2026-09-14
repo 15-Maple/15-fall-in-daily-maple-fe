@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 import { getLogById, deleteLog as requestDeleteLog } from "../api/logs.js";
 import { removeRecentLog } from "../utils/recentLogs.js";
 
 import HabitTable from "../components/habit/habitTable.jsx";
-//import Nohabit from "../components/habit/noHabit.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 import NavButton from "../components/ui/NavButton.jsx";
@@ -17,6 +17,8 @@ import styles from "./LogDetail.module.css";
 function LogDetail() {
   const { logId } = useParams();
   const navigate = useNavigate();
+  const { showToast } = useOutletContext();
+  console.log("showToast:", showToast);
   const [log, setLog] = useState(null);
   console.log(log);
 
@@ -35,7 +37,7 @@ function LogDetail() {
     try {
       await navigator.clipboard.writeText(window.location.href);
 
-      alert("링크가 복사되었습니 다람쥐 🐿️");
+      showToast("success", "링크가 복사되었습니 다람쥐 🐿️");
     } catch (error) {
       console.log("링크복사 실패", error);
     }
