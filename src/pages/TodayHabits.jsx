@@ -91,7 +91,8 @@ function TodayHabits() {
       {isEditOpen && (
         <TodayHabitsModal
           id={selectedId}
-          onClose={async () => {
+          onClose={() => setIsEditOpen(false)}
+          onSaved={() => {
             refresh();
             setIsEditOpen(false);
           }}
