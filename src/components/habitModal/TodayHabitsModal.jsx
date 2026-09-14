@@ -164,15 +164,15 @@ function HabitsModal({ id, onClose, onSaved }) {
       onSaved(); // 저장 성공했을 때만 → 재조회 + 닫기
     } catch (err) {
       console.error("습관 목록 저장 실패:", err);
-if (err.cause?.response?.status === 401) {
-  sessionStorage.removeItem(`${TOKEN_PREFIX}${id}`);
-  setIsPasswordModalOpen(true);
-} else {
-  showToast(
-    "warning",
-    err.message || "저장에 실패했습니다. 다시 시도해주세요.",
-  );
-}
+      if (err.cause?.response?.status === 401) {
+        sessionStorage.removeItem(`${TOKEN_PREFIX}${id}`);
+        setIsPasswordModalOpen(true);
+      } else {
+        showToast(
+          "warning",
+          err.message || "저장에 실패했습니다. 다시 시도해주세요.",
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
