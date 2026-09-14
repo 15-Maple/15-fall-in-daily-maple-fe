@@ -58,3 +58,12 @@ export const getHomeLogs = async () => {
     }),
   );
 };
+
+// 로그 이름 중복검사
+export function nameCheck(name) {
+  return api.get("/logs/name-check", {
+    params: {
+      name: name.trim(),
+    },
+  });
+}

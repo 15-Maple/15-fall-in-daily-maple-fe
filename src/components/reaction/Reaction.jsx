@@ -61,6 +61,9 @@ function Reaction() {
 
       return [...prev, newReaction];
     });
+
+    //이모지 선택 후 선택창 닫기
+    setIsOpen(false);
   };
 
   //큰순으로 정렬
@@ -78,7 +81,9 @@ function Reaction() {
   return (
     <section>
       <div className={styles.reactionContent}>
-        {topReactions.length > 0 && <ReactionList reactions={topReactions} />}
+        {topReactions.length > 0 && (
+          <ReactionList reactions={topReactions} onEmojiClick={EmojiClick} />
+        )}
 
         {/* 4번째 이후 리액션 더보기 */}
         {hiddenReactions.length > 0 && (
@@ -87,6 +92,7 @@ function Reaction() {
             reactions={hiddenReactions}
             setIsOpen={setIsOpen}
             setMoreOpen={setMoreOpen}
+            onEmojiClick={EmojiClick}
           />
         )}
 

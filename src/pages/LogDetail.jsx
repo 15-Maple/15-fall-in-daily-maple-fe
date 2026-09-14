@@ -7,7 +7,6 @@ import { removeRecentLog } from "../utils/recentLogs.js";
 import Modal from "../components/common/Modal.jsx";
 import PasswordConfirmModal from "../components/common/PasswordConfirmModal.jsx";
 import HabitTable from "../components/habit/habitTable.jsx";
-//import Nohabit from "../components/habit/noHabit.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 import NavButton from "../components/ui/NavButton.jsx";
@@ -48,8 +47,7 @@ function LogDetail() {
     try {
       await navigator.clipboard.writeText(window.location.href);
 
-      // alert("링크가 복사되었습니 다람쥐 🐿️");
-      // 토스트로 변경하였습니다!
+      // 토스트배너
       showToast("success", "링크가 복사되었습니 다람쥐 🐿️");
     } catch (error) {
       console.log("링크복사 실패", error);
