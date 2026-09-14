@@ -259,7 +259,7 @@
   -webkit-box-orient: vertical;
 }
 
-/* 기존 정보 영역이 필요하면 유지 */
+/* 기존 정보 영역 */
 
 .logsCardInfo {
   display: flex;
@@ -316,7 +316,14 @@
 /* 데이터가 없을 때 */
 
 .emptyMessage {
-  margin: auto;
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: 160px;
+  padding-top: 50px;
+  margin: 0;
   font-size: clamp(12px, 1.5vw, 14px);
   color: #777;
   text-align: center;
@@ -357,8 +364,14 @@
     padding: 20px;
   }
 
-  .recentLogsList,
+  .recentLogsList {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
   .logsGrid {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
@@ -368,7 +381,14 @@
   }
 
   .logsSearchInput {
+    box-sizing: border-box;
+    flex: none;
+    width: 100%;
     max-width: none;
+    height: 56px;
+    padding: 0 20px;
+    font-size: 16px;
+    border-radius: 16px;
   }
 
   .logsCardContent {
@@ -389,33 +409,80 @@
     border-radius: 12px;
   }
 
+  /* 최근 조회 로그는 가로 스크롤 */
+  .recentLogsList {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    overflow: auto hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .recentLogsList::-webkit-scrollbar {
+    display: none;
+  }
+
+  .recentLogsList .logsCard {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+  }
+
+  /* 검색 + 정렬 */
   .logsListControls {
+    display: flex;
     flex-direction: column;
+    gap: 16px;
     align-items: stretch;
   }
 
   .logsSearchInput {
+    box-sizing: border-box;
+    flex: none;
     width: 100%;
     max-width: none;
+    height: 44px;
+    padding: 0 16px;
   }
 
   .logsSortBox {
-    width: 100%;
+    align-self: flex-end;
+    width: 65%;
+    min-width: 190px;
   }
 
-  .recentLogsList,
+  .logsSortButton {
+    width: 100%;
+    height: 52px;
+    padding: 0 18px;
+    font-size: 16px;
+    border-radius: 16px;
+  }
+
+  /* 로그 둘러보기는 세로 1열 */
   .logsGrid {
+    display: grid;
     grid-template-columns: 1fr;
     gap: 16px;
     width: 100%;
+    min-height: 200px;
   }
 
-  .logsCard {
+  /* 빈 상태 문구 */
+  .emptyMessage {
+    min-height: 160px;
+    padding-top: 50px;
+  }
+
+  /* 카드 */
+  .logCard {
+    height: 280px;
     min-height: 280px;
   }
 
   .logsCardContent {
-    min-height: 280px;
+    height: 100%;
+    min-height: 0;
     padding: 20px;
   }
 
@@ -424,8 +491,14 @@
   }
 
   .logsCardDescription {
-    margin-top: 24px;
+    display: -webkit-box;
+    margin: 16px 0 10px;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     font-size: 13px;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
   }
 
   .logsCardPoint {
