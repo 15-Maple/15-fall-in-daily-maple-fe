@@ -263,7 +263,21 @@ function HabitsModal({ id, onClose, onSaved }) {
                 }
               }}
             />
-            <div className={styles.habitAddSpacer} />
+            <button
+              aria-label="새 습관 입력 취소"
+              type="button"
+              className={styles.habitDelete}
+              onClick={() => {
+                setNewHabitName("");
+                setIsAdding(false);
+              }}
+            >
+              <img
+                alt=""
+                src={trashcanIcon}
+                className={styles.habitDeleteIcon}
+              />
+            </button>
           </div>
         )}
         <div className={styles.habitAddLayout}>
