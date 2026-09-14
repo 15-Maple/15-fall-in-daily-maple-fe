@@ -4,6 +4,10 @@ import { useParams } from "react-router-dom";
 
 import { updateLog, getLogById, nameCheck } from "../../api/logs.js";
 
+import Modal from "../../components/common/Modal.jsx";
+
+import { TOKEN_PREFIX } from "../../constants/auth";
+import { ROUTES } from "../../constants/routes.js";
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
 import btnVisibilityOff from "../../assets/btn_visibility_off_24px.svg";
@@ -46,6 +50,11 @@ function UpdateLog() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
     useState(false);
+
+  // 접근권한 체크
+  const hasToken = !!sessionStorage.getItem(`${TOKEN_PREFIX}${logId}`);
+  const showNoAccessAlert = !hasToken;
+
   // 비밀번호 가시화/비가시화 버튼
   const handleBtnVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -84,10 +93,9 @@ function UpdateLog() {
 
   // 현재 logid의 데이터 불러오기
   useEffect(() => {
+    // 토큰이나 로그 id 없으면 return
+    if (!hasToken || !logId) return;
     async function loadLog() {
-      // 로그 id 없으면 return
-      if (!logId) return;
-
       try {
         const log = await getLogById(logId);
 
@@ -109,7 +117,7 @@ function UpdateLog() {
     }
 
     loadLog();
-  }, [logId]);
+  }, [logId, hasToken]);
 
   // 한글 입력 조합 시작
   const handleCompositionStart = () => {
@@ -477,6 +485,20 @@ function UpdateLog() {
           수정 완료
         </button>
       </form>
+      {/* 접근권한 알럿 */}
+      {showNoAccessAlert && (
+        <Modal
+          content="접근 권한이 없습니다."
+          isOpen={true}
+          type="alert"
+          onClose={() => {
+            navigate(logId ? `/logdetail/${logId}` : ROUTES.HOME, {
+              replace: true,
+            });
+          }}
+        />
+      )}
+      {/* 알럿 모달이 추가로 필요한 경우 새로 Modal을 추가해서 써주세요! */}
     </div>
   );
 }
