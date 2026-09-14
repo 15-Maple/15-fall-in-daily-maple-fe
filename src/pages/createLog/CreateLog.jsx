@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { createLog, getLog } from "../../api/logs.js";
+import { createLog, getLogById } from "../../api/logs.js";
 
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
@@ -167,7 +167,7 @@ function CreateLog() {
       console.log("로그가 생성되었습니다: ", createdLog);
 
       // 생성된 로그 id로 조회하기
-      const fetchedLog = await getLog(logId);
+      const fetchedLog = await getLogById(logId);
 
       // logDetail/id 페이지로 이동하기
       navigate(`/logdetail/${logId}`, {

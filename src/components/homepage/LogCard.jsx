@@ -1,5 +1,3 @@
-// src/components/logs/LogCard.jsx
-
 import styles from "../../pages/Home.module.css";
 
 import bgBlue from "../../assets/bg_blue.svg";
@@ -39,6 +37,11 @@ function LogCard({
 
   const isImageBackground = IMAGE_BACKGROUNDS.includes(background);
 
+  // count가 많은 순서대로 정렬한 뒤 최대 3개만 사용
+  const topReactions = [...reactions]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3);
+
   return (
     <article
       className={`${styles.logsCard} ${
@@ -73,7 +76,7 @@ function LogCard({
         <p className={styles.logsCardDescription}>{description}</p>
 
         <div className={styles.logsCardReactions}>
-          {reactions.map((reaction) => (
+          {topReactions.map((reaction) => (
             <span key={reaction.emoji} className={styles.logsCardReaction}>
               {reaction.emoji} {reaction.count}
             </span>

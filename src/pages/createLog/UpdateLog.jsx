@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-import { updateLog, getLog } from "../../api/logs.js";
+import { updateLog, getLogById } from "../../api/logs.js";
 
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
@@ -68,8 +68,11 @@ function UpdateLog() {
   // 현재 logid의 데이터 불러오기
   useEffect(() => {
     async function loadLog() {
+      // 로그 id 없으면 return
+      if (!logId) return;
+
       try {
-        const log = await getLog(logId);
+        const log = await getLogById(logId);
 
         setForm({
           nickname: log.nickname,
@@ -206,10 +209,10 @@ function UpdateLog() {
       console.log("로그가 수정되었습니다: ", updatedLog);
 
       // 생성된 로그 id로 조회하기
-      const fetchedLog = await getLog(updatedLogId);
+      const fetchedLog = await getLogById(updatedLogId);
 
-      // logDetail/id 페이지로 이동하기
-      navigate(`/logDetail/${updatedLogId}`, {
+      // logdetail/id 페이지로 이동하기
+      navigate(`/logdetail/${updatedLogId}`, {
         replace: true,
         state: { log: fetchedLog },
       });

@@ -1,5 +1,7 @@
 .box {
-  width: 1120px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1120px;
   height: auto;
   padding: 25px;
   margin-top: 30px;
@@ -18,7 +20,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding-bottom: 20px;
 }
 
@@ -72,4 +73,47 @@
   height: 430px;
   color: #818181;
   text-align: center;
+}
+
+/* =====================================
+태블릿 (1024px)
+======================================== */
+
+@media (width <= 1024px) {
+  .box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .row {
+    grid-template-columns: 200px repeat(7, 60px);
+  }
+
+  .habit {
+    grid-template-columns: 200px repeat(7, 60px);
+  }
+}
+
+/* =====================================
+모바일 (744px)
+====================================== */
+
+@media (width <= 744px) {
+  .box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .row {
+    grid-template-columns: 200px repeat(7, 60px);
+  }
+
+  .habit {
+    grid-template-columns: 200px repeat(7, 60px);
+  }
+
+  .habitScroll {
+    width: 500px;
+    overflow-x: auto;
+  }
 }

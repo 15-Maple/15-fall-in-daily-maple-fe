@@ -5,7 +5,9 @@ import { useTimer, useStopwatch } from "react-timer-hook";
 
 import { createFocusSession, finishFocus } from "../../api/focus";
 
+import { TOKEN_PREFIX } from "../../constants/auth";
 import Modal from "../common/Modal";
+import PasswordConfirmModal from "../common/PasswordConfirmModal";
 import TimerButton from "../ui/TimerButton";
 
 import timerIcon from "../../assets/ic-timer.svg";
@@ -24,6 +26,9 @@ function Timer() {
   // 모달
   const [alertMessage, setAlertMessage] = useState("");
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+
+  // 패스워드 확인 모달
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   // context
   const { logData, showToast } = useOutletContext();
@@ -112,7 +117,7 @@ function Timer() {
   // 시간 멈춤
   const handlePauseTimer = () => {
     pause();
-    showToast("warning");
+    showToast("warning", "🚨 집중이 중단되었습니다.");
   };
 
   // 시간이 멈춘곳에서 다시 시작
@@ -136,11 +141,21 @@ function Timer() {
   const handleFinishFocus = async () => {
     try {
       const earnedPoints = await finishFocus({ logId });
-      showToast("success", earnedPoints);
+      showToast("success", `🎉 ${earnedPoints}포인트를 획득했습니다!`);
     } catch (error) {
       console.error("집중 종료 에러:", error.message);
-      setAlertMessage(error.message);
-      setIsAlertOpen(true);
+
+      // 에러 코드가 401(권한 없음/토큰 만료)일 경우
+      if (error.response?.status === 401 || error.message.includes("401")) {
+        // 만료된 토큰 지움
+        sessionStorage.removeItem(`${TOKEN_PREFIX}${logId}`);
+        // 비밀번호 모달(다시 입력받고 이어서 처리)
+        setIsPasswordModalOpen(true);
+      } else {
+        // 401이 아닌 다른 에러는 일반 alert
+        setAlertMessage(error.message);
+        setIsAlertOpen(true);
+      }
     }
   };
 
@@ -279,6 +294,19 @@ function Timer() {
           }}
         />
       )}
+
+      {/* 토큰 만료시 비밀번호 모달 */}
+      <PasswordConfirmModal
+        isOpen={isPasswordModalOpen}
+        logId={logId}
+        title={logData.name}
+        onClose={() => setIsPasswordModalOpen(false)}
+        onSuccess={async () => {
+          setIsPasswordModalOpen(false);
+          // 실패했던 집중 종료 API 다시 호출
+          await handleFinishFocus();
+        }}
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react"; // 새 습관 입력 상태 관리
 
-import { deactivateHabit } from "../../api/habit/habit.js";
+import { deactivateHabit } from "../../api/habit.js";
 import { useTodayHabits } from "../../hooks/useTodayHabits.js";
 
 import Button from "../ui/Button.jsx";
