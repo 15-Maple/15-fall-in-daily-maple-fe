@@ -11,7 +11,8 @@
   display: flex;
   flex-direction: column;
   width: 648px;
-  max-height: 80vh; /* 뷰포트 기준 최대 높이 제한 */
+  max-width: calc(100vw - 32px);
+  max-height: 80vh;
   padding: 40px 24px;
   background-color: var(--color-white);
   border-radius: 20px;
@@ -28,13 +29,22 @@
 
 .habitList {
   display: flex;
-  flex: 1; /* 남는 공간을 차지 */
+  flex: 1;
   flex-direction: column;
   gap: 20px;
-  width: 300px;
-  min-height: 0; /* flex 자식이 부모보다 커지는 걸 방지 (스크롤 되게) */
+  width: 100%;
+  max-width: 456px; /* habitName(400) + gap(8) + habitDelete(48) */
+  min-height: 0;
   margin: 24px auto 0;
   overflow-y: auto;
+}
+
+.emptyText {
+  margin: auto 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-gray-dark);
+  text-align: center;
 }
 
 .habitItem {
@@ -43,27 +53,30 @@
   gap: 8px;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .habitName {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  width: 400px;
+  min-width: 0;
   height: 54px;
   font-size: 16px;
   font-weight: 700;
   color: var(--color-gray-dark);
-  text-align: center; /* 새 습관 입력할 때도 텍스트 중앙 정렬 */
+  text-align: center;
   text-decoration: underline;
-  outline: none; /* input 기본 디자인 삭제 */
+  outline: none;
   background-color: var(--color-gray-light);
-  border: none; /* input 기본 디자인 삭제 */
+  border: none;
   border-radius: 20px;
 }
 
 .habitDelete {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: 48px;
@@ -83,14 +96,17 @@
   gap: 8px;
   align-items: center;
   justify-content: center;
-  margin: 20px 0 24px;
+  width: 100%;
+  max-width: 456px;
+  margin: 20px auto 24px;
 }
 
 .habitAdd {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  width: 400px;
+  min-width: 0;
   height: 54px;
   font-size: 30px;
   font-weight: 300;
@@ -98,9 +114,24 @@
   border-radius: 20px;
 }
 
+.habitAdd:disabled {
+  color: var(--color-gray-medium);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .habitAddSpacer {
+  flex-shrink: 0;
   width: 48px;
   height: 48px;
+}
+
+.formError {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-error-dark);
+  text-align: center;
 }
 
 .btnLayout {
@@ -113,4 +144,16 @@
 
 .cancelButton {
   background-color: var(--color-gray-medium);
+}
+
+@media (width <= 744px) {
+  .modalContainer {
+    width: 100%;
+    padding: 32px 16px;
+  }
+
+  .habitList,
+  .habitAddLayout {
+    max-width: 100%;
+  }
 }

@@ -17,7 +17,7 @@ export async function getTodayHabits(logId, { page, limit }) {
 
 // 주간습관기록표 조회
 export async function getHabitsWeekly(logId) {
-  const data = await api.get("/habits/me/weekly", authHeader(logId));
+  const data = await api.get(`/habits/${logId}/weekly`); // 헤더 필요 없음
   return {
     weekStart: data.weekStart,
     weekEnd: data.weekEnd,
@@ -33,7 +33,14 @@ export async function deleteHabitCheck(habitId, logId) {
   return api.delete(`/habits/${habitId}/check`, authHeader(logId));
 }
 
-export async function deactivateHabit(habitId, logId) {
-  // TODO: 백엔드 /habits/:habitId/deactivate 구현되면 실제 API 호출로 교체
-  console.log(`만드는중 ${habitId} ${logId}`);
+// 습관 목록 일괄 저장 (생성/수정/삭제를 한 번에 전송)
+export async function syncTodayHabits(
+  logId,
+  { create, update, delete: deleteIds },
+) {
+  await api.put(
+    "/habits/me",
+    { create, update, delete: deleteIds },
+    authHeader(logId),
+  );
 }
