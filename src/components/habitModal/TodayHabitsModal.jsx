@@ -268,9 +268,19 @@ function HabitsModal({ id, onClose, onSaved }) {
         )}
         <div className={styles.habitAddLayout}>
           <button
-            disabled={habits.length >= MAX_HABIT_COUNT}
+            aria-disabled={habits.length >= MAX_HABIT_COUNT}
             className={styles.habitAdd}
-            onClick={() => setIsAdding(true)}
+            onClick={() => {
+              if (habits.length >= MAX_HABIT_COUNT) {
+                showToast(
+                  "warning",
+                  `습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`,
+                );
+                return;
+              }
+
+              setIsAdding(true);
+            }}
           >
             +
           </button>

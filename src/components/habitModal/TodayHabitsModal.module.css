@@ -114,8 +114,7 @@
   border-radius: 20px;
 }
 
-.habitAdd:disabled {
-  color: var(--color-gray-medium);
+.habitAdd[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.5;
 }
