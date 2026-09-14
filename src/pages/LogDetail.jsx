@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 import { getLogById, deleteLog as requestDeleteLog } from "../api/logs.js";
 import { removeRecentLog } from "../utils/recentLogs.js";
@@ -9,10 +8,9 @@ import HabitTable from "../components/habit/habitTable.jsx";
 //import Nohabit from "../components/habit/noHabit.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
+import NavButton from "../components/ui/NavButton.jsx";
 
 import { ROUTES } from "../constants/routes.js";
-
-import arrow from "../assets/ic-arrow-right.svg";
 
 import styles from "./LogDetail.module.css";
 
@@ -32,10 +30,24 @@ function LogDetail() {
     fetchLog();
   }, [logId]);
 
+  //공유하기 버튼
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+
+      alert("링크가 복사되었습니 다람쥐 🐿️");
+    } catch (error) {
+      console.log("링크복사 실패", error);
+    }
+  };
+
+  //수정하기 버튼
   const handleUpdateLog = () => {
     navigate(`/logdetail/${logId}/update`);
   };
 
+  const todayHabitsPath = ROUTES.TODAY_HABITS.replace(":logId", logId);
+  const todayFocusPath = ROUTES.TODAY_FOCUS.replace(":logId", logId);
   // 로그 삭제하기
   const handleDeleteLog = async () => {
     try {
@@ -60,6 +72,12 @@ function LogDetail() {
               {log ? log.name : "연우의 개발공장"}
             </h1>
 
+            <div className={styles.mobileHabitMenu}>
+              <NavButton pageName="오늘의 습관" to={todayHabitsPath} />
+
+              <NavButton pageName="오늘의 집중" to={todayFocusPath} />
+            </div>
+
             <div className={styles.sub}>
               <p className={styles.label}>소개</p>
 
@@ -77,7 +95,9 @@ function LogDetail() {
 
           <div className={styles.rightArea}>
             <div className={styles.menu}>
-              <button className={styles.share}>공유하기</button>
+              <button className={styles.share} onClick={handleShare}>
+                공유하기
+              </button>
               <span className={styles.barOne}>|</span>
               <button onClick={handleUpdateLog}>수정하기</button>
               <span className={styles.barTwo}>|</span>
@@ -87,20 +107,9 @@ function LogDetail() {
             </div>
 
             <div className={styles.habitMenu}>
-              <Link
-                to={ROUTES.TODAY_HABITS.replace(":logId", logId)}
-                className={styles.todayHabit}
-              >
-                오늘의 습관
-                <img src={arrow} />
-              </Link>
-              <Link
-                to={ROUTES.TODAY_FOCUS.replace(":logId", logId)}
-                className={styles.todayFocus}
-              >
-                오늘의 집중
-                <img src={arrow} />
-              </Link>
+              <NavButton pageName="오늘의 습관" to={todayHabitsPath} />
+
+              <NavButton pageName="오늘의 집중" to={todayFocusPath} />
             </div>
           </div>
         </div>

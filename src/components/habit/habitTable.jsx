@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { getHabitsWeekly } from "../../api/habit/habit";
+import { getHabitsWeekly } from "../../api/habit.js";
 
 import dotori_0 from "../../assets/dotori_0.svg";
 import dotori_1 from "../../assets/dotori_1.svg";
@@ -30,31 +30,35 @@ function HabitTable({ logId }) {
     <div className={styles.box}>
       <h2 className={styles.title}>습관 기록표</h2>
 
-      <div className={styles.habitBox}>
-        {/* 요일 */}
-        <div className={styles.row}>
-          <div className={styles.name}></div>
-          {days.map((day) => (
-            <span key={day} className={styles.week}>
-              {day}
-            </span>
+      <div className={styles.habitScroll}>
+        <div className={styles.habitContent}>
+          <div className={styles.habitBox}>
+            {/* 요일 */}
+            <div className={styles.row}>
+              <div className={styles.name}></div>
+              {days.map((day) => (
+                <span key={day} className={styles.week}>
+                  {day}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {habitWeekly.map((habit) => (
+            <div
+              key={habit.habitId}
+              className={`${styles.habit} ${habit.isDeleted ? styles.disabled : ""}`}
+            >
+              <span className={styles.habitTitle}>{habit.name}</span>
+
+              {habit.records.map((record, index) => (
+                <span key={index}>
+                  <img src={record ? dotori_1 : dotori_0} />
+                </span>
+              ))}
+            </div>
           ))}
         </div>
-
-        {habitWeekly.map((habit) => (
-          <div
-            key={habit.habitId}
-            className={`${styles.habit} ${habit.isDeleted ? styles.disabled : ""}`}
-          >
-            <span className={styles.habitTitle}>{habit.name}</span>
-
-            {habit.records.map((record, index) => (
-              <span key={index}>
-                <img src={record ? dotori_1 : dotori_0} />
-              </span>
-            ))}
-          </div>
-        ))}
       </div>
     </div>
   );
