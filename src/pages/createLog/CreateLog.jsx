@@ -35,7 +35,7 @@ function CreateLog() {
   const [isNamePassedDupCheck, setIsNamePassedDupCheck] = useState(false);
   // 중복 검사에 사용한 이름 저장
   const [checkedName, setCheckedName] = useState("");
-  // 추가
+  // 중복 검사중인지 확인
   const [isNameChecking, setIsNameChecking] = useState(false);
 
   // 한글 조합 감지
@@ -67,10 +67,6 @@ function CreateLog() {
         : touched.passwordConfirm && form.password !== form.passwordConfirm
           ? "*비밀번호가 일치하지 않습니다."
           : "",
-    // nameCheck:
-    //   isNamePassedDupCheck === true
-    //     ? "*사용 가능한 로그 이름입니다."
-    //     : "*이미 존재하는 로그 이름입니다.",
   };
 
   // 로그 이름 중복 검사 응답 양식
@@ -303,7 +299,7 @@ function CreateLog() {
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
-                {/* <Button>중복 확인</Button> */}
+                {/* 중복 확인 버튼 */}
                 <button
                   disabled={isNameChecking}
                   type="button"
