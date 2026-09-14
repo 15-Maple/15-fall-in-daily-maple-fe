@@ -1,0 +1,8 @@
+.reactionList {
+  display: flex;
+  gap: 8px;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}

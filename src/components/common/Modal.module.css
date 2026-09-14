@@ -1,0 +1,113 @@
+/* =========================================
+  1. 기본 스타일(모바일)
+========================================= */
+
+/* 어두운 배경 스타일 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-index-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0 0 0 / 50%);
+}
+
+/* 모달 공통 스타일 */
+.modalWrapper {
+  background-color: var(--color-white);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+
+  /* 기본 애니메이션 (선택사항) */
+  animation: modal-fade-in 0.2s ease-out;
+}
+
+/* 2가지 종류별 모달 크기 (모바일 기준) */
+.alert {
+  width: 344px;
+  height: 223px;
+  padding: 68px 16px 24px;
+}
+
+.confirm {
+  width: 344px;
+  height: 223px;
+  padding: 68px 16px 24px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.modalText {
+  font-size: 18px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-black);
+  text-align: center;
+}
+
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm .buttonGroup {
+  gap: 16px;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+  2. 태블릿,PC 공통 (744px 이상)
+========================================= */
+@media (width >= 744px) {
+  .alert {
+    width: 648px;
+    height: 255px;
+    padding: 80px 24px 40px;
+  }
+
+  .confirm {
+    width: 648px;
+    height: 255px;
+    padding: 80px 24px 40px;
+  }
+
+  .confirm .buttonGroup {
+    gap: 24px;
+  }
+
+  /* 컨펌모달 버튼 스타일링 */
+  .cancelBtn,
+  .confirm .confirmBtn {
+    width: 288px;
+    height: 58px;
+    border-radius: 16px;
+  }
+
+  /* 알럿모달 버튼 스타일링 */
+  .alert .confirmBtn {
+    width: 600px;
+    height: 58px;
+    border-radius: 16px;
+  }
+}

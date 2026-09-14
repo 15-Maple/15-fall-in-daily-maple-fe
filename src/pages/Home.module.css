@@ -1,0 +1,513 @@
+/* 페이지 전체 */
+
+.homePage {
+  width: 100%;
+  max-width: 980px;
+  padding-bottom: 80px;
+}
+
+/* 제목 */
+
+.sectionTitle {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 700;
+}
+
+/* 최근 조회한 로그 */
+
+.recentLogs {
+  padding: clamp(16px, 3vw, 24px);
+  margin-bottom: 64px;
+  background-color: var(--color-white);
+  border-radius: 16px;
+}
+
+.recentLogsList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: stretch;
+  margin-top: 24px;
+}
+
+/* 로그 둘러보기 */
+
+.logsList {
+  padding: clamp(16px, 3vw, 24px);
+  background-color: var(--color-white);
+  border-radius: 16px;
+}
+
+.logsListControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* 검색 */
+
+.logsSearchInput {
+  flex: 1 1 220px;
+  min-width: 0;
+  max-width: 280px;
+  padding: 10px 16px;
+  font-size: 14px;
+  outline: none;
+  background-color: var(--color-white);
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+}
+
+.logsSearchInput:focus {
+  border-color: var(--color-brand-main);
+}
+
+/* 정렬 */
+
+.logsSortBox {
+  position: relative;
+  width: 160px;
+}
+
+.logsSortButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  background-color: var(--color-white);
+  border: 1px solid #d9d9d9;
+  border-radius: 16px;
+}
+
+.logsSortButton:focus {
+  border-color: var(--color-brand-main);
+}
+
+.logsSortButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.logsSortArrow {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.logsSortArrowOpen {
+  transform: rotate(180deg);
+}
+
+.logsSortDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  background-color: var(--color-white);
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
+}
+
+.logsSortDropdown button {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #555;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+}
+
+.logsSortDropdown button:hover {
+  background-color: #f5f5f5;
+}
+
+.logsSortOptionActive {
+  font-weight: 700;
+  background-color: #f5f5f5 !important;
+}
+
+/* 로그 리스트 */
+
+.logsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: stretch;
+  min-height: clamp(220px, 45vw, 380px);
+  margin-top: 24px;
+}
+
+/* 로그 카드 */
+
+.logsCard {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: var(--color-white);
+  border: 1px solid #e5e5e5;
+  border-radius: 24px;
+}
+
+/* 카드 배경 이미지 */
+
+.logsCardBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 사진형 배경 어둡게 */
+
+.logsCardOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgb(0 0 0 / 35%);
+}
+
+/* 카드 내용 */
+
+.logsCardContent {
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 20px 24px;
+}
+
+/* 제목 + 포인트 상단 영역 */
+
+.logsCardHeader {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+/* 제목 */
+
+.logsCardTitle {
+  min-height: 56px;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #111;
+}
+
+/* 진행 날짜 */
+
+.logsCardDate {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #888;
+}
+
+/* 획득 포인트 */
+
+.logsCardPoint {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1;
+  color: #333;
+  white-space: nowrap;
+  background: rgb(255 255 255 / 70%);
+  border: 1px solid rgb(0 0 0 / 8%);
+  border-radius: 999px;
+}
+
+/* 로그 설명 */
+
+.logsCardDescription {
+  display: -webkit-box;
+  margin: 20px 0 12px;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #666;
+  -webkit-box-orient: vertical;
+}
+
+/* 기존 정보 영역 */
+
+.logsCardInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* 이모지 반응 전체 */
+
+.logsCardReactions {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+/* 각각의 이모지 반응 */
+
+.logsCardReaction {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  font-size: 14px;
+  line-height: 1;
+  color: #fff;
+  background: rgb(72 100 88 / 55%);
+  border-radius: 999px;
+}
+
+/* 사진 배경 카드 전용 */
+
+.logsCardImageType .logsCardTitle {
+  color: #fff;
+}
+
+.logsCardImageType .logsCardDate {
+  color: rgb(255 255 255 / 80%);
+}
+
+.logsCardImageType .logsCardDescription {
+  color: #fff;
+}
+
+.logsCardImageType .logsCardPoint {
+  color: #fff;
+  background: rgb(0 0 0 / 55%);
+  border-color: transparent;
+}
+
+/* 데이터가 없을 때 */
+
+.emptyMessage {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: 160px;
+  padding-top: 50px;
+  margin: 0;
+  font-size: clamp(12px, 1.5vw, 14px);
+  color: #777;
+  text-align: center;
+}
+
+/* 더보기 */
+
+.loadMoreWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.loadMoreButton {
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  background-color: var(--color-white);
+  border: 1px solid #d9d9d9;
+  border-radius: 999px;
+}
+
+.loadMoreButton:hover {
+  border-color: var(--color-brand-main);
+}
+
+/* 태블릿 */
+
+@media (width <= 768px) {
+  .homePage {
+    padding-bottom: 60px;
+  }
+
+  .recentLogs,
+  .logsList {
+    padding: 20px;
+  }
+
+  .recentLogsList {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .logsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .logsListControls {
+    align-items: stretch;
+  }
+
+  .logsSearchInput {
+    box-sizing: border-box;
+    flex: none;
+    width: 100%;
+    max-width: none;
+    height: 56px;
+    padding: 0 20px;
+    font-size: 16px;
+    border-radius: 16px;
+  }
+
+  .logsCardContent {
+    padding: 20px;
+  }
+}
+
+/* 모바일 */
+
+@media (width <= 480px) {
+  .homePage {
+    padding-bottom: 40px;
+  }
+
+  .recentLogs,
+  .logsList {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* 최근 조회 로그는 가로 스크롤 */
+  .recentLogsList {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    overflow: auto hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .recentLogsList::-webkit-scrollbar {
+    display: none;
+  }
+
+  .recentLogsList .logsCard {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+  }
+
+  /* 검색 + 정렬 */
+  .logsListControls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .logsSearchInput {
+    box-sizing: border-box;
+    flex: none;
+    width: 100%;
+    max-width: none;
+    height: 44px;
+    padding: 0 16px;
+  }
+
+  .logsSortBox {
+    align-self: flex-end;
+    width: 65%;
+    min-width: 190px;
+  }
+
+  .logsSortButton {
+    width: 100%;
+    height: 52px;
+    padding: 0 18px;
+    font-size: 16px;
+    border-radius: 16px;
+  }
+
+  /* 로그 둘러보기는 세로 1열 */
+  .logsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+    min-height: 200px;
+  }
+
+  /* 빈 상태 문구 */
+  .emptyMessage {
+    min-height: 160px;
+    padding-top: 50px;
+  }
+
+  /* 카드 */
+  .logCard {
+    height: 280px;
+    min-height: 280px;
+  }
+
+  .logsCardContent {
+    height: 100%;
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .logsCardTitle {
+    font-size: 18px;
+  }
+
+  .logsCardDescription {
+    display: -webkit-box;
+    margin: 16px 0 10px;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+  }
+
+  .logsCardPoint {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .logsCardReaction {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+}

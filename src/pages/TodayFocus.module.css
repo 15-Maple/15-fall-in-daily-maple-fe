@@ -1,0 +1,31 @@
+/* =========================================
+  1. 기본 스타일(모바일)
+========================================= */
+
+.pointContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  color: var(--color-black);
+}
+
+.contentTitle {
+  font-size: 24px;
+  font-weight: var(--font-weight-extra-bold);
+}
+
+/* =========================================
+  2. 태블릿,PC 사이즈 (744px 이상)
+========================================= */
+@media (width >= 744px) {
+  .contentWrapper {
+    gap: 24px;
+  }
+}

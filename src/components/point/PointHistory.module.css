@@ -1,0 +1,22 @@
+.pointHistory {
+  display: flex;
+}
+
+.pointBox {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  padding: 0 12px;
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid rgb(0 0 0 / 10%);
+  border-radius: 50px;
+}
+
+.pointIcon {
+  width: 14px;
+  height: 20px;
+}

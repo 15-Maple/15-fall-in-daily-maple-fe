@@ -1,0 +1,48 @@
+.backgroundGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* mobile */
+@media (width < 744px) {
+  .backgroundGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+.backgroundItem {
+  position: relative;
+  display: flex;
+}
+
+.radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.image {
+  border: 1px solid rgb(0 0 0 / 10%);
+  border-radius: 1rem;
+}
+
+.selector {
+  width: 2rem;
+  height: 2rem;
+}
+
+.selectorOn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.selectorOff {
+  display: none;
+  opacity: 0;
+}

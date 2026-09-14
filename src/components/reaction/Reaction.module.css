@@ -1,0 +1,15 @@
+.reactionContent {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.addPicker {
+  position: relative;
+}
+
+.picker {
+  position: absolute;
+  top: 40px;
+  left: 0;
+}

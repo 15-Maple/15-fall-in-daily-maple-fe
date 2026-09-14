@@ -1,0 +1,177 @@
+.page {
+  width: 100%;
+  background-color: #f1e3d8;
+}
+
+/* 컨텐츠영역 흰색배경 */
+
+.content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  padding: 40px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 20px;
+}
+
+.topArea {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.leftArea {
+  display: flex;
+  flex-direction: column;
+}
+
+.rightArea {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+/* 공유 수정 삭제 버튼 */
+
+.menu {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.menu button {
+  color: #7e5a44;
+}
+
+.menu .deleteBtn {
+  color: #818181;
+}
+
+.barOne {
+  color: #7e5a44;
+}
+
+.barTwo {
+  color: #818181;
+}
+
+/* 오늘의 습관/집중 버튼(pc) */
+
+.habitMenu {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* 오늘의 습관/집중 버튼(mo) */
+
+.mobileHabitMenu {
+  display: none;
+}
+
+/* 제목 */
+
+.title {
+  margin-top: 20px;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+/* 소개 */
+
+.label {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #818181;
+}
+
+/* 내용 */
+
+.desc {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.pointText {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #818181;
+}
+
+/* ======================================
+모바일 (744px)
+========================================= */
+
+@media (width <= 744px) {
+  .topArea {
+    flex-direction: column;
+  }
+
+  .rightArea {
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .label {
+    font-size: 16px;
+  }
+
+  .desc {
+    font-size: 14px;
+  }
+
+  .pointText {
+    font-size: 16px;
+  }
+
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    order: 1;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 12px;
+  }
+
+  .leftArea {
+    order: 2;
+  }
+
+  .mobileHabitMenu {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .habitMenu {
+    display: none;
+  }
+
+  .page {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .content {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .leftArea,
+  .rightArea {
+    min-width: 0;
+  }
+}
