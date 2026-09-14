@@ -50,6 +50,7 @@ function LogLayout() {
 
   if (!logData) return <div>로딩중</div>;
 
+  const homePath = ROUTES.LOG_DETAIL.replace(":logId", logId);
   const todayHabitsPath = ROUTES.TODAY_HABITS.replace(":logId", logId);
   const todayFocusPath = ROUTES.TODAY_FOCUS.replace(":logId", logId);
 
@@ -66,7 +67,7 @@ function LogLayout() {
             {/* 현재 있는 페이지 버튼은 보이지 않도록 처리했습니다. */}
             <NavButton pageName="오늘의 습관" to={todayHabitsPath} />
             <NavButton pageName="오늘의 집중" to={todayFocusPath} />
-            <NavButton pageName="홈" to={ROUTES.HOME} />
+            <NavButton pageName="홈" to={homePath} />
           </div>
         </div>
 
