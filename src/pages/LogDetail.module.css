@@ -168,10 +168,17 @@
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
+    padding: 20px;
   }
 
   .leftArea,
   .rightArea {
     min-width: 0;
+  }
+}
+
+@media (width <= 375px) {
+  .content {
+    padding: 20px 10px;
   }
 }
