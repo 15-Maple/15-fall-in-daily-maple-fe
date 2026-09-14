@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import { createLog, getLogById, nameCheck } from "../../api/logs.js";
 
+import Modal from "../../components/common/Modal.jsx";
+
 // import Button from "../../components/ui/Button.jsx";
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
@@ -37,6 +39,9 @@ function CreateLog() {
   const [checkedName, setCheckedName] = useState("");
   // 중복 검사중인지 확인
   const [isNameChecking, setIsNameChecking] = useState(false);
+
+  // 제출 모달 표시 여부
+  const [showNoSubmitAlert, setShowNoSubmitAlert] = useState(false);
 
   // 한글 조합 감지
   const [isComposing, setIsComposing] = useState(false);
@@ -195,6 +200,7 @@ function CreateLog() {
       setIsNamePassedDupCheck(false);
       setCheckedName("");
       setFormError(error.message || "로그 이름 중복 확인에 실패했습니다.");
+      setShowNoSubmitAlert(true);
     } finally {
       setIsNameChecking(false);
     }
@@ -223,7 +229,10 @@ function CreateLog() {
       !form.passwordConfirm.trim() ||
       form.password !== form.passwordConfirm;
 
-    if (hasError) return;
+    if (hasError) {
+      setShowNoSubmitAlert(true);
+      return;
+    }
 
     // 폼에 입력한 데이터 + 배경값
     const logData = {
@@ -427,6 +436,20 @@ function CreateLog() {
           만들기
         </button>
       </form>
+      {/* 제출 불가 알림 */}
+      {showNoSubmitAlert && (
+        <Modal
+          content="로그를 생성할 수 없습니다."
+          isOpen={true}
+          type="alert"
+          onClose={() => {
+            setShowNoSubmitAlert(false);
+            // navigate(`/logdetail/${logId}`, {
+            //   replace: true,
+            // });
+          }}
+        />
+      )}
     </div>
   );
 }

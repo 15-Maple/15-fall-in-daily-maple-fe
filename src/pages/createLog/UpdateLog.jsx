@@ -44,6 +44,9 @@ function UpdateLog() {
   // 원래 이름 저장
   const [originalName, setOriginalName] = useState("");
 
+  // 제출 모달 표시 여부
+  const [showNoSubmitAlert, setShowNoSubmitAlert] = useState(false);
+
   // 한글 조합 감지
   const [isComposing, setIsComposing] = useState(false);
 
@@ -245,6 +248,7 @@ function UpdateLog() {
       setIsNamePassedDupCheck(false);
       setCheckedName("");
       setFormError(error.message || "로그 이름 중복 확인에 실패했습니다.");
+      setShowNoSubmitAlert(true);
     } finally {
       setIsNameChecking(false);
     }
@@ -279,8 +283,10 @@ function UpdateLog() {
       checkedName !== form.name.trim() ||
       hasPasswordError;
 
-    if (hasError) return;
-
+    if (hasError) {
+      setShowNoSubmitAlert(true);
+      return;
+    }
     // 폼에 입력한 데이터 + 배경값
     const logData = {
       nickname: form.nickname.trim(),
@@ -499,6 +505,24 @@ function UpdateLog() {
         />
       )}
       {/* 알럿 모달이 추가로 필요한 경우 새로 Modal을 추가해서 써주세요! */}
+      {/* 제출 불가 알림 */}
+      {showNoSubmitAlert && (
+        <Modal
+          content={
+            isNamePassedDupCheck === false
+              ? "로그 이름 중복 확인이 필요합니다."
+              : "로그를 생성할 수 없습니다."
+          }
+          isOpen={true}
+          type="alert"
+          onClose={() => {
+            setShowNoSubmitAlert(false);
+            // navigate(`/logdetail/${logId}`, {
+            //   replace: true,
+            // });
+          }}
+        />
+      )}
     </div>
   );
 }
