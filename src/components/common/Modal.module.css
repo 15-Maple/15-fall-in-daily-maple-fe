@@ -7,13 +7,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999; /* 무조건 최상단에 오도록 */
+  z-index: var(--z-index-modal);
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgb(0 0 0 / 50%); /* 💡 어두운 반투명 배경 */
+  background-color: rgb(0 0 0 / 50%);
 }
 
 /* 모달 공통 스타일 */
