@@ -3,7 +3,7 @@ import ReactionList from "./ReactionList";
 
 import styles from "./ReactionMore.module.css";
 
-function ReactionMore({ moreOpen, setMoreOpen, reactions }) {
+function ReactionMore({ moreOpen, setMoreOpen, reactions, onEmojiClick }) {
   //3개보다 많으면 더보기
   const hiddenCount = reactions.length;
 
@@ -22,7 +22,11 @@ function ReactionMore({ moreOpen, setMoreOpen, reactions }) {
       {/* 더보기 true면 박스오픈 */}
       {moreOpen && (
         <div className={styles.moreBox}>
-          <ReactionList reactions={reactions} wrap={true} />
+          <ReactionList
+            reactions={reactions}
+            wrap={true}
+            onEmojiClick={onEmojiClick}
+          />
         </div>
       )}
     </div>

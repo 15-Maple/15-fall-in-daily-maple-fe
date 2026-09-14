@@ -2,8 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-import { updateLog, getLogById } from "../../api/logs.js";
+import { updateLog, getLogById, nameCheck } from "../../api/logs.js";
 
+import Modal from "../../components/common/Modal.jsx";
+
+import { TOKEN_PREFIX } from "../../constants/auth";
+import { ROUTES } from "../../constants/routes.js";
 import BackgroundSelector from "./BackgroundSelector.jsx";
 
 import btnVisibilityOff from "../../assets/btn_visibility_off_24px.svg";
@@ -25,8 +29,23 @@ function UpdateLog() {
     passwordConfirm: "",
   });
 
+  // 입력창 클릭 여부
   const [touched, setTouched] = useState({});
   const [formError, setFormError] = useState("");
+
+  // 로그 이름 중복 검사 실시 여부(중복 검사 했을 때: true) -- 수정하기는 처음 데이터가 이미 통과한 데이터이므로 true
+  const [isNameChecked, setIsNameChecked] = useState(true);
+  // 로그 이름 중복 검사 통과 여부
+  const [isNamePassedDupCheck, setIsNamePassedDupCheck] = useState(true);
+  // 중복 검사에 사용한 이름 저장
+  const [checkedName, setCheckedName] = useState("");
+  // 중복 검사중인지 확인
+  const [isNameChecking, setIsNameChecking] = useState(false);
+  // 원래 이름 저장
+  const [originalName, setOriginalName] = useState("");
+
+  // 제출 모달 표시 여부
+  const [showNoSubmitAlert, setShowNoSubmitAlert] = useState(false);
 
   // 한글 조합 감지
   const [isComposing, setIsComposing] = useState(false);
@@ -34,6 +53,11 @@ function UpdateLog() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
     useState(false);
+
+  // 접근권한 체크
+  const hasToken = !!sessionStorage.getItem(`${TOKEN_PREFIX}${logId}`);
+  const showNoAccessAlert = !hasToken;
+
   // 비밀번호 가시화/비가시화 버튼
   const handleBtnVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -46,10 +70,7 @@ function UpdateLog() {
   const errors = {
     nickname:
       touched.nickname && !form.nickname.trim() ? "*닉네임을 입력해주세요" : "",
-
     name: touched.name && !form.name.trim() ? "*로그 이름을 입력해주세요" : "",
-
-    // password랑 passwordConfirm은 둘 다 입력해야 함
     password:
       touched.passwordConfirm && !form.password.trim() && !form.password.trim()
         ? "*비밀번호를 입력해주세요"
@@ -65,12 +86,19 @@ function UpdateLog() {
           : "",
   };
 
+  // 로그 이름 중복 검사 응답 양식
+  const nameCheckMessage =
+    isNameChecked && form.name.trim()
+      ? isNamePassedDupCheck
+        ? "*사용 가능한 로그 이름입니다."
+        : "*이미 존재하는 로그 이름입니다."
+      : "";
+
   // 현재 logid의 데이터 불러오기
   useEffect(() => {
+    // 토큰이나 로그 id 없으면 return
+    if (!hasToken || !logId) return;
     async function loadLog() {
-      // 로그 id 없으면 return
-      if (!logId) return;
-
       try {
         const log = await getLogById(logId);
 
@@ -81,7 +109,8 @@ function UpdateLog() {
           password: "",
           passwordConfirm: "",
         });
-
+        setOriginalName(log.name.trim());
+        setCheckedName(log.name.trim());
         setSelectedBackground(log.background);
       } catch (error) {
         const message =
@@ -91,7 +120,7 @@ function UpdateLog() {
     }
 
     loadLog();
-  }, [logId]);
+  }, [logId, hasToken]);
 
   // 한글 입력 조합 시작
   const handleCompositionStart = () => {
@@ -117,6 +146,8 @@ function UpdateLog() {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
+    // 이름 변경 감지되면 이전에 통과했어도 다시 비활성화.
+
     // 한글 조합 중 비밀번호값 즉시 replace 안함
     if (isComposing && (name === "password" || name === "passwordConfirm")) {
       setForm((prev) => ({
@@ -141,6 +172,19 @@ function UpdateLog() {
     const sanitizer = sanitizeByField[name];
     const sanitizedValue = sanitizer ? sanitizer(value) : value;
 
+    // 지금 변경된 입력창이 로그 이름 입력창인지 확인
+    if (name === "name") {
+      if (value.trim() === originalName) {
+        setIsNameChecked(true);
+        setIsNamePassedDupCheck(true);
+        setCheckedName(value.trim());
+      } else if (name === "name" && value.trim() !== originalName) {
+        setIsNameChecked(false);
+        setIsNamePassedDupCheck(false);
+        setCheckedName("");
+      }
+    }
+
     setForm((prev) => ({
       ...prev,
       [name]: sanitizedValue,
@@ -157,6 +201,57 @@ function UpdateLog() {
       ...prev,
       [name]: true,
     }));
+  };
+
+  // 로그 이름 중복 검사
+  const handleNameCheck = async (event) => {
+    // 기본 폼 제출 동작 방지
+    event.preventDefault();
+
+    // // 중복 검사 실시 여부: true
+    // setIsNameChecked(true);
+
+    // 중복 검사 버튼을 누른 시점의 name을 검사 대상으로 선언
+    const currentName = form.name.trim();
+
+    // 이름 입력 없으면 경고 띄우기
+    if (!currentName) {
+      setTouched((prev) => ({
+        ...prev,
+        name: true,
+      }));
+      setIsNameChecked(false);
+      setIsNamePassedDupCheck(false);
+      setCheckedName("");
+      return;
+    }
+
+    setIsNameChecking(true);
+    setIsNameChecked(false);
+    setIsNamePassedDupCheck(false);
+    setCheckedName("");
+
+    // 현재 검사 대상인 currentName 중복 검사 api로 보낸다.
+    try {
+      // 검사 결과가 true이면 setIsNamePassedDupCheck(true)
+      // 검사 전 현재 입력값 저장
+      const currentName = form.name.trim();
+      // 검사 시행
+      const isNameDuplicated = await nameCheck(currentName);
+
+      setIsNameChecked(true);
+      setIsNamePassedDupCheck(!isNameDuplicated);
+      setCheckedName(currentName);
+    } catch (error) {
+      // 검사 결과가 false 이면 setIsNamePassedDupCheck(false)
+      setIsNameChecked(false);
+      setIsNamePassedDupCheck(false);
+      setCheckedName("");
+      setFormError(error.message || "로그 이름 중복 확인에 실패했습니다.");
+      setShowNoSubmitAlert(true);
+    } finally {
+      setIsNameChecking(false);
+    }
   };
 
   // 폼 제출 기능
@@ -181,10 +276,17 @@ function UpdateLog() {
         form.password !== form.passwordConfirm);
 
     const hasError =
-      !form.nickname.trim() || !form.name.trim() || hasPasswordError;
+      !form.nickname.trim() ||
+      !form.name.trim() ||
+      !isNameChecked ||
+      !isNamePassedDupCheck ||
+      checkedName !== form.name.trim() ||
+      hasPasswordError;
 
-    if (hasError) return;
-
+    if (hasError) {
+      setShowNoSubmitAlert(true);
+      return;
+    }
     // 폼에 입력한 데이터 + 배경값
     const logData = {
       nickname: form.nickname.trim(),
@@ -192,13 +294,14 @@ function UpdateLog() {
       description: form.description.trim() || null,
       background: selectedBackground,
     };
-
+    // password 입력값이 있을 때만 넣기
     if (hasPasswordInput) {
       logData.password = form.password;
       logData.passwordConfirm = form.passwordConfirm;
     }
 
     try {
+      // 로그 수정(update) api 요청
       const updatedLog = await updateLog(logId, logData);
       const { logId: updatedLogId } = updatedLog;
 
@@ -251,17 +354,39 @@ function UpdateLog() {
           <label>
             로그 이름
             <div className={styles.inputWrapper}>
-              <input
-                name="name"
-                placeholder="로그 이름을 입력해주세요"
-                type="text"
-                value={form.name}
-                className={errors.name ? styles.errorInput : ""}
-                onBlur={handleBlur}
-                onChange={handleChange}
-              />
+              <div className={styles.nameWrapper}>
+                <input
+                  name="name"
+                  placeholder="로그 이름을 입력해주세요"
+                  type="text"
+                  value={form.name}
+                  className={errors.name ? styles.errorInput : ""}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                />
+                {/* 중복 확인 버튼 */}
+                <button
+                  disabled={form.name.trim() === originalName || isNameChecking}
+                  type="button"
+                  className={styles.nameCheckBtn}
+                  onClick={handleNameCheck}
+                >
+                  {isNameChecking ? "확인 중..." : "중복 확인"}
+                </button>
+              </div>
               {errors.name && (
                 <p className={styles.inputError}>{errors.name}</p>
+              )}
+              {nameCheckMessage && (
+                <p
+                  className={
+                    isNamePassedDupCheck
+                      ? styles.inputCorrect
+                      : styles.inputError
+                  }
+                >
+                  {nameCheckMessage}
+                </p>
               )}
             </div>
           </label>
@@ -366,6 +491,38 @@ function UpdateLog() {
           수정 완료
         </button>
       </form>
+      {/* 접근권한 알럿 */}
+      {showNoAccessAlert && (
+        <Modal
+          content="접근 권한이 없습니다."
+          isOpen={true}
+          type="alert"
+          onClose={() => {
+            navigate(logId ? `/logdetail/${logId}` : ROUTES.HOME, {
+              replace: true,
+            });
+          }}
+        />
+      )}
+      {/* 알럿 모달이 추가로 필요한 경우 새로 Modal을 추가해서 써주세요! */}
+      {/* 제출 불가 알림 */}
+      {showNoSubmitAlert && (
+        <Modal
+          content={
+            isNamePassedDupCheck === false
+              ? "로그 이름 중복 확인이 필요합니다."
+              : "로그를 생성할 수 없습니다."
+          }
+          isOpen={true}
+          type="alert"
+          onClose={() => {
+            setShowNoSubmitAlert(false);
+            // navigate(`/logdetail/${logId}`, {
+            //   replace: true,
+            // });
+          }}
+        />
+      )}
     </div>
   );
 }

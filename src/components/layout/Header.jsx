@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+
+import { ROUTES } from "../../constants/routes";
 import Button from "../ui/Button";
 
 import logoImg from "../../assets/ic-logo.svg";
@@ -8,13 +11,13 @@ function Header({ showCreateButton = false }) {
   return (
     <header className={styles.wrapper}>
       <div className={styles.content}>
-        <div className={styles.logoWrapper}>
+        <Link to={ROUTES.HOME} className={styles.logoWrapper}>
           <img
             alt="fall in daily 텍스트 로고"
             src={logoImg}
             className={styles.logoImage}
           />
-        </div>
+        </Link>
         {showCreateButton && (
           <div className={styles.buttonWrapper}>
             <Button to="/createlog" className={styles.headerBtn}>
