@@ -187,4 +187,8 @@ h6 {
   --font-weight-light: 300;
   --font-weight-extra-light: 200;
   --font-weight-thin: 100;
+
+  /* 인덱스 계층 */
+  --z-index-modal: 9000;
+  --z-index-toast: 9500;
 }
