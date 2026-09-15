@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useBlocker, useOutletContext } from "react-router-dom";
 import { useTimer, useStopwatch } from "react-timer-hook";
 
 import { createFocusSession, finishFocus } from "../../api/focus";
@@ -33,17 +33,19 @@ function Timer() {
   // context
   const { logData, showToast } = useOutletContext();
 
+  // 로그 정보
   const logId = logData.id;
+
+  // 타이머 종료
+  const overtimeTimeoutRef = useRef(null);
 
   // 스톱워치 설정(설정된 시간 종료 이후 처리)
   const {
-    seconds: overSec,
-    minutes: overMin,
+    seconds: overtimeSeconds,
+    minutes: overtimeMinutes,
     start: startOvertime,
     reset: resetOvertime,
   } = useStopwatch({ autoStart: false });
-
-  const overtimeTimeoutRef = useRef(null);
 
   // 타이머 설정
   const { seconds, minutes, hours, isRunning, restart, pause, resume } =
@@ -73,6 +75,22 @@ function Timer() {
       },
     });
 
+  // 집중 진행중일때 페이지 밖으로 나가는 것 안내
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    return isRunning && currentLocation.pathname !== nextLocation.pathname;
+  });
+
+  // 브라우저 탭 닫기/새로고침 방어
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isRunning) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isRunning]);
   const totalDisplayMinutes = hours * 60 + minutes;
 
   const handleStartTimer = () => {
@@ -179,8 +197,8 @@ function Timer() {
   }, []);
 
   // 화면 출력 시간(타이머, 스톱워치)
-  const currentMinutes = isFinished ? overMin : totalDisplayMinutes;
-  const currentSeconds = isFinished ? overSec : seconds;
+  const currentMinutes = isFinished ? overtimeMinutes : totalDisplayMinutes;
+  const currentSeconds = isFinished ? overtimeSeconds : seconds;
 
   return (
     <div className={styles.timerContainer}>
@@ -307,6 +325,23 @@ function Timer() {
           await handleFinishFocus();
         }}
       />
+
+      {/* 페이지 이탈 안내 */}
+      {blocker.state === "blocked" && (
+        <Modal
+          cancelText="취소"
+          confirmText="떠나기"
+          content="집중이 진행중입니다. 페이지를 떠나시겠습니까?"
+          isOpen={true}
+          type="confirm"
+          onClose={() => {
+            blocker.reset();
+          }}
+          onConfirm={() => {
+            blocker.proceed();
+          }}
+        />
+      )}
     </div>
   );
 }
