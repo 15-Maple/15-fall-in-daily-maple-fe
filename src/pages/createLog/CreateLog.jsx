@@ -15,7 +15,15 @@ import styles from "./createLog.module.css";
 
 function CreateLog() {
   const navigate = useNavigate();
-  // isBtnActive가 true 일 때만 작동하도록 하기
+
+  const MAXLENGTH = {
+    nickname: 12,
+    name: 20,
+    description: 140,
+    password: 15,
+    passwordConfirm: 15,
+  };
+  // const [currentMaxLength, setCurrentMaxLength] = useState(MAXLENGTH);
 
   // 입력값 state
   const [selectedBackground, setSelectedBackground] = useState("bgGreen");
@@ -104,8 +112,10 @@ function CreateLog() {
 
   // 입력 내용 변경시 작동
   const handleChange = (event) => {
+    // name: {nickname, name, description, password, password}
     const { name, value } = event.target;
-    // 지금 변경된 입력창이 로그 이름 입력창인지 확인
+
+    // 지금 변경된 입력창이 로그 이름 입력창인지 확인: 로그 이름 중복검사 위함
     if (name === "name") {
       setIsNameChecked(false);
       setIsNamePassedDupCheck(false);
@@ -282,6 +292,7 @@ function CreateLog() {
                 name="nickname"
                 aria-describedby="nickname-error"
                 aria-required="true"
+                maxLength={MAXLENGTH.nickname}
                 placeholder="닉네임을 입력해주세요"
                 type="text"
                 value={form.nickname}
@@ -301,6 +312,7 @@ function CreateLog() {
               <div className={styles.nameWrapper}>
                 <input
                   name="name"
+                  maxLength={MAXLENGTH.name}
                   placeholder="로그 이름을 입력해주세요"
                   type="text"
                   value={form.name}
@@ -339,6 +351,7 @@ function CreateLog() {
             소개
             <textarea
               name="description"
+              maxLength={MAXLENGTH.description}
               placeholder="소개 멘트를 작성해주세요"
               value={form.description}
               onChange={handleChange}
@@ -361,6 +374,7 @@ function CreateLog() {
               >
                 <input
                   name="password"
+                  maxLength={MAXLENGTH.password}
                   placeholder="비밀번호를 입력해 주세요"
                   type={isPasswordVisible ? "text" : "password"}
                   value={form.password}
@@ -396,6 +410,7 @@ function CreateLog() {
               >
                 <input
                   name="passwordConfirm"
+                  maxLength={MAXLENGTH.password}
                   placeholder="비밀번호를 다시 한 번 입력해 주세요"
                   type={isPasswordConfirmVisible ? "text" : "password"}
                   value={form.passwordConfirm}

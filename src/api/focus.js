@@ -1,11 +1,11 @@
 import { TOKEN_PREFIX } from "../constants/auth";
-import { api } from "./axios.js";
+import { apiClient } from "./client.js";
 
 // 집중 세션 생성
 export function createFocusSession({ logId, targetSeconds }) {
   const token = sessionStorage.getItem(`${TOKEN_PREFIX}${logId}`);
 
-  return api.post(
+  return apiClient.post(
     "/focus",
     { targetSeconds },
     { headers: { Authorization: `Bearer ${token}` } },
@@ -16,7 +16,7 @@ export function createFocusSession({ logId, targetSeconds }) {
 export function finishFocus({ logId }) {
   const token = sessionStorage.getItem(`${TOKEN_PREFIX}${logId}`);
 
-  return api.post(
+  return apiClient.post(
     "/focus/finish",
     {},
     { headers: { Authorization: `Bearer ${token}` } },
