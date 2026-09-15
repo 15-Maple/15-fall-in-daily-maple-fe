@@ -5,6 +5,7 @@ import { syncTodayHabits } from "../../api/habit.js";
 import { useTodayHabits } from "../../hooks/useTodayHabits.js";
 
 import { TOKEN_PREFIX } from "../../constants/auth.js";
+import Modal from "../common/Modal.jsx";
 import PasswordConfirmModal from "../common/PasswordConfirmModal.jsx";
 import Button from "../ui/Button.jsx";
 
@@ -25,6 +26,7 @@ function HabitsModal({ id, onClose, onSaved }) {
   const [editingHabitId, setEditingHabitId] = useState(null); // 수정 중인 습관의 id
   const [editingHabitName, setEditingHabitName] = useState(""); // (수정) input에 입력하고 있는 이름
 
+  const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
   const [deletedIds, setDeletedIds] = useState([]); // 삭제한 "기존" 습관 id 모아두기 (저장할 때 한 번에 보냄)
   const [isSubmitting, setIsSubmitting] = useState(false); // 저장 중 중복 클릭 방지
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -320,7 +322,7 @@ function HabitsModal({ id, onClose, onSaved }) {
             disabled={isSubmitting}
             size="sm"
             className={styles.cancelButton}
-            onClick={onClose}
+            onClick={() => setIsCancelConfirmOpen(true)}
           >
             취소
           </Button>
@@ -338,6 +340,18 @@ function HabitsModal({ id, onClose, onSaved }) {
         onSuccess={() => {
           setIsPasswordModalOpen(false);
           handleSubmit();
+        }}
+      />
+      <Modal
+        cancelText="아니오"
+        confirmText="예"
+        content="정말 나가시겠습니까?"
+        isOpen={isCancelConfirmOpen}
+        type="confirm"
+        onClose={() => setIsCancelConfirmOpen(false)}
+        onConfirm={() => {
+          setIsCancelConfirmOpen(false);
+          onClose();
         }}
       />
     </div>
