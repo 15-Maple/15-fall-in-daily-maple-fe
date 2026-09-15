@@ -1,5 +1,5 @@
-import { api } from "./axios.js";
+import { apiClient } from "./client.js";
 
 export function verifyPasswordApi(logId, password) {
-  return api.post("/auth/verify", { logId, password });
+  return apiClient.post("/auth/verify", { logId, password });
 }
