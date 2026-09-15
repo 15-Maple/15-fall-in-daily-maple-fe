@@ -201,6 +201,21 @@ textarea {
   border-radius: 16px;
 }
 
+.inputLengthCount {
+  display: flex;
+  justify-content: right;
+  margin-left: auto;
+  color: #818181;
+  text-align: right;
+}
+
+.inputInfo {
+  display: flex;
+  flex-direction: row;
+
+  /* justify-content: space-between; */
+}
+
 /* tablet */
 @media (width < 1200px) {
   .contianer {

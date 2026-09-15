@@ -21,7 +21,20 @@ function CreateLog() {
     password: 15,
     passwordConfirm: 15,
   };
-  // const [currentMaxLength, setCurrentMaxLength] = useState(MAXLENGTH);
+
+  // 입력 글자수
+  const [inputCount, setInputCount] = useState({
+    nickname: 0,
+    name: 0,
+    description: 0,
+    password: 0,
+    passwordConfirm: 0,
+  });
+
+  // 문자 수 계산 함수
+  const getCharacterLength = (value = "") => {
+    return [...value].length;
+  };
 
   // 입력값 state
   const [selectedBackground, setSelectedBackground] = useState("bgGreen");
@@ -111,10 +124,10 @@ function CreateLog() {
   // 입력 내용 변경시 작동
   const handleChange = (event) => {
     // name: {nickname, name, description, password, password}
-    const { name, value } = event.target;
+    const { name: inputType, value } = event.target;
 
     // 지금 변경된 입력창이 로그 이름 입력창인지 확인: 로그 이름 중복검사 위함
-    if (name === "name") {
+    if (inputType === "name") {
       setIsNameChecked(false);
       setIsNamePassedDupCheck(false);
       setCheckedName("");
@@ -122,10 +135,13 @@ function CreateLog() {
     // 이름 변경 감지되면 이전에 통과했어도 다시 비활성화.
 
     // 한글 조합 중 비밀번호값 즉시 replace 안함
-    if (isComposing && (name === "password" || name === "passwordConfirm")) {
+    if (
+      isComposing &&
+      (inputType === "password" || inputType === "passwordConfirm")
+    ) {
       setForm((prev) => ({
         ...prev,
-        [name]: value,
+        [inputType]: value,
       }));
       return;
     }
@@ -145,9 +161,15 @@ function CreateLog() {
     const sanitizer = sanitizeByField[name];
     const sanitizedValue = sanitizer ? sanitizer(value) : value;
 
+    // 글자수 바이트로 변환
+    setInputCount((prev) => ({
+      ...prev,
+      [inputType]: getCharacterLength(sanitizedValue),
+    }));
+
     setForm((prev) => ({
       ...prev,
-      [name]: sanitizedValue,
+      [inputType]: sanitizedValue,
     }));
 
     setFormError("");
@@ -298,9 +320,14 @@ function CreateLog() {
                 onBlur={handleBlur}
                 onChange={handleChange}
               />
-              {errors.nickname && (
-                <p className={styles.inputError}>{errors.nickname}</p>
-              )}
+              <div className={styles.inputInfo}>
+                <p className={styles.inputError}>
+                  {errors.nickname ? errors.nickname : ""}
+                </p>
+                <div className={styles.inputLengthCount}>
+                  {inputCount.nickname}/{MAXLENGTH.nickname}
+                </div>
+              </div>
             </div>
           </label>
 
@@ -328,20 +355,27 @@ function CreateLog() {
                   {isNameChecking ? "확인 중..." : "중복 확인"}
                 </button>
               </div>
-              {errors.name && (
-                <p className={styles.inputError}>{errors.name}</p>
-              )}
-              {nameCheckMessage && (
-                <p
-                  className={
-                    isNamePassedDupCheck
-                      ? styles.inputCorrect
-                      : styles.inputError
-                  }
-                >
-                  {nameCheckMessage}
-                </p>
-              )}
+              <div className={styles.inputInfo}>
+                {/* 에러 메시지와 중복 통과 메시지는 같은 자리에서 서로 교체  */}
+                {/* 글자수는 오른쪽 고정 */}
+                {errors.name && (
+                  <p className={styles.inputError}>{errors.name}</p>
+                )}
+                {nameCheckMessage && (
+                  <p
+                    className={
+                      isNamePassedDupCheck
+                        ? styles.inputCorrect
+                        : styles.inputError
+                    }
+                  >
+                    {nameCheckMessage}
+                  </p>
+                )}
+                <div className={styles.inputLengthCount}>
+                  {inputCount.name}/{MAXLENGTH.name}
+                </div>
+              </div>
             </div>
           </label>
 
@@ -354,6 +388,9 @@ function CreateLog() {
               value={form.description}
               onChange={handleChange}
             ></textarea>
+            <div className={styles.inputLengthCount}>
+              {inputCount.description}/{MAXLENGTH.description}
+            </div>
           </label>
 
           <fieldset>
@@ -395,9 +432,14 @@ function CreateLog() {
                   />
                 </button>
               </div>
-              {errors.password && (
-                <p className={styles.inputError}>{errors.password}</p>
-              )}
+              <div className={styles.inputInfo}>
+                <p className={styles.inputError}>
+                  {errors.password ? errors.password : ""}
+                </p>
+                <div className={styles.inputLengthCount}>
+                  {inputCount.password}/{MAXLENGTH.password}
+                </div>
+              </div>
             </div>
           </label>
           <label>
@@ -437,9 +479,14 @@ function CreateLog() {
                   />
                 </button>
               </div>
-              {errors.passwordConfirm && (
-                <p className={styles.inputError}>{errors.passwordConfirm}</p>
-              )}
+              <div className={styles.inputInfo}>
+                <p className={styles.inputError}>
+                  {errors.passwordConfirm ? errors.passwordConfirm : ""}
+                </p>
+                <div className={styles.inputLengthCount}>
+                  {inputCount.passwordConfirm}/{MAXLENGTH.passwordConfirm}
+                </div>
+              </div>
             </div>
           </label>
           {formError && <p className={styles.formError}>{formError}</p>}
@@ -452,14 +499,15 @@ function CreateLog() {
       {/* 제출 불가 알림 */}
       {showNoSubmitAlert && (
         <Modal
-          content="로그를 생성할 수 없습니다."
+          content={
+            isNamePassedDupCheck === false
+              ? "로그 이름 중복 확인이 필요합니다."
+              : "로그를 생성할 수 없습니다."
+          }
           isOpen={true}
           type="alert"
           onClose={() => {
             setShowNoSubmitAlert(false);
-            // navigate(`/logdetail/${logId}`, {
-            //   replace: true,
-            // });
           }}
         />
       )}
