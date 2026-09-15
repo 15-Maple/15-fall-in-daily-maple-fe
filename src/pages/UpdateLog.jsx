@@ -1,19 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { createLog, getLogById, nameCheck } from "../../api/logs.js";
+import { updateLog, getLogById, nameCheck } from "../api/logs.js";
 
-import Modal from "../../components/common/Modal.jsx";
+import BackgroundSelector from "../components/common/BackgroundSelector.jsx";
+import Modal from "../components/common/Modal.jsx";
 
-// import Button from "../../components/ui/Button.jsx";
-import BackgroundSelector from "./BackgroundSelector.jsx";
+import { TOKEN_PREFIX } from "../constants/auth.js";
+import { ROUTES } from "../constants/routes.js";
 
-import btnVisibilityOff from "../../assets/btn_visibility_off_24px.svg";
-import btnVisibilityOn from "../../assets/btn_visibility_on_24px.svg";
+import btnVisibilityOff from "../assets/btn_visibility_off_24px.svg";
+import btnVisibilityOn from "../assets/btn_visibility_on_24px.svg";
 
 import styles from "./createLog.module.css";
 
-function CreateLog() {
+function UpdateLog() {
+  const { logId } = useParams();
   const navigate = useNavigate();
 
   const MAXLENGTH = {
@@ -23,7 +26,6 @@ function CreateLog() {
     password: 15,
     passwordConfirm: 15,
   };
-  // const [currentMaxLength, setCurrentMaxLength] = useState(MAXLENGTH);
 
   // 입력값 state
   const [selectedBackground, setSelectedBackground] = useState("bgGreen");
@@ -39,14 +41,16 @@ function CreateLog() {
   const [touched, setTouched] = useState({});
   const [formError, setFormError] = useState("");
 
-  // 로그 이름 중복 검사 실시 여부(중복 검사 했을 때: true)
-  const [isNameChecked, setIsNameChecked] = useState(false);
+  // 로그 이름 중복 검사 실시 여부(중복 검사 했을 때: true) -- 수정하기는 처음 데이터가 이미 통과한 데이터이므로 true
+  const [isNameChecked, setIsNameChecked] = useState(true);
   // 로그 이름 중복 검사 통과 여부
-  const [isNamePassedDupCheck, setIsNamePassedDupCheck] = useState(false);
+  const [isNamePassedDupCheck, setIsNamePassedDupCheck] = useState(true);
   // 중복 검사에 사용한 이름 저장
   const [checkedName, setCheckedName] = useState("");
   // 중복 검사중인지 확인
   const [isNameChecking, setIsNameChecking] = useState(false);
+  // 원래 이름 저장
+  const [originalName, setOriginalName] = useState("");
 
   // 제출 모달 표시 여부
   const [showNoSubmitAlert, setShowNoSubmitAlert] = useState(false);
@@ -57,6 +61,11 @@ function CreateLog() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
     useState(false);
+
+  // 접근권한 체크
+  const hasToken = !!sessionStorage.getItem(`${TOKEN_PREFIX}${logId}`);
+  const showNoAccessAlert = !hasToken;
+
   // 비밀번호 가시화/비가시화 버튼
   const handleBtnVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -71,13 +80,16 @@ function CreateLog() {
       touched.nickname && !form.nickname.trim() ? "*닉네임을 입력해주세요" : "",
     name: touched.name && !form.name.trim() ? "*로그 이름을 입력해주세요" : "",
     password:
-      touched.password && !form.password.trim()
-        ? "*비밀번호를 입력해 주세요"
+      touched.passwordConfirm && !form.password.trim() && !form.password.trim()
+        ? "*비밀번호를 입력해주세요"
         : "",
     passwordConfirm:
-      touched.passwordConfirm && !form.passwordConfirm.trim()
+      touched.password && form.password.trim() && !form.passwordConfirm.trim()
         ? "*비밀번호 확인을 입력해주세요"
-        : touched.passwordConfirm && form.password !== form.passwordConfirm
+        : touched.passwordConfirm &&
+            form.password.trim() &&
+            form.passwordConfirm.trim() &&
+            form.password !== form.passwordConfirm
           ? "*비밀번호가 일치하지 않습니다."
           : "",
   };
@@ -89,6 +101,34 @@ function CreateLog() {
         ? "*사용 가능한 로그 이름입니다."
         : "*이미 존재하는 로그 이름입니다."
       : "";
+
+  // 현재 logid의 데이터 불러오기
+  useEffect(() => {
+    // 토큰이나 로그 id 없으면 return
+    if (!hasToken || !logId) return;
+    async function loadLog() {
+      try {
+        const log = await getLogById(logId);
+
+        setForm({
+          nickname: log.nickname,
+          name: log.name,
+          description: log.description ?? "",
+          password: "",
+          passwordConfirm: "",
+        });
+        setOriginalName(log.name.trim());
+        setCheckedName(log.name.trim());
+        setSelectedBackground(log.background);
+      } catch (error) {
+        const message =
+          error.response?.data?.message || "로그 정보를 불러오지 못했습니다.";
+        setFormError(message);
+      }
+    }
+
+    loadLog();
+  }, [logId, hasToken]);
 
   // 한글 입력 조합 시작
   const handleCompositionStart = () => {
@@ -112,15 +152,8 @@ function CreateLog() {
 
   // 입력 내용 변경시 작동
   const handleChange = (event) => {
-    // name: {nickname, name, description, password, password}
     const { name, value } = event.target;
 
-    // 지금 변경된 입력창이 로그 이름 입력창인지 확인: 로그 이름 중복검사 위함
-    if (name === "name") {
-      setIsNameChecked(false);
-      setIsNamePassedDupCheck(false);
-      setCheckedName("");
-    }
     // 이름 변경 감지되면 이전에 통과했어도 다시 비활성화.
 
     // 한글 조합 중 비밀번호값 즉시 replace 안함
@@ -146,6 +179,19 @@ function CreateLog() {
 
     const sanitizer = sanitizeByField[name];
     const sanitizedValue = sanitizer ? sanitizer(value) : value;
+
+    // 지금 변경된 입력창이 로그 이름 입력창인지 확인
+    if (name === "name") {
+      if (value.trim() === originalName) {
+        setIsNameChecked(true);
+        setIsNamePassedDupCheck(true);
+        setCheckedName(value.trim());
+      } else if (name === "name" && value.trim() !== originalName) {
+        setIsNameChecked(false);
+        setIsNamePassedDupCheck(false);
+        setCheckedName("");
+      }
+    }
 
     setForm((prev) => ({
       ...prev,
@@ -224,51 +270,60 @@ function CreateLog() {
     setTouched({
       nickname: true,
       name: true,
-      password: true,
-      passwordConfirm: true,
     });
 
-    // 오류 검사 - 필수 항목 누락 확인
+    // 비밀번호 입력 없으면 PATCH 요청에서 제외
+    const hasPasswordInput =
+      form.password.trim() || form.passwordConfirm.trim();
+
+    // 비밀번호, 비밀번호 확인 둘 중 하나라도 입력이 있는데 서로 일치하지 않은 경우 오류처리
+    const hasPasswordError =
+      hasPasswordInput &&
+      (!form.password.trim() ||
+        !form.passwordConfirm.trim() ||
+        form.password !== form.passwordConfirm);
+
     const hasError =
       !form.nickname.trim() ||
       !form.name.trim() ||
       !isNameChecked ||
       !isNamePassedDupCheck ||
       checkedName !== form.name.trim() ||
-      !form.password.trim() ||
-      !form.passwordConfirm.trim() ||
-      form.password !== form.passwordConfirm;
+      hasPasswordError;
 
     if (hasError) {
       setShowNoSubmitAlert(true);
       return;
     }
-
     // 폼에 입력한 데이터 + 배경값
     const logData = {
       nickname: form.nickname.trim(),
       name: form.name.trim(),
       description: form.description.trim() || null,
       background: selectedBackground,
-      password: form.password,
-      passwordConfirm: form.passwordConfirm,
     };
+    // password 입력값이 있을 때만 넣기
+    if (hasPasswordInput) {
+      logData.password = form.password;
+      logData.passwordConfirm = form.passwordConfirm;
+    }
 
     try {
-      const createdLog = await createLog(logData);
-      const { logId } = createdLog;
+      // 로그 수정(update) api 요청
+      const updatedLog = await updateLog(logId, logData);
+      const { logId: updatedLogId } = updatedLog;
 
       if (!logId) {
-        throw new Error("생성된 로그 ID를 확인할 수 없습니다.");
+        throw new Error("수정된 로그 ID를 확인할 수 없습니다.");
       }
 
-      console.log("로그가 생성되었습니다: ", createdLog);
+      console.log("로그가 수정되었습니다: ", updatedLog);
 
       // 생성된 로그 id로 조회하기
-      const fetchedLog = await getLogById(logId);
+      const fetchedLog = await getLogById(updatedLogId);
 
-      // logDetail/id 페이지로 이동하기
-      navigate(`/logdetail/${logId}`, {
+      // logdetail/id 페이지로 이동하기
+      navigate(`/logdetail/${updatedLogId}`, {
         replace: true,
         state: { log: fetchedLog },
       });
@@ -284,7 +339,7 @@ function CreateLog() {
     <div className={styles.contianer}>
       <form noValidate onSubmit={handleSubmit}>
         <div className={styles.formContent}>
-          <span className={styles.title}>로그 만들기</span>
+          <span className={styles.title}>로그 수정하기</span>
           <label>
             닉네임
             <div className={styles.inputWrapper}>
@@ -305,7 +360,6 @@ function CreateLog() {
               )}
             </div>
           </label>
-
           <label>
             로그 이름
             <div className={styles.inputWrapper}>
@@ -322,7 +376,7 @@ function CreateLog() {
                 />
                 {/* 중복 확인 버튼 */}
                 <button
-                  disabled={isNameChecking}
+                  disabled={form.name.trim() === originalName || isNameChecking}
                   type="button"
                   className={styles.nameCheckBtn}
                   onClick={handleNameCheck}
@@ -346,7 +400,6 @@ function CreateLog() {
               )}
             </div>
           </label>
-
           <label>
             소개
             <textarea
@@ -375,7 +428,7 @@ function CreateLog() {
                 <input
                   name="password"
                   maxLength={MAXLENGTH.password}
-                  placeholder="비밀번호를 입력해 주세요"
+                  placeholder="새 비밀번호 (변경 시에만 입력)"
                   type={isPasswordVisible ? "text" : "password"}
                   value={form.password}
                   className={styles.inputPassword}
@@ -411,7 +464,7 @@ function CreateLog() {
                 <input
                   name="passwordConfirm"
                   maxLength={MAXLENGTH.password}
-                  placeholder="비밀번호를 다시 한 번 입력해 주세요"
+                  placeholder="새 비밀번호 확인"
                   type={isPasswordConfirmVisible ? "text" : "password"}
                   value={form.passwordConfirm}
                   className={styles.inputPassword}
@@ -448,13 +501,31 @@ function CreateLog() {
         </div>
 
         <button type="submit" className={styles.submitButton}>
-          만들기
+          수정 완료
         </button>
       </form>
+      {/* 접근권한 알럿 */}
+      {showNoAccessAlert && (
+        <Modal
+          content="접근 권한이 없습니다."
+          isOpen={true}
+          type="alert"
+          onClose={() => {
+            navigate(logId ? `/logdetail/${logId}` : ROUTES.HOME, {
+              replace: true,
+            });
+          }}
+        />
+      )}
+      {/* 알럿 모달이 추가로 필요한 경우 새로 Modal을 추가해서 써주세요! */}
       {/* 제출 불가 알림 */}
       {showNoSubmitAlert && (
         <Modal
-          content="로그를 생성할 수 없습니다."
+          content={
+            isNamePassedDupCheck === false
+              ? "로그 이름 중복 확인이 필요합니다."
+              : "로그를 생성할 수 없습니다."
+          }
           isOpen={true}
           type="alert"
           onClose={() => {
@@ -468,4 +539,4 @@ function CreateLog() {
     </div>
   );
 }
-export default CreateLog;
+export default UpdateLog;
