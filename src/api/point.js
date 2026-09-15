@@ -1,5 +1,5 @@
-import { api } from "./axios";
+import { apiClient } from "./client";
 
 export function getPoint(logId) {
-  return api.get(`/logs/${logId}/point`);
+  return apiClient.get(`/logs/${logId}/point`);
 }

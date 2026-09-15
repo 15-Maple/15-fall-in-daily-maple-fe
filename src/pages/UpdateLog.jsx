@@ -2,22 +2,30 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-import { updateLog, getLogById, nameCheck } from "../../api/logs.js";
+import { updateLog, getLogById, nameCheck } from "../api/logs.js";
 
-import Modal from "../../components/common/Modal.jsx";
+import BackgroundSelector from "../components/common/BackgroundSelector.jsx";
+import Modal from "../components/common/Modal.jsx";
 
-import { TOKEN_PREFIX } from "../../constants/auth";
-import { ROUTES } from "../../constants/routes.js";
-import BackgroundSelector from "./BackgroundSelector.jsx";
+import { TOKEN_PREFIX } from "../constants/auth.js";
+import { ROUTES } from "../constants/routes.js";
 
-import btnVisibilityOff from "../../assets/btn_visibility_off_24px.svg";
-import btnVisibilityOn from "../../assets/btn_visibility_on_24px.svg";
+import btnVisibilityOff from "../assets/btn_visibility_off_24px.svg";
+import btnVisibilityOn from "../assets/btn_visibility_on_24px.svg";
 
 import styles from "./createLog.module.css";
 
 function UpdateLog() {
   const { logId } = useParams();
   const navigate = useNavigate();
+
+  const MAXLENGTH = {
+    nickname: 12,
+    name: 20,
+    description: 140,
+    password: 15,
+    passwordConfirm: 15,
+  };
 
   // 입력값 state
   const [selectedBackground, setSelectedBackground] = useState("bgGreen");
@@ -339,6 +347,7 @@ function UpdateLog() {
                 name="nickname"
                 aria-describedby="nickname-error"
                 aria-required="true"
+                maxLength={MAXLENGTH.nickname}
                 placeholder="닉네임을 입력해주세요"
                 type="text"
                 value={form.nickname}
@@ -357,6 +366,7 @@ function UpdateLog() {
               <div className={styles.nameWrapper}>
                 <input
                   name="name"
+                  maxLength={MAXLENGTH.name}
                   placeholder="로그 이름을 입력해주세요"
                   type="text"
                   value={form.name}
@@ -394,6 +404,7 @@ function UpdateLog() {
             소개
             <textarea
               name="description"
+              maxLength={MAXLENGTH.description}
               placeholder="소개 멘트를 작성해주세요"
               value={form.description}
               onChange={handleChange}
@@ -416,6 +427,7 @@ function UpdateLog() {
               >
                 <input
                   name="password"
+                  maxLength={MAXLENGTH.password}
                   placeholder="새 비밀번호 (변경 시에만 입력)"
                   type={isPasswordVisible ? "text" : "password"}
                   value={form.password}
@@ -451,6 +463,7 @@ function UpdateLog() {
               >
                 <input
                   name="passwordConfirm"
+                  maxLength={MAXLENGTH.password}
                   placeholder="새 비밀번호 확인"
                   type={isPasswordConfirmVisible ? "text" : "password"}
                   value={form.passwordConfirm}
