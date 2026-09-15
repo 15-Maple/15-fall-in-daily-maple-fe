@@ -24,7 +24,9 @@
 
 .leftArea {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-width: 0;
 }
 
 .rightArea {
@@ -96,7 +98,6 @@
 .desc {
   font-size: 18px;
   font-weight: 500;
-  overflow-wrap: anywhere;
 }
 
 .pointText {
