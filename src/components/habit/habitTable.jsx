@@ -7,6 +7,32 @@ import Nohabit from "./noHabit";
 
 import styles from "./habit.module.css";
 
+const STICKER_COLORS = [
+  // 밝고 산뜻한 파스텔톤 위주
+  "var(--color-sticker-light-green-100)",
+  "var(--color-sticker-yellow-200)",
+  "var(--color-sticker-pink-100)",
+  "var(--color-sticker-blue-100)",
+  "var(--color-sticker-purple-200)",
+  "var(--color-sticker-light-mint-100)",
+
+  // 조금 더 선명한 색상들
+  "var(--color-sticker-yellow-300)",
+  "var(--color-sticker-light-green-200)",
+  "var(--color-sticker-pink-300)",
+  "var(--color-sticker-blue-200)",
+  "var(--color-sticker-purple-100)",
+  "var(--color-sticker-light-mint-200)",
+
+  // 남은 색상들 교차 배치 (진한 색상과 밝은 색상 대비)
+  "var(--color-sticker-yellow-100)",
+  "var(--color-sticker-pink-200)",
+  "var(--color-sticker-light-green-300)",
+  "var(--color-sticker-blue-300)",
+  "var(--color-sticker-purple-300)",
+  "var(--color-sticker-green)",
+];
+
 function HabitTable({ logId }) {
   const days = ["월", "화", "수", "목", "금", "토", "일"];
 
@@ -53,24 +79,28 @@ function HabitTable({ logId }) {
           </div>
 
           {/* 습관목록 */}
-          {habitWeekly.map((habit) => (
-            <div
-              key={habit.habitId}
-              className={`${styles.habit} ${habit.isDeleted ? styles.disabled : ""}`}
-            >
-              <span className={styles.habitTitle}>{habit.name}</span>
-              {/* 월~일 습관 기록표시 */}
-              {habit.records.map((record, index) => (
-                <span key={index}>
-                  <AcornSticker
-                    bgColor={
-                      record ? "var(--color-sticker-yellow-200)" : "#eeeeee"
-                    }
-                  />
-                </span>
-              ))}
-            </div>
-          ))}
+          {habitWeekly.map((habit, habitIndex) => {
+            const currentColor =
+              STICKER_COLORS[habitIndex % STICKER_COLORS.length];
+            return (
+              <div
+                key={habit.habitId}
+                className={`${styles.habit} ${habit.isDeleted ? styles.disabled : ""}`}
+              >
+                <span className={styles.habitTitle}>{habit.name}</span>
+                {/* 월~일 습관 기록표시 */}
+                {habit.records.map((record, index) => (
+                  <span key={index}>
+                    <AcornSticker
+                      bgColor={
+                        record ? currentColor : "var(--color-sticker-empty)"
+                      }
+                    />
+                  </span>
+                ))}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
