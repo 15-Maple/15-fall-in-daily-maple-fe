@@ -35,10 +35,6 @@ export function deleteLog(logId) {
   });
 }
 
-// export function verifyLogPassword(logId, password) {
-//   return api.post(`/logs/${logId}/password`, { password });
-// }
-
 export const getHomeLogs = async () => {
   const { items: logs } = await apiClient.get("/home/logs");
 

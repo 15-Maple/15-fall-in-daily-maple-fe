@@ -1,6 +1,5 @@
-import AcornSticker from "../../components/common/AcornSticker.jsx";
-
 import { BACKGROUNDS } from "../../constants/backgrounds.js";
+import AcornSticker from "./AcornSticker.jsx";
 
 import styles from "./BackgroundSelector.module.css";
 
