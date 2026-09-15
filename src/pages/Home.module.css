@@ -229,9 +229,16 @@
 
 /* 획득 포인트 */
 
+.logsCardPointIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
 .logsCardPoint {
   display: inline-flex;
   flex-shrink: 0;
+  gap: 5px;
   align-items: center;
   justify-content: center;
   padding: 6px 12px;
