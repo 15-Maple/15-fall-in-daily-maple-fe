@@ -8,6 +8,7 @@ import bgTile from "../../assets/bg_img_tile.svg";
 import bgWindow from "../../assets/bg_img_window.svg";
 import bgPink from "../../assets/bg_pink.svg";
 import bgYellow from "../../assets/bg_yellow.svg";
+import pointIcon from "../../assets/ic-point.svg";
 
 // 백엔드에서 오는 background 값과 실제 이미지 연결
 const BACKGROUND_MAP = {
@@ -70,7 +71,10 @@ function LogCard({
             <p className={styles.logsCardDate}>{elapsedDays}일째 진행 중</p>
           </div>
 
-          <span className={styles.logsCardPoint}>🌿 {point}P 획득</span>
+          <span className={styles.logsCardPoint}>
+            <img alt="" src={pointIcon} className={styles.logsCardPointIcon} />
+            {point}P 획득
+          </span>
         </div>
 
         <p className={styles.logsCardDescription}>{description}</p>
