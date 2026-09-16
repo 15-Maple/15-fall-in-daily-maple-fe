@@ -94,12 +94,14 @@ function UpdateLog() {
       touched.nickname && !form.nickname.trim() ? "*닉네임을 입력해주세요" : "",
     name: touched.name && !form.name.trim() ? "*로그 이름을 입력해주세요" : "",
     password:
+      // 비밀번호 확인 클릭하고 비밀번호 확인 입력했는데 비밀번호 내용 없음
       touched.passwordConfirm &&
       !form.password.trim() &&
-      !form.passwordComfirm.trim()
+      form.passwordConfirm.trim()
         ? "*비밀번호를 입력해주세요"
         : "",
     passwordConfirm:
+      // 비밀번호 클릭하고 비밀번호 입력했는데 비밀번호 확인 없음
       touched.password && form.password.trim() && !form.passwordConfirm.trim()
         ? "*비밀번호 확인을 입력해주세요"
         : touched.passwordConfirm &&
