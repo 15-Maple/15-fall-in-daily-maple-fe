@@ -129,9 +129,7 @@ function LogDetail() {
             <div className={styles.leftArea}>
               <Reaction />
 
-              <h1 className={styles.title}>
-                {log ? log.name : "연우의 개발공장"}
-              </h1>
+              <h1 className={styles.title}>{log ? log.name : ""}</h1>
 
               <div className={styles.mobileHabitMenu}>
                 <NavButton pageName="오늘의 습관" to={todayHabitsPath} />
@@ -142,11 +140,7 @@ function LogDetail() {
               <div className={styles.sub}>
                 <p className={styles.label}>소개</p>
 
-                <p className={styles.desc}>
-                  {log
-                    ? log.description
-                    : "Slow And Steady Wins The Race! 다들 오늘 하루도 화이팅!"}
-                </p>
+                <p className={styles.desc}>{log ? log.description : ""}</p>
               </div>
 
               <div className={styles.pointText}>현재까지 획득한 포인트</div>
