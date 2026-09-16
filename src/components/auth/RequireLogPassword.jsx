@@ -11,7 +11,7 @@ function RequireLogPassword({ children }) {
   const navigate = useNavigate();
 
   // context
-  const { logData, showToast } = useOutletContext();
+  const { logData } = useOutletContext();
 
   // 토큰이 있는지 없는지
   const [hasToken, setHasToken] = useState(
@@ -37,17 +37,13 @@ function RequireLogPassword({ children }) {
         logId={logId}
         title={logData.name}
         onClose={() => {
-          // 유저가 비밀번호 확인 모달을 취소한 경우
-          showToast("warning", "비밀번호 확인이 필요합니다.");
-          setTimeout(() => {
-            const hasPreviousPage =
-              window.history.state && window.history.state.idx > 0;
-            if (hasPreviousPage) {
-              navigate(-1, { replace: true });
-            } else {
-              navigate(`/`, { replace: true });
-            }
-          }, 1000);
+          const hasPreviousPage =
+            window.history.state && window.history.state.idx > 0;
+          if (hasPreviousPage) {
+            navigate(-1, { replace: true });
+          } else {
+            navigate(`/`, { replace: true });
+          }
         }}
         onSuccess={() => {
           setHasToken(true);
