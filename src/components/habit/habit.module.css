@@ -61,7 +61,7 @@
 }
 
 .habitTitle {
-  padding-right: 40px;
+  padding-right: 20px;
   font-size: 18px;
   font-weight: 700;
   color: #414141;
@@ -105,13 +105,13 @@
 작은 PC (1100px)
 ======================================= */
 
-@media (width <= 1100px) {
+@media (width <= 1200px) {
   .row {
-    grid-template-columns: 200px repeat(7, 60px);
+    grid-template-columns: 200px repeat(7, 90px);
   }
 
   .habit {
-    grid-template-columns: 200px repeat(7, 60px);
+    grid-template-columns: 200px repeat(7, 90px);
   }
 }
 
@@ -149,6 +149,7 @@
   }
 
   .habitTitle {
+    padding-right: 20px;
     font-size: 14px;
   }
 
@@ -157,14 +158,14 @@
   }
 
   .row {
-    grid-template-columns: 200px repeat(7, 60px);
+    grid-template-columns: 150px repeat(7, 60px);
     justify-content: start;
     width: 620px;
     margin-left: 0;
   }
 
   .habit {
-    grid-template-columns: 200px repeat(7, 60px);
+    grid-template-columns: 150px repeat(7, 60px);
     justify-content: start;
     width: 620px;
     margin-left: 0;
@@ -175,5 +176,25 @@
     min-width: 0;
     max-width: 100%;
     overflow-x: auto;
+  }
+}
+
+@media (width <= 375px) {
+  .week {
+    font-size: 14px;
+  }
+
+  .row {
+    grid-template-columns: 100px repeat(7, 60px);
+    justify-content: start;
+    width: 620px;
+    margin-left: 0;
+  }
+
+  .habit {
+    grid-template-columns: 100px repeat(7, 60px);
+    justify-content: start;
+    width: 620px;
+    margin-left: 0;
   }
 }
