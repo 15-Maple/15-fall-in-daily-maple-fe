@@ -21,6 +21,7 @@ apiClient.interceptors.response.use(
     const isSelfHandledAuthApi = [
       { method: "post", path: "/focus/finish" }, // 집중 종료: 타이머 상태 유지한 채 재시도
       { method: "put", path: "/habits/me" }, // 습관 목록 저장: 입력/삭제 상태 유지한 채 재시도
+      { method: "post", path: "/auth/verify" }, // 비밀번호 불일치와 토큰 만료 처리 구분
     ].some(
       ({ method, path }) =>
         requestMethod === method && requestUrl.includes(path),
