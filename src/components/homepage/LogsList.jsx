@@ -125,16 +125,20 @@ function LogsList() {
 
       {/* 검색 + 정렬 */}
       <div className={styles.logsListControls}>
-        <input
-          placeholder="검색"
-          type="text"
-          value={keyword}
-          className={styles.logsSearchInput}
-          onChange={(e) => {
-            setKeyword(e.target.value);
-            setVisibleCount(6);
-          }}
-        />
+        <div className={styles.logsSearchBox}>
+          <span className={styles.logsSearchIcon}>⌕</span>
+
+          <input
+            placeholder="검색"
+            type="text"
+            value={keyword}
+            className={styles.logsSearchInput}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+              setVisibleCount(6);
+            }}
+          />
+        </div>
 
         {/* 정렬 드롭다운 */}
         <div className={styles.logsSortBox}>
