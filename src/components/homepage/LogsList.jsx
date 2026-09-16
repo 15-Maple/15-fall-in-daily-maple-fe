@@ -104,7 +104,6 @@ function LogsList() {
   // 정렬 선택
   const handleSortChange = (sortType) => {
     setSort(sortType);
-    setVisibleCount(6);
     setIsSortOpen(false);
   };
 
