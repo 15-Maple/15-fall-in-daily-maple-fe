@@ -10,6 +10,7 @@ import HabitTable from "../components/habit/habitTable.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 import NavButton from "../components/ui/NavButton.jsx";
+import Loading from "@/components/common/Loading.jsx";
 
 import { TOKEN_PREFIX } from "../constants/auth";
 import { ROUTES } from "../constants/routes.js";
@@ -116,16 +117,7 @@ function LogDetail() {
 
   //로딩중일떄
   if (loading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.dot}>
-          <span></span>
-          <span></span>
-          <span className={styles.right}></span>
-        </div>
-        <p>L O A D I N G</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   //로딩끝났을때
