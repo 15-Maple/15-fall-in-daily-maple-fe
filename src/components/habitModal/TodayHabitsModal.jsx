@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ReactDOM from "react-dom";
 import { useOutletContext } from "react-router-dom";
 
 import { syncTodayHabits } from "../../api/habit.js";
@@ -8,7 +9,6 @@ import { TOKEN_PREFIX } from "../../constants/auth.js";
 import Modal from "../common/Modal.jsx";
 import PasswordConfirmModal from "../common/PasswordConfirmModal.jsx";
 import Button from "../ui/Button.jsx";
-import HabitAddModal from "./HabitAddModal.jsx";
 
 import trashcanIcon from "../../assets/ic-trashcan.svg";
 
@@ -22,6 +22,7 @@ function HabitsModal({ id, onClose, onSaved }) {
   const { habits, setHabits, isLoading, error } = useTodayHabits(id);
   const { logData } = useOutletContext();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newHabitName, setNewHabitName] = useState("");
 
   const [editingHabitId, setEditingHabitId] = useState(null); // 수정 중인 습관의 id
   const [editingHabitName, setEditingHabitName] = useState(""); // (수정) input에 입력하고 있는 이름
@@ -49,11 +50,11 @@ function HabitsModal({ id, onClose, onSaved }) {
     }
   };
 
-  const handleAddHabit = (habitName) => {
-    const trimmedName = habitName.trim();
+  const handleAddHabit = () => {
+    const trimmedName = newHabitName.trim();
 
     if (!trimmedName) {
-      return false;
+      return;
     }
 
     if (habits.length >= MAX_HABIT_COUNT) {
@@ -62,15 +63,14 @@ function HabitsModal({ id, onClose, onSaved }) {
         `습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`,
       );
 
-      return false;
+      return;
     }
 
     const isDuplicate = habits.some((habit) => habit.name === trimmedName);
 
     if (isDuplicate) {
       showToast("warning", "이미 같은 이름의 습관이 있어요.");
-
-      return false;
+      return;
     }
 
     setHabits((prev) => [
@@ -82,9 +82,29 @@ function HabitsModal({ id, onClose, onSaved }) {
       },
     ]);
 
+    setNewHabitName("");
     setIsAddModalOpen(false);
+  };
 
-    return true;
+  const handleCloseAddModal = () => {
+    setNewHabitName("");
+    setIsAddModalOpen(false);
+  };
+
+  const handleNewHabitNameChange = (e) => {
+    const value = e.target.value;
+
+    if (value.length > MAX_HABIT_NAME_LENGTH) {
+      showToast(
+        "warning",
+        `습관 이름은 최대 ${MAX_HABIT_NAME_LENGTH}자까지 입력할 수 있어요.`,
+      );
+
+      setNewHabitName(value.slice(0, MAX_HABIT_NAME_LENGTH));
+      return;
+    }
+
+    setNewHabitName(value);
   };
 
   const handleEditHabit = () => {
@@ -305,12 +325,59 @@ function HabitsModal({ id, onClose, onSaved }) {
           </Button>
         </div>
       </div>
-      <HabitAddModal
-        isOpen={isAddModalOpen}
-        showToast={showToast}
-        onAdd={handleAddHabit}
-        onClose={() => setIsAddModalOpen(false)}
-      />
+
+      {isAddModalOpen &&
+        ReactDOM.createPortal(
+          <div className={styles.addModalOverlay} onClick={handleCloseAddModal}>
+            <div
+              className={styles.addModalWrapper}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={styles.addModalContent}>
+                <div className={styles.addModalTitleWrapper}>
+                  <h3 className={styles.addModalTitle}>
+                    새로운 습관을 입력해주세요
+                  </h3>
+                </div>
+
+                <div className={styles.addModalInputWrapper}>
+                  <input
+                    autoFocus
+                    placeholder="습관 이름을 입력해주세요"
+                    type="text"
+                    value={newHabitName}
+                    className={styles.addModalInput}
+                    onChange={handleNewHabitNameChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleAddHabit();
+                      }
+
+                      if (e.key === "Escape") {
+                        handleCloseAddModal();
+                      }
+                    }}
+                  />
+                </div>
+
+                <div className={styles.addModalButtonGroup}>
+                  <Button
+                    size="xs"
+                    variant="cancel"
+                    onClick={handleCloseAddModal}
+                  >
+                    취소
+                  </Button>
+
+                  <Button size="xs" onClick={handleAddHabit}>
+                    추가
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.getElementById("modal-root"),
+        )}
 
       <PasswordConfirmModal
         isOpen={isPasswordModalOpen}
