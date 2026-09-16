@@ -8,6 +8,7 @@ import { TOKEN_PREFIX } from "../../constants/auth.js";
 import Modal from "../common/Modal.jsx";
 import PasswordConfirmModal from "../common/PasswordConfirmModal.jsx";
 import Button from "../ui/Button.jsx";
+import HabitAddModal from "./HabitAddModal.jsx";
 
 import trashcanIcon from "../../assets/ic-trashcan.svg";
 
@@ -19,9 +20,7 @@ function HabitsModal({ id, onClose, onSaved }) {
   const { showToast } = useOutletContext();
   const { habits, setHabits, isLoading, error } = useTodayHabits(id);
   const { logData } = useOutletContext();
-  const [isAdding, setIsAdding] = useState(false); // 새 습관 입력창 표시 여부
-  const [newHabitName, setNewHabitName] = useState(""); // 새 습관 이름 저장
-  const [placeholder, setPlaceholder] = useState("새로운 습관을 입력해주세요");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const [editingHabitId, setEditingHabitId] = useState(null); // 수정 중인 습관의 id
   const [editingHabitName, setEditingHabitName] = useState(""); // (수정) input에 입력하고 있는 이름
@@ -49,11 +48,11 @@ function HabitsModal({ id, onClose, onSaved }) {
     }
   };
 
-  // Enter를 누르면 새 습관을 기존 습관 목록에 그대로 추가 (같은 배열, isNew로만 구분)
-  const handleAddHabit = () => {
-    const trimmedName = newHabitName.trim();
+  const handleAddHabit = (habitName) => {
+    const trimmedName = habitName.trim();
+
     if (!trimmedName) {
-      return;
+      return false;
     }
 
     if (habits.length >= MAX_HABIT_COUNT) {
@@ -61,21 +60,30 @@ function HabitsModal({ id, onClose, onSaved }) {
         "warning",
         `습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`,
       );
-      return;
+
+      return false;
     }
 
     const isDuplicate = habits.some((habit) => habit.name === trimmedName);
 
     if (isDuplicate) {
       showToast("warning", "이미 같은 이름의 습관이 있어요.");
-      return;
+
+      return false;
     }
 
-    // 새로 추가한 습관은 임시로 현재 시간을 id로 사용 (서버에는 이름만 보냄)
-    setHabits([...habits, { id: Date.now(), name: trimmedName, isNew: true }]);
+    setHabits((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        name: trimmedName,
+        isNew: true,
+      },
+    ]);
 
-    setNewHabitName("");
-    setIsAdding(false);
+    setIsAddModalOpen(false);
+
+    return true;
   };
 
   const handleEditHabit = () => {
@@ -125,32 +133,12 @@ function HabitsModal({ id, onClose, onSaved }) {
       if (habit.isNew) {
         createList.push({ name: habit.name });
       } else {
-        updateList.push({ id: habit.id, name: habit.name });
+        updateList.push({
+          id: habit.id,
+          name: habit.name,
+        });
       }
     });
-
-    // Enter를 누르지 않은 새 습관도 저장 대상에 포함
-    const trimmedNewHabitName = newHabitName.trim();
-
-    if (trimmedNewHabitName) {
-      const isDuplicate = habits.some(
-        (habit) => habit.name === trimmedNewHabitName,
-      );
-
-      if (isDuplicate) {
-        showToast("warning", "이미 같은 이름의 습관이 있어요.");
-        return;
-      }
-      if (habits.length >= MAX_HABIT_COUNT) {
-        showToast(
-          "warning",
-          `습관은 최대 ${MAX_HABIT_COUNT}개까지 등록할 수 있어요.`,
-        );
-        return;
-      }
-
-      createList.push({ name: trimmedNewHabitName });
-    }
 
     setIsSubmitting(true);
 
@@ -163,9 +151,10 @@ function HabitsModal({ id, onClose, onSaved }) {
 
       showToast("success", "습관 목록이 수정되었습니다.");
 
-      onSaved(); // 저장 성공했을 때만 → 재조회 + 닫기
+      onSaved();
     } catch (err) {
       console.error("습관 목록 저장 실패:", err);
+
       if (err.cause?.response?.status === 401) {
         sessionStorage.removeItem(`${TOKEN_PREFIX}${id}`);
         setIsPasswordModalOpen(true);
@@ -263,39 +252,6 @@ function HabitsModal({ id, onClose, onSaved }) {
           ))}
         </div>
 
-        {isAdding && (
-          <div className={styles.habitAddLayout}>
-            <input
-              placeholder={placeholder}
-              type="text"
-              value={newHabitName}
-              className={styles.habitName}
-              onBlur={() => setPlaceholder("새로운 습관을 입력해주세요")}
-              onChange={(e) => setNewHabitName(e.target.value)}
-              onFocus={() => setPlaceholder("")}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleAddHabit();
-                }
-              }}
-            />
-            <button
-              aria-label="새 습관 입력 취소"
-              type="button"
-              className={styles.habitDelete}
-              onClick={() => {
-                setNewHabitName("");
-                setIsAdding(false);
-              }}
-            >
-              <img
-                alt=""
-                src={trashcanIcon}
-                className={styles.habitDeleteIcon}
-              />
-            </button>
-          </div>
-        )}
         <div className={styles.habitAddLayout}>
           <button
             aria-disabled={habits.length >= MAX_HABIT_COUNT}
@@ -309,7 +265,7 @@ function HabitsModal({ id, onClose, onSaved }) {
                 return;
               }
 
-              setIsAdding(true);
+              setIsAddModalOpen(true);
             }}
           >
             +
@@ -332,6 +288,12 @@ function HabitsModal({ id, onClose, onSaved }) {
           </Button>
         </div>
       </div>
+      <HabitAddModal
+        isOpen={isAddModalOpen}
+        onAdd={handleAddHabit}
+        onClose={() => setIsAddModalOpen(false)}
+      />
+
       <PasswordConfirmModal
         isOpen={isPasswordModalOpen}
         logId={id}
