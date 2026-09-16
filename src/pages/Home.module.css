@@ -50,11 +50,30 @@
 
 /* 검색 */
 
-.logsSearchInput {
+.logsSearchBox {
+  position: relative;
   flex: 1 1 220px;
   min-width: 0;
   max-width: 280px;
-  padding: 10px 16px;
+}
+
+.logsSearchIcon {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  z-index: 1;
+  font-size: 32px;
+  line-height: 1;
+  color: #888;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.logsSearchInput {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 16px 10px 64px;
   font-size: 14px;
   outline: none;
   background-color: var(--color-white);
@@ -198,7 +217,7 @@
   padding: 20px 24px;
 }
 
-/* 제목 + 포인트 상단 영역 */
+/* 제목 + 포인트 */
 
 .logsCardHeader {
   display: flex;
@@ -229,9 +248,16 @@
 
 /* 획득 포인트 */
 
+.logsCardPointIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
 .logsCardPoint {
   display: inline-flex;
   flex-shrink: 0;
+  gap: 5px;
   align-items: center;
   justify-content: center;
   padding: 6px 12px;
@@ -380,15 +406,24 @@
     align-items: stretch;
   }
 
-  .logsSearchInput {
-    box-sizing: border-box;
+  .logsSearchBox {
     flex: none;
     width: 100%;
     max-width: none;
+  }
+
+  .logsSearchInput {
+    width: 100%;
+    max-width: none;
     height: 56px;
-    padding: 0 20px;
+    padding: 0 20px 0 64px;
     font-size: 16px;
     border-radius: 16px;
+  }
+
+  .logsSearchIcon {
+    left: 20px;
+    font-size: 32px;
   }
 
   .logsCardContent {
@@ -410,6 +445,7 @@
   }
 
   /* 최근 조회 로그는 가로 스크롤 */
+
   .recentLogsList {
     display: flex;
     gap: 16px;
@@ -423,12 +459,20 @@
     display: none;
   }
 
+  /* 카드 기본 모바일 높이 */
+
+  .logsCard {
+    height: 280px;
+    min-height: 280px;
+  }
+
   .recentLogsList .logsCard {
     flex: 0 0 85%;
     scroll-snap-align: start;
   }
 
   /* 검색 + 정렬 */
+
   .logsListControls {
     display: flex;
     flex-direction: column;
@@ -436,13 +480,20 @@
     align-items: stretch;
   }
 
-  .logsSearchInput {
-    box-sizing: border-box;
-    flex: none;
+  .logsSearchBox {
     width: 100%;
     max-width: none;
+  }
+
+  .logsSearchInput {
+    width: 100%;
     height: 44px;
-    padding: 0 16px;
+    padding: 0 16px 0 58px;
+  }
+
+  .logsSearchIcon {
+    left: 18px;
+    font-size: 28px;
   }
 
   .logsSortBox {
@@ -460,6 +511,7 @@
   }
 
   /* 로그 둘러보기는 세로 1열 */
+
   .logsGrid {
     display: grid;
     grid-template-columns: 1fr;
@@ -469,16 +521,13 @@
   }
 
   /* 빈 상태 문구 */
+
   .emptyMessage {
     min-height: 160px;
     padding-top: 50px;
   }
 
   /* 카드 */
-  .logCard {
-    height: 280px;
-    min-height: 280px;
-  }
 
   .logsCardContent {
     height: 100%;

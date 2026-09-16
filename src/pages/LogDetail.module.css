@@ -24,7 +24,9 @@
 
 .leftArea {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-width: 0;
 }
 
 .rightArea {
@@ -105,6 +107,36 @@
   color: #818181;
 }
 
+/* 로딩중 */
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 800px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #7e5a44;
+}
+
+.dot {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.dot span {
+  width: 8px;
+  height: 8px;
+  background-color: #7e5a44;
+  border-radius: 50%;
+}
+
+.right {
+  opacity: 0.5;
+}
+
 /* ======================================
 모바일 (744px)
 ========================================= */
@@ -168,10 +200,17 @@
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
+    padding: 20px;
   }
 
   .leftArea,
   .rightArea {
     min-width: 0;
+  }
+}
+
+@media (width <= 375px) {
+  .content {
+    padding: 20px 10px;
   }
 }

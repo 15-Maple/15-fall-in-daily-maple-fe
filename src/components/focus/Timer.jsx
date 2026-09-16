@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useBlocker, useOutletContext } from "react-router-dom";
 import { useTimer, useStopwatch } from "react-timer-hook";
 
 import { createFocusSession, finishFocus } from "../../api/focus";
@@ -14,12 +14,13 @@ import timerIcon from "../../assets/ic-timer.svg";
 
 import styles from "./Timer.module.css";
 
-const formatNumber = (num) => String(num).padStart(2, "0");
+// 타이머 전용 함수
+const formatNumber = (num) => String(num || 0).padStart(2, "0");
 
 function Timer() {
   // 타이머
-  const [inputMinutes, setInputMinutes] = useState(25);
-  const [inputSeconds, setInputSeconds] = useState(0);
+  const [inputMinutes, setInputMinutes] = useState("25");
+  const [inputSeconds, setInputSeconds] = useState("00");
   const [isFinished, setIsFinished] = useState(false);
   const [isTimerStarted, setIsTimerStarted] = useState(false);
 
@@ -31,19 +32,21 @@ function Timer() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   // context
-  const { logData, showToast } = useOutletContext();
+  const { logData, showToast, handleUpdatePoint } = useOutletContext();
 
+  // 로그 정보
   const logId = logData.id;
+
+  // 타이머 종료
+  const overtimeTimeoutRef = useRef(null);
 
   // 스톱워치 설정(설정된 시간 종료 이후 처리)
   const {
-    seconds: overSec,
-    minutes: overMin,
+    seconds: overtimeSeconds,
+    minutes: overtimeMinutes,
     start: startOvertime,
     reset: resetOvertime,
   } = useStopwatch({ autoStart: false });
-
-  const overtimeTimeoutRef = useRef(null);
 
   // 타이머 설정
   const { seconds, minutes, hours, isRunning, restart, pause, resume } =
@@ -73,6 +76,22 @@ function Timer() {
       },
     });
 
+  // 집중 진행중일때 페이지 밖으로 나가는 것 안내
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    return isRunning && currentLocation.pathname !== nextLocation.pathname;
+  });
+
+  // 브라우저 탭 닫기/새로고침 방어
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isRunning) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isRunning]);
   const totalDisplayMinutes = hours * 60 + minutes;
 
   const handleStartTimer = () => {
@@ -89,7 +108,9 @@ function Timer() {
       return;
     }
 
-    const totalSecondsToAdd = inputMinutes * 60 + inputSeconds;
+    const safeMinutes = Number(inputMinutes) || 0;
+    const safeSeconds = Number(inputSeconds) || 0;
+    const totalSecondsToAdd = safeMinutes * 60 + safeSeconds;
 
     // 10분 이상 설정
     if (totalSecondsToAdd < 600) {
@@ -102,8 +123,7 @@ function Timer() {
     newEndTime.setSeconds(newEndTime.getSeconds() + totalSecondsToAdd);
 
     // 시작 세션 생성
-    const targetSeconds = inputMinutes * 60 + inputSeconds;
-    handleStartFocus(targetSeconds);
+    handleStartFocus(totalSecondsToAdd);
 
     // 초기화
     resetOvertime(null, false); // 스톱워치 끄기
@@ -142,6 +162,9 @@ function Timer() {
     try {
       const earnedPoints = await finishFocus({ logId });
       showToast("success", `🎉 ${earnedPoints}포인트를 획득했습니다!`);
+
+      // 포인트 갱신
+      handleUpdatePoint();
     } catch (error) {
       console.error("집중 종료 에러:", error.message);
 
@@ -171,6 +194,31 @@ function Timer() {
     }
   };
 
+  // 숫자 입력 처리 함수
+  const handleTimeChange = (e, type) => {
+    // 숫자 이외의 문자 제거
+    let onlyNumber = e.target.value.replace(/[^0-9]/g, "");
+
+    if (onlyNumber === "") {
+      if (type === "minutes") setInputMinutes("");
+      else setInputSeconds("");
+      return;
+    }
+
+    // 숫자로 변환하여 값 체크
+    let num = Number(onlyNumber);
+
+    if (type === "minutes" && num > 99) {
+      onlyNumber = "99";
+    } else if (type === "seconds" && num > 59) {
+      onlyNumber = "59";
+    }
+
+    // 입력한 문자열 그대로 상태에 저장
+    if (type === "minutes") setInputMinutes(onlyNumber);
+    else setInputSeconds(onlyNumber);
+  };
+
   // overtimeTimeoutRef 정리
   useEffect(() => {
     return () => {
@@ -178,19 +226,51 @@ function Timer() {
     };
   }, []);
 
+  // 버튼 영역을 조건에 맞게 반환해주는 렌더 함수
+  const renderTimerButtons = () => {
+    // 1. 시작 전 상태
+    if (!isTimerStarted) {
+      return <TimerButton variant="start" onClick={handleStartTimer} />;
+    }
+
+    // 2. 집중 종료 상태
+    if (isFinished) {
+      return <TimerButton variant="stop" onClick={handleStopOvertime} />;
+    }
+
+    // 3. 타이머 실행 중이거나 일시정지 상태 (나머지 모든 경우)
+    return (
+      <>
+        <TimerButton
+          disabled={!isRunning} // 멈춰있으면 비활성화
+          variant="pause"
+          onClick={handlePauseTimer}
+        />
+        <TimerButton
+          disabled={isRunning} // 실행중 비활성화
+          variant="start"
+          onClick={handleResumeTimer}
+        />
+        <TimerButton
+          variant="restart"
+          onClick={handleRestartTimer} // 언제든 누를 수 있음
+        />
+      </>
+    );
+  };
+
   // 화면 출력 시간(타이머, 스톱워치)
-  const currentMinutes = isFinished ? overMin : totalDisplayMinutes;
-  const currentSeconds = isFinished ? overSec : seconds;
+  const currentMinutes = isFinished ? overtimeMinutes : totalDisplayMinutes;
+  const currentSeconds = isFinished ? overtimeSeconds : seconds;
 
   return (
     <div className={styles.timerContainer}>
       {/* 목표시간 chip */}
       <div className={styles.chipWrapper}>
         <div
-          className={clsx(
-            styles.targetTimeChip,
-            !isTimerStarted ? styles.hidden : "",
-          )}
+          className={clsx(styles.targetTimeChip, {
+            [styles.hidden]: !isTimerStarted,
+          })}
         >
           <div className={styles.timerIconWrapper}>
             <img alt="시계모양 아이콘" src={timerIcon} />
@@ -203,34 +283,35 @@ function Timer() {
 
       {/* 타이머 영역 */}
       <div
-        className={clsx(
-          styles.timeDisplayArea,
-          isTimerStarted ? styles.running : "",
-          isFinished ? styles.finished : "",
-        )}
+        className={clsx(styles.timeDisplayArea, {
+          [styles.running]: isTimerStarted,
+          [styles.finished]: isFinished,
+        })}
       >
         {!isTimerStarted ? (
           // 1. 타이머 정지(입력 모드)
           <>
             <div className={styles.numberWrapper}>
               <input
-                max="99"
-                min="0"
-                type="number"
-                value={formatNumber(inputMinutes)}
+                inputMode="numeric"
+                maxLength={2}
+                type="text"
+                value={inputMinutes}
                 className={styles.hiddenInput}
-                onChange={(e) => setInputMinutes(Number(e.target.value))}
+                onBlur={() => setInputMinutes(formatNumber(inputMinutes))}
+                onChange={(e) => handleTimeChange(e, "minutes")}
               />
             </div>
             <span className={styles.colon}>:</span>
             <div className={styles.numberWrapper}>
               <input
-                max="59"
-                min="0"
-                type="number"
-                value={formatNumber(inputSeconds)}
+                inputMode="numeric"
+                maxLength={2}
+                type="text"
+                value={inputSeconds}
                 className={styles.hiddenInput}
-                onChange={(e) => setInputSeconds(Number(e.target.value))}
+                onBlur={() => setInputSeconds(formatNumber(inputSeconds))}
+                onChange={(e) => handleTimeChange(e, "seconds")}
               />
             </div>
           </>
@@ -256,33 +337,7 @@ function Timer() {
       </div>
 
       {/* 버튼 영역 */}
-      <div className={styles.timerBtns}>
-        {!isTimerStarted ? (
-          // 시작 전: 시작 버튼
-          <TimerButton variant="start" onClick={handleStartTimer} />
-        ) : isFinished ? (
-          // 집중 종료: 마이너스 + 스톱워치 -> Stop 버튼
-          <TimerButton variant="stop" onClick={handleStopOvertime} />
-        ) : (
-          // 타이머 화면 (실행 중이거나 일시정지)
-          <>
-            <TimerButton
-              disabled={!isRunning} // 멈춰있으면 비활성화
-              variant="pause"
-              onClick={handlePauseTimer}
-            />
-            <TimerButton
-              disabled={isRunning} // 실행중 비활성화
-              variant="start"
-              onClick={handleResumeTimer}
-            />
-            <TimerButton
-              variant="restart"
-              onClick={handleRestartTimer} // 언제든 누를 수 있음
-            />
-          </>
-        )}
-      </div>
+      <div className={styles.timerBtns}>{renderTimerButtons()}</div>
 
       {isAlertOpen && (
         <Modal
@@ -307,6 +362,23 @@ function Timer() {
           await handleFinishFocus();
         }}
       />
+
+      {/* 페이지 이탈 안내 */}
+      {blocker.state === "blocked" && (
+        <Modal
+          cancelText="취소"
+          confirmText="떠나기"
+          content="집중이 진행중입니다. 페이지를 떠나시겠습니까?"
+          isOpen={true}
+          type="confirm"
+          onClose={() => {
+            blocker.reset();
+          }}
+          onConfirm={() => {
+            blocker.proceed();
+          }}
+        />
+      )}
     </div>
   );
 }

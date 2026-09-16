@@ -8,17 +8,16 @@ import pointIcon from "../../assets/ic-point.svg";
 
 import styles from "./PointHistory.module.css";
 
-function PointHistory() {
+function PointHistory({ refreshKey = 0 }) {
   const [point, setPoint] = useState(0);
   const { logId } = useParams();
   useEffect(() => {
     const fetchPoint = async () => {
       const responses = await getPoint(logId);
-
       setPoint(responses.points);
     };
     fetchPoint();
-  }, [logId]);
+  }, [logId, refreshKey]);
 
   return (
     <section className={styles.pointHistory}>

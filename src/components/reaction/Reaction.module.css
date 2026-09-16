@@ -13,3 +13,22 @@
   top: 40px;
   left: 0;
 }
+
+/* ===========================
+모바일 (744px)
+============================== */
+
+@media (width <= 744px) {
+  .picker {
+    position: fixed;
+    top: 190px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (width <= 360px) {
+  .reactionContent {
+    flex-wrap: wrap;
+  }
+}

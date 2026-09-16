@@ -27,6 +27,20 @@ function UpdateLog() {
     passwordConfirm: 15,
   };
 
+  // 입력 글자수
+  const [inputCount, setInputCount] = useState({
+    nickname: 0,
+    name: 0,
+    description: 0,
+    password: 0,
+    passwordConfirm: 0,
+  });
+
+  // 문자 수 계산 함수
+  const getCharacterLength = (value = "") => {
+    return [...value].length;
+  };
+
   // 입력값 state
   const [selectedBackground, setSelectedBackground] = useState("bgGreen");
   const [form, setForm] = useState({
@@ -80,10 +94,14 @@ function UpdateLog() {
       touched.nickname && !form.nickname.trim() ? "*닉네임을 입력해주세요" : "",
     name: touched.name && !form.name.trim() ? "*로그 이름을 입력해주세요" : "",
     password:
-      touched.passwordConfirm && !form.password.trim() && !form.password.trim()
+      // 비밀번호 확인 클릭하고 비밀번호 확인 입력했는데 비밀번호 내용 없음
+      touched.passwordConfirm &&
+      !form.password.trim() &&
+      form.passwordConfirm.trim()
         ? "*비밀번호를 입력해주세요"
         : "",
     passwordConfirm:
+      // 비밀번호 클릭하고 비밀번호 입력했는데 비밀번호 확인 없음
       touched.password && form.password.trim() && !form.passwordConfirm.trim()
         ? "*비밀번호 확인을 입력해주세요"
         : touched.passwordConfirm &&
@@ -111,8 +129,8 @@ function UpdateLog() {
         const log = await getLogById(logId);
 
         setForm({
-          nickname: log.nickname,
-          name: log.name,
+          nickname: log.nickname ?? "",
+          name: log.name ?? "",
           description: log.description ?? "",
           password: "",
           passwordConfirm: "",
@@ -120,6 +138,15 @@ function UpdateLog() {
         setOriginalName(log.name.trim());
         setCheckedName(log.name.trim());
         setSelectedBackground(log.background);
+
+        // 글자수 현재 값으로 업데이트
+        setInputCount({
+          nickname: getCharacterLength(log.nickname),
+          name: getCharacterLength(log.name),
+          description: getCharacterLength(log.description),
+          password: 0,
+          passwordConfirm: 0,
+        });
       } catch (error) {
         const message =
           error.response?.data?.message || "로그 정보를 불러오지 못했습니다.";
@@ -152,15 +179,18 @@ function UpdateLog() {
 
   // 입력 내용 변경시 작동
   const handleChange = (event) => {
-    const { name, value } = event.target;
-
+    // name: {nickname, name, description, password, password}
     // 이름 변경 감지되면 이전에 통과했어도 다시 비활성화.
+    const { name: inputType, value } = event.target;
 
     // 한글 조합 중 비밀번호값 즉시 replace 안함
-    if (isComposing && (name === "password" || name === "passwordConfirm")) {
+    if (
+      isComposing &&
+      (inputType === "password" || inputType === "passwordConfirm")
+    ) {
       setForm((prev) => ({
         ...prev,
-        [name]: value,
+        [inputType]: value,
       }));
       return;
     }
@@ -177,16 +207,23 @@ function UpdateLog() {
       passwordConfirm: (value) => value.replace(/[^0-9a-zA-Z]/g, ""),
     };
 
-    const sanitizer = sanitizeByField[name];
+    const sanitizer = sanitizeByField[inputType];
     const sanitizedValue = sanitizer ? sanitizer(value) : value;
 
+    // 글자수 바이트로 변환
+    setInputCount((prev) => ({
+      ...prev,
+      [inputType]: getCharacterLength(sanitizedValue),
+    }));
+
     // 지금 변경된 입력창이 로그 이름 입력창인지 확인
-    if (name === "name") {
+    if (inputType === "name") {
+      // 기존 이름과 같으면 중복 검사 필요
       if (value.trim() === originalName) {
         setIsNameChecked(true);
         setIsNamePassedDupCheck(true);
         setCheckedName(value.trim());
-      } else if (name === "name" && value.trim() !== originalName) {
+      } else if (inputType === "name" && value.trim() !== originalName) {
         setIsNameChecked(false);
         setIsNamePassedDupCheck(false);
         setCheckedName("");
@@ -195,7 +232,7 @@ function UpdateLog() {
 
     setForm((prev) => ({
       ...prev,
-      [name]: sanitizedValue,
+      [inputType]: sanitizedValue,
     }));
 
     setFormError("");
@@ -355,9 +392,14 @@ function UpdateLog() {
                 onBlur={handleBlur}
                 onChange={handleChange}
               />
-              {errors.nickname && (
-                <p className={styles.inputError}>{errors.nickname}</p>
-              )}
+              <div className={styles.inputInfo}>
+                <p className={styles.inputError}>
+                  {errors.nickname ? errors.nickname : ""}
+                </p>
+                <div className={styles.inputLengthCount}>
+                  {inputCount.nickname}/{MAXLENGTH.nickname}
+                </div>
+              </div>
             </div>
           </label>
           <label>
@@ -384,7 +426,28 @@ function UpdateLog() {
                   {isNameChecking ? "확인 중..." : "중복 확인"}
                 </button>
               </div>
-              {errors.name && (
+              <div className={styles.inputInfo}>
+                {/* 에러 메시지와 중복 통과 메시지는 같은 자리에서 서로 교체  */}
+                {/* 글자수는 오른쪽 고정 */}
+                {errors.name && (
+                  <p className={styles.inputError}>{errors.name}</p>
+                )}
+                {nameCheckMessage && (
+                  <p
+                    className={
+                      isNamePassedDupCheck
+                        ? styles.inputCorrect
+                        : styles.inputError
+                    }
+                  >
+                    {nameCheckMessage}
+                  </p>
+                )}
+                <div className={styles.inputLengthCount}>
+                  {inputCount.name}/{MAXLENGTH.name}
+                </div>
+              </div>
+              {/* {errors.name && (
                 <p className={styles.inputError}>{errors.name}</p>
               )}
               {nameCheckMessage && (
@@ -397,7 +460,7 @@ function UpdateLog() {
                 >
                   {nameCheckMessage}
                 </p>
-              )}
+              )} */}
             </div>
           </label>
           <label>
@@ -409,6 +472,9 @@ function UpdateLog() {
               value={form.description}
               onChange={handleChange}
             ></textarea>
+            <div className={styles.inputLengthCount}>
+              {inputCount.description}/{MAXLENGTH.description}
+            </div>
           </label>
 
           <fieldset>
@@ -450,9 +516,14 @@ function UpdateLog() {
                   />
                 </button>
               </div>
-              {errors.password && (
-                <p className={styles.inputError}>{errors.password}</p>
-              )}
+              <div className={styles.inputInfo}>
+                <p className={styles.inputError}>
+                  {errors.password ? errors.password : ""}
+                </p>
+                <div className={styles.inputLengthCount}>
+                  {inputCount.password}/{MAXLENGTH.password}
+                </div>
+              </div>
             </div>
           </label>
           <label>
@@ -492,9 +563,14 @@ function UpdateLog() {
                   />
                 </button>
               </div>
-              {errors.passwordConfirm && (
-                <p className={styles.inputError}>{errors.passwordConfirm}</p>
-              )}
+              <div className={styles.inputInfo}>
+                <p className={styles.inputError}>
+                  {errors.passwordConfirm ? errors.passwordConfirm : ""}
+                </p>
+                <div className={styles.inputLengthCount}>
+                  {inputCount.passwordConfirm}/{MAXLENGTH.passwordConfirm}
+                </div>
+              </div>
             </div>
           </label>
           {formError && <p className={styles.formError}>{formError}</p>}
@@ -530,9 +606,6 @@ function UpdateLog() {
           type="alert"
           onClose={() => {
             setShowNoSubmitAlert(false);
-            // navigate(`/logdetail/${logId}`, {
-            //   replace: true,
-            // });
           }}
         />
       )}

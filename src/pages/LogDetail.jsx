@@ -20,6 +20,8 @@ function LogDetail() {
   const { logId } = useParams();
   const navigate = useNavigate();
   const [log, setLog] = useState(null);
+  // 로딩중
+  const [loading, setLoading] = useState(true);
   console.log("log", log);
   // 비밀번호 모달
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -36,11 +38,19 @@ function LogDetail() {
     if (!logId) return;
 
     const fetchLog = async () => {
-      const data = await getLogById(logId);
-      setLog(data);
+      try {
+        const data = await getLogById(logId);
+        setLog(data);
+      } catch (error) {
+        console.log("로그 조회 실패", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     fetchLog();
   }, [logId]);
+  console.log("loading 상태:", loading);
 
   //공유하기 버튼
   const handleShare = async () => {
@@ -104,6 +114,21 @@ function LogDetail() {
     handleUpdateLog();
   };
 
+  //로딩중일떄
+  if (loading) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.dot}>
+          <span></span>
+          <span></span>
+          <span className={styles.right}></span>
+        </div>
+        <p>L O A D I N G</p>
+      </div>
+    );
+  }
+
+  //로딩끝났을때
   return (
     <>
       <main className={styles.page}>
