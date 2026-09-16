@@ -94,7 +94,9 @@ function UpdateLog() {
       touched.nickname && !form.nickname.trim() ? "*닉네임을 입력해주세요" : "",
     name: touched.name && !form.name.trim() ? "*로그 이름을 입력해주세요" : "",
     password:
-      touched.passwordConfirm && !form.password.trim() && !form.password.trim()
+      touched.passwordConfirm &&
+      !form.password.trim() &&
+      !form.passwordComfirm.trim()
         ? "*비밀번호를 입력해주세요"
         : "",
     passwordConfirm:
