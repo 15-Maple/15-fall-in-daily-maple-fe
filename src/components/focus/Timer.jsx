@@ -32,7 +32,7 @@ function Timer() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   // context
-  const { logData, showToast } = useOutletContext();
+  const { logData, showToast, handleUpdatePoint } = useOutletContext();
 
   // 로그 정보
   const logId = logData.id;
@@ -162,6 +162,9 @@ function Timer() {
     try {
       const earnedPoints = await finishFocus({ logId });
       showToast("success", `🎉 ${earnedPoints}포인트를 획득했습니다!`);
+
+      // 포인트 갱신
+      handleUpdatePoint();
     } catch (error) {
       console.error("집중 종료 에러:", error.message);
 
