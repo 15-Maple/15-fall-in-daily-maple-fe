@@ -158,7 +158,7 @@ function CreateLog() {
       passwordConfirm: (value) => value.replace(/[^0-9a-zA-Z]/g, ""),
     };
 
-    const sanitizer = sanitizeByField[name];
+    const sanitizer = sanitizeByField[inputType];
     const sanitizedValue = sanitizer ? sanitizer(value) : value;
 
     // 글자수 바이트로 변환
