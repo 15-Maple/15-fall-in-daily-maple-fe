@@ -350,7 +350,7 @@ function UpdateLog() {
       const updatedLog = await updateLog(logId, logData);
       const { logId: updatedLogId } = updatedLog;
 
-      if (!logId) {
+      if (!updatedLogId) {
         throw new Error("수정된 로그 ID를 확인할 수 없습니다.");
       }
 
