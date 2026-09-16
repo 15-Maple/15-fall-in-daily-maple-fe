@@ -71,12 +71,8 @@ function PasswordConfirmModal({
   };
 
   return ReactDOM.createPortal(
-    // 어두운 배경 (클릭 시 모달 닫힘)
-    <div className={styles.modalOverlay} onClick={handleClose}>
-      <div
-        className={styles.modalWrapper}
-        onClick={(e) => e.stopPropagation()} // 박스 안을 클릭했을 때 모달이 닫히는 걸 막아줍니다.
-      >
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalWrapper}>
         <div className={styles.modalContent}>
           <div className={styles.titleWrapper}>
             <h3 className={styles.title}>{title}</h3>
