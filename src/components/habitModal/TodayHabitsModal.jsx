@@ -15,6 +15,7 @@ import trashcanIcon from "../../assets/ic-trashcan.svg";
 import styles from "./TodayHabitsModal.module.css";
 
 const MAX_HABIT_COUNT = 30;
+const MAX_HABIT_NAME_LENGTH = 30;
 
 function HabitsModal({ id, onClose, onSaved }) {
   const { showToast } = useOutletContext();
@@ -218,7 +219,23 @@ function HabitsModal({ id, onClose, onSaved }) {
                   type="text"
                   value={editingHabitName}
                   className={styles.habitName}
-                  onChange={(e) => setEditingHabitName(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (value.length > MAX_HABIT_NAME_LENGTH) {
+                      showToast(
+                        "warning",
+                        `습관 이름은 최대 ${MAX_HABIT_NAME_LENGTH}자까지 입력할 수 있어요.`,
+                      );
+
+                      setEditingHabitName(
+                        value.slice(0, MAX_HABIT_NAME_LENGTH),
+                      );
+                      return;
+                    }
+
+                    setEditingHabitName(value);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       handleEditHabit();
@@ -290,6 +307,7 @@ function HabitsModal({ id, onClose, onSaved }) {
       </div>
       <HabitAddModal
         isOpen={isAddModalOpen}
+        showToast={showToast}
         onAdd={handleAddHabit}
         onClose={() => setIsAddModalOpen(false)}
       />

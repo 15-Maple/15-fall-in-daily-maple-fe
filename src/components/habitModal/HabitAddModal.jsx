@@ -5,7 +5,9 @@ import Button from "../ui/Button.jsx";
 
 import styles from "./HabitAddModal.module.css";
 
-function HabitAddModal({ isOpen, onClose, onAdd }) {
+const MAX_HABIT_NAME_LENGTH = 30;
+
+function HabitAddModal({ isOpen, onClose, onAdd, showToast }) {
   const [habitName, setHabitName] = useState("");
 
   if (!isOpen) {
@@ -42,7 +44,21 @@ function HabitAddModal({ isOpen, onClose, onAdd }) {
           type="text"
           value={habitName}
           className={styles.input}
-          onChange={(e) => setHabitName(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+
+            if (value.length > MAX_HABIT_NAME_LENGTH) {
+              showToast(
+                "warning",
+                `습관 이름은 최대 ${MAX_HABIT_NAME_LENGTH}자까지 입력할 수 있어요.`,
+              );
+
+              setHabitName(value.slice(0, MAX_HABIT_NAME_LENGTH));
+              return;
+            }
+
+            setHabitName(value);
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               handleAdd();
