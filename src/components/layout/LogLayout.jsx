@@ -104,7 +104,7 @@ function LogLayout() {
         <>
           {isHabits ? (
             <div className={styles.timeBox}>
-              <div className={styles.timeLabel}>현재 시간</div>
+              <div className={styles.timeLabel}>오늘의 날짜</div>
               <div className={styles.timeValue}>{nowTime()}</div>
             </div>
           ) : (
