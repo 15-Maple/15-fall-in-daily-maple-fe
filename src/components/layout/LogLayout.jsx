@@ -25,6 +25,14 @@ function LogLayout() {
   // 비밀번호 모달
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+  // 포인트 새로고침
+  const [pointRefreshKey, setPointRefreshKey] = useState(0);
+
+  // 포인트 새로고침 핸들러
+  const handleUpdatePoint = () => {
+    setPointRefreshKey((prev) => prev + 1);
+  };
+
   // 현재 위치 정보
   const location = useLocation();
   const currentPath = location.pathname;
@@ -110,15 +118,14 @@ function LogLayout() {
           ) : (
             <div className={styles.pointContainer}>
               <span>현재까지 획득한 포인트</span>
-              {/* 포인트 처리 확인하기 */}
-              <PointHistory />
+              <PointHistory refreshKey={pointRefreshKey} />
             </div>
           )}
         </>
 
         {/* 5. 콘텐츠 영역 */}
         <div className={styles.contentContainer}>
-          <Outlet context={{ logData, showToast }} />
+          <Outlet context={{ logData, showToast, handleUpdatePoint }} />
         </div>
       </div>
 
