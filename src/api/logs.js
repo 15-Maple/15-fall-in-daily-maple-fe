@@ -72,7 +72,14 @@ export const getHomeLogs = async () => {
       const reactions = await apiClient.get(`/logs/${log.id}/reactions`);
 
       return {
-        ...log,
+        id: log.id,
+        name: log.name,
+        nickname: log.nickname,
+        description: log.description,
+        background: log.background,
+        points: log.points,
+        createdAt: log.createdAt,
+        updatedAt: log.updatedAt,
         point: log.points,
         reactions: reactions ?? [],
         elapsedDays: calculateElapsedDays(log.createdAt),

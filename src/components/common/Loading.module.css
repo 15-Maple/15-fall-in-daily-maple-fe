@@ -1,0 +1,27 @@
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 800px;
+  font-size: 18px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-brand-bg);
+}
+
+.dot {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.dot span {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-brand-bg);
+  border-radius: 50%;
+}
+
+.right {
+  opacity: 0.5;
+}

@@ -11,6 +11,7 @@ import { nowTime } from "../../utils/formatDateTime.js";
 
 import { TOKEN_PREFIX } from "../../constants/auth";
 import { ROUTES } from "../../constants/routes";
+import Loading from "../common/Loading.jsx";
 import PasswordConfirmModal from "../common/PasswordConfirmModal";
 import PointHistory from "../point/PointHistory";
 import NavButton from "../ui/NavButton";
@@ -79,10 +80,9 @@ function LogLayout() {
     };
   }, [showToast, logId]);
 
-  // TODO: 에러, 로딩 처리 추가 필요
   if (error) return <div>{error}</div>;
 
-  if (!logData) return <div>로딩중</div>;
+  if (!logData) return <Loading />;
 
   const homePath = ROUTES.LOG_DETAIL.replace(":logId", logId);
   const todayHabitsPath = ROUTES.TODAY_HABITS.replace(":logId", logId);
