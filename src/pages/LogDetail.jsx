@@ -10,6 +10,7 @@ import HabitTable from "../components/habit/habitTable.jsx";
 import PointHistory from "../components/point/PointHistory";
 import Reaction from "../components/reaction/Reaction";
 import NavButton from "../components/ui/NavButton.jsx";
+import Loading from "@/components/common/Loading.jsx";
 
 import { TOKEN_PREFIX } from "../constants/auth";
 import { ROUTES } from "../constants/routes.js";
@@ -116,16 +117,7 @@ function LogDetail() {
 
   //로딩중일떄
   if (loading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.dot}>
-          <span></span>
-          <span></span>
-          <span className={styles.right}></span>
-        </div>
-        <p>L O A D I N G</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   //로딩끝났을때
@@ -137,9 +129,7 @@ function LogDetail() {
             <div className={styles.leftArea}>
               <Reaction />
 
-              <h1 className={styles.title}>
-                {log ? log.name : "연우의 개발공장"}
-              </h1>
+              <h1 className={styles.title}>{log ? log.name : ""}</h1>
 
               <div className={styles.mobileHabitMenu}>
                 <NavButton pageName="오늘의 습관" to={todayHabitsPath} />
@@ -150,11 +140,7 @@ function LogDetail() {
               <div className={styles.sub}>
                 <p className={styles.label}>소개</p>
 
-                <p className={styles.desc}>
-                  {log
-                    ? log.description
-                    : "Slow And Steady Wins The Race! 다들 오늘 하루도 화이팅!"}
-                </p>
+                <p className={styles.desc}>{log ? log.description : ""}</p>
               </div>
 
               <div className={styles.pointText}>현재까지 획득한 포인트</div>
