@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { createLog, getLogById, nameCheck } from "../api/logs.js";
+import { createLog, getLogById } from "../api/logs.js";
+import { useNameDuplicateCheck } from "@/hooks/useNameDuplicateCheck.js";
 
 import BackgroundSelector from "../components/common/BackgroundSelector.jsx";
 import Modal from "../components/common/Modal.jsx";
@@ -50,14 +51,14 @@ function CreateLog() {
   const [touched, setTouched] = useState({});
   const [formError, setFormError] = useState("");
 
-  // 로그 이름 중복 검사 실시 여부(중복 검사 했을 때: true)
-  const [isNameChecked, setIsNameChecked] = useState(false);
-  // 로그 이름 중복 검사 통과 여부
-  const [isNamePassedDupCheck, setIsNamePassedDupCheck] = useState(false);
-  // 중복 검사에 사용한 이름 저장
-  const [checkedName, setCheckedName] = useState("");
-  // 중복 검사중인지 확인
-  const [isNameChecking, setIsNameChecking] = useState(false);
+  const {
+    isNameChecked,
+    isNamePassedDupCheck,
+    isNameChecking,
+    resetNameCheckOnChange,
+    checkName,
+    isNameValid,
+  } = useNameDuplicateCheck();
 
   // 제출 모달 표시 여부
   const [showNoSubmitAlert, setShowNoSubmitAlert] = useState(false);
@@ -126,14 +127,6 @@ function CreateLog() {
     // name: {nickname, name, description, password, password}
     const { name: inputType, value } = event.target;
 
-    // 지금 변경된 입력창이 로그 이름 입력창인지 확인: 로그 이름 중복검사 위함
-    if (inputType === "name") {
-      setIsNameChecked(false);
-      setIsNamePassedDupCheck(false);
-      setCheckedName("");
-    }
-    // 이름 변경 감지되면 이전에 통과했어도 다시 비활성화.
-
     // 한글 조합 중 비밀번호값 즉시 replace 안함
     if (
       isComposing &&
@@ -158,10 +151,15 @@ function CreateLog() {
       passwordConfirm: (value) => value.replace(/[^0-9a-zA-Z]/g, ""),
     };
 
-    const sanitizer = sanitizeByField[name];
+    const sanitizer = sanitizeByField[inputType];
     const sanitizedValue = sanitizer ? sanitizer(value) : value;
 
-    // 글자수 바이트로 변환
+    // 지금 변경된 입력창이 로그 이름 입력창인지 확인: 로그 이름 중복검사 위함
+    if (inputType === "name") {
+      resetNameCheckOnChange(sanitizedValue);
+    }
+
+    // 글자수 변환
     setInputCount((prev) => ({
       ...prev,
       [inputType]: getCharacterLength(sanitizedValue),
@@ -190,9 +188,6 @@ function CreateLog() {
     // 기본 폼 제출 동작 방지
     event.preventDefault();
 
-    // // 중복 검사 실시 여부: true
-    // setIsNameChecked(true);
-
     // 중복 검사 버튼을 누른 시점의 name을 검사 대상으로 선언
     const currentName = form.name.trim();
 
@@ -202,37 +197,17 @@ function CreateLog() {
         ...prev,
         name: true,
       }));
-      setIsNameChecked(false);
-      setIsNamePassedDupCheck(false);
-      setCheckedName("");
       return;
     }
 
-    setIsNameChecking(true);
-    setIsNameChecked(false);
-    setIsNamePassedDupCheck(false);
-    setCheckedName("");
-
     // 현재 검사 대상인 currentName 중복 검사 api로 보낸다.
     try {
-      // 검사 결과가 true이면 setIsNamePassedDupCheck(true)
-      // 검사 전 현재 입력값 저장
-      const currentName = form.name.trim();
-      // 검사 시행
-      const isNameDuplicated = await nameCheck(currentName);
-
-      setIsNameChecked(true);
-      setIsNamePassedDupCheck(!isNameDuplicated);
-      setCheckedName(currentName);
+      // 이름 중복 검사 로직(api 호출 및 state 변경)
+      await checkName(currentName);
     } catch (error) {
-      // 검사 결과가 false 이면 setIsNamePassedDupCheck(false)
-      setIsNameChecked(false);
-      setIsNamePassedDupCheck(false);
-      setCheckedName("");
       setFormError(error.message || "로그 이름 중복 확인에 실패했습니다.");
+      // 오류 모달 띄우기
       setShowNoSubmitAlert(true);
-    } finally {
-      setIsNameChecking(false);
     }
   };
 
@@ -252,9 +227,8 @@ function CreateLog() {
     const hasError =
       !form.nickname.trim() ||
       !form.name.trim() ||
-      !isNameChecked ||
-      !isNamePassedDupCheck ||
-      checkedName !== form.name.trim() ||
+      // useNameDuplicateCheck에서 중복 확인 완료함
+      !isNameValid ||
       !form.password.trim() ||
       !form.passwordConfirm.trim() ||
       form.password !== form.passwordConfirm;
